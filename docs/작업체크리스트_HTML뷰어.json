@@ -1,0 +1,150 @@
+{
+  "target_file": "C:\\dev\\연산JSON관리기\\연산JSON_HTML 뷰어\\전체문항_HTML뷰어.html",
+  "build_target": "HTML 뷰어 별도 프로젝트",
+  "status_rule": "작업 완료 시 해당 task의 check를 true로 변경한다. 다음 작업 시 check가 false인 task만 진행 대상으로 본다.",
+  "scope": "연산JSON관리기_build 바깥의 HTML 뷰어 전용 폴더에서만 작업한다. 기존 exe/Python 소스는 수정하지 않는다.",
+  "tasks": [
+    {
+      "id": "01_create_project_structure",
+      "order": 1,
+      "title": "전용 프로젝트 폴더 구조 생성",
+      "check": true,
+      "targets": "연산JSON_HTML 뷰어 루트, docs, samples, tests",
+      "allowed_fields": [
+        "연산JSON_HTML 뷰어"
+      ],
+      "protected_fields": [
+        "연산JSON관리기_build/app",
+        "연산JSON관리기_build/dist",
+        "연산JSON관리기_build/build"
+      ],
+      "summary": "HTML 뷰어를 exe 빌드 폴더 밖의 별도 작업 폴더로 분리한다.",
+      "verify": [
+        "docs 폴더 존재",
+        "samples 폴더 존재",
+        "tests 폴더 존재"
+      ]
+    },
+    {
+      "id": "02_copy_html_viewer",
+      "order": 2,
+      "title": "기존 HTML 뷰어 복사",
+      "check": true,
+      "targets": "전체문항_HTML뷰어.html",
+      "allowed_fields": [
+        "연산JSON_HTML 뷰어/전체문항_HTML뷰어.html"
+      ],
+      "protected_fields": [
+        "연산JSON관리기_build/app",
+        "연산JSON관리기_build/html_viewer"
+      ],
+      "summary": "현재 독립 HTML 뷰어 파일을 새 전용 프로젝트 루트로 복사한다.",
+      "verify": [
+        "새 위치 HTML 파일 존재",
+        "원본 app Python 파일 미수정"
+      ]
+    },
+    {
+      "id": "03_add_selection_memory",
+      "order": 3,
+      "title": "JSON 선택 기억 기능 추가",
+      "check": true,
+      "targets": "파일/폴더 선택 UI와 브라우저 저장소",
+      "allowed_fields": [
+        "연산JSON_HTML 뷰어/전체문항_HTML뷰어.html"
+      ],
+      "protected_fields": [
+        "연산JSON관리기_build/app"
+      ],
+      "summary": "최근 파일명/상태를 localStorage에 저장하고, Chrome/Edge에서는 File System Access API와 IndexedDB로 최근 폴더 핸들 재사용을 지원한다.",
+      "verify": [
+        "최근 파일명 안내 표시",
+        "최근 폴더 다시 열기 버튼 표시",
+        "지원되지 않거나 권한이 없으면 다시 폴더 선택 안내"
+      ]
+    },
+    {
+      "id": "04_add_left_panel_resizer",
+      "order": 4,
+      "title": "좌측 패널 폭 조정 기능 추가",
+      "check": true,
+      "targets": "좌측 패널과 우측 상세 사이 리사이저",
+      "allowed_fields": [
+        "연산JSON_HTML 뷰어/전체문항_HTML뷰어.html"
+      ],
+      "protected_fields": [
+        "문항 데이터 파싱 로직"
+      ],
+      "summary": "드래그 가능한 세로 리사이저를 추가하고 좌측 폭을 localStorage에 저장한다.",
+      "verify": [
+        "리사이저 표시",
+        "드래그로 좌측 폭 변경",
+        "폭 저장/복원",
+        "최소 260px, 최대 화면 폭 60% 적용"
+      ]
+    },
+    {
+      "id": "05_add_sticky_detail_header",
+      "order": 5,
+      "title": "우측 상세 sticky 헤더 적용",
+      "check": true,
+      "targets": "파일명/section/문제번호/이전문항/다음문항 영역",
+      "allowed_fields": [
+        "연산JSON_HTML 뷰어/전체문항_HTML뷰어.html"
+      ],
+      "protected_fields": [
+        "상세 본문 렌더링 순서"
+      ],
+      "summary": "본문 스크롤 중에도 문제번호와 이전/다음 버튼이 보이도록 상세 헤더를 sticky로 고정한다.",
+      "verify": [
+        "상세 스크롤 시 헤더 고정",
+        "모바일 폭에서 버튼 줄바꿈",
+        "본문과 겹침 없음"
+      ]
+    },
+    {
+      "id": "06_add_samples",
+      "order": 6,
+      "title": "샘플 JSON 추가",
+      "check": true,
+      "targets": "samples 폴더",
+      "allowed_fields": [
+        "연산JSON_HTML 뷰어/samples"
+      ],
+      "protected_fields": [
+        "실제 원본 JSON"
+      ],
+      "summary": "파일 선택/폴더 선택 검수용 샘플 JSON을 저장한다.",
+      "verify": [
+        "샘플 JSON 파싱 가능",
+        "그림 문항 포함",
+        "blocks/image_edit_notes 유무 케이스 포함"
+      ]
+    },
+    {
+      "id": "07_browser_review",
+      "order": 7,
+      "title": "브라우저 동작 및 레이아웃 검수",
+      "check": true,
+      "targets": "HTML 뷰어 실제 렌더링",
+      "allowed_fields": [
+        "연산JSON_HTML 뷰어/전체문항_HTML뷰어.html",
+        "연산JSON_HTML 뷰어/tests"
+      ],
+      "protected_fields": [
+        "연산JSON관리기_build/app"
+      ],
+      "summary": "샘플 데이터로 검색, 필터, 폴딩, 이전/다음, 리사이즈, sticky 헤더, 콘솔 오류를 확인한다.",
+      "verify": [
+        "검색 필터 동작",
+        "그림 필터 동작",
+        "전체 접기/펼치기 동작",
+        "이전/다음 이동",
+        "좌측 폭 조정",
+        "sticky 헤더",
+        "데스크톱/좁은 화면 겹침 없음",
+        "콘솔 오류 없음"
+      ]
+    }
+  ]
+}

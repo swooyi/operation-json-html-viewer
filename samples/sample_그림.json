@@ -1,0 +1,44 @@
+{
+  "sections": [
+    {
+      "section_title": "그림이 포함된 문항",
+      "note": "그림 태그와 image_edit_notes 검수",
+      "items": [
+        {
+          "q_number": 10,
+          "question": {
+            "stem": "[img:circle-01] 원의 반지름이 $4$일 때 넓이를 구하시오.",
+            "blocks": []
+          },
+          "choices": ["$8\\pi$", "$12\\pi$", "$16\\pi$", "$20\\pi$"],
+          "answer_type": "single",
+          "answer": "$16\\pi$",
+          "explanation": "원의 넓이는 $\\pi r^2$ 이므로 $16\\pi$ 입니다.",
+          "image_edit_notes": []
+        },
+        {
+          "q_number": 11,
+          "question": {
+            "stem": "그림을 보고 삼각형의 높이를 판단하시오.",
+            "blocks": [
+              {
+                "kind": "image",
+                "value": "[img]"
+              }
+            ]
+          },
+          "choices": ["2", "4", "6", "8"],
+          "answer_type": "number",
+          "answer": 6,
+          "explanation": "밑변과 수직인 선분의 길이가 높이입니다.",
+          "image_edit_notes": [
+            {
+              "image": "triangle-height",
+              "note": "높이를 나타내는 수직 표시가 선명해야 합니다."
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

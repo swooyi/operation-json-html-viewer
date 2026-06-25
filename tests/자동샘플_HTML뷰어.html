@@ -1,0 +1,1158 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>전체 문항 HTML 뷰어</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$', '$$'], ['\\[', '\\]']] },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'code'] }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <style>
+    :root {
+      color-scheme: light;
+      --line: #d8dde6;
+      --panel: #f4f6f8;
+      --panel-strong: #e8edf3;
+      --ink: #1f2933;
+      --muted: #697586;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --answer-bg: #fff8e6;
+      --note-bg: #eff6ff;
+      --danger: #b42318;
+      --nav-width: 32vw;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Malgun Gothic", "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #fff;
+    }
+    header {
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0;
+    }
+    header span { color: var(--muted); font-size: 13px; white-space: nowrap; }
+    .load-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fafbfc;
+    }
+    .load-button {
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 7px 10px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .load-button:hover { background: #eef2f7; }
+    .load-button:disabled {
+      color: #98a2b3;
+      cursor: default;
+      background: #f2f4f7;
+    }
+    .load-button input { display: none; }
+    .load-status {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .load-status.error { color: var(--danger); font-weight: 700; }
+    main {
+      height: calc(100vh - 105px);
+      display: grid;
+      grid-template-columns: minmax(260px, var(--nav-width)) 6px minmax(0, 1fr);
+    }
+    nav {
+      border-right: 1px solid var(--line);
+      background: var(--panel);
+      overflow: auto;
+      padding: 10px;
+    }
+    .resizer {
+      width: 6px;
+      background: #eef2f7;
+      border-right: 1px solid var(--line);
+      cursor: col-resize;
+      touch-action: none;
+    }
+    .resizer:hover,
+    .resizer.dragging {
+      background: #c7d2fe;
+    }
+    .filters {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      display: grid;
+      gap: 8px;
+      padding-bottom: 10px;
+      background: var(--panel);
+    }
+    .search-input {
+      width: 100%;
+      min-height: 34px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 7px 9px;
+      font: inherit;
+      background: #fff;
+    }
+    .filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .image-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--ink);
+      white-space: nowrap;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 5px 8px;
+      background: #fff;
+      font-weight: 700;
+    }
+    .image-toggle.active {
+      border-color: #86efac;
+      background: #dcfce7;
+      color: #166534;
+    }
+    .fold-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .fold-button,
+    .nav-button {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 5px 8px;
+      background: #fff;
+      color: #344054;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+    }
+    .fold-button:hover,
+    .nav-button:hover:not(:disabled) { background: #eef2f7; }
+    .nav-button:disabled {
+      color: #98a2b3;
+      cursor: default;
+      background: #f2f4f7;
+    }
+    .tree {
+      display: grid;
+      gap: 6px;
+      padding-bottom: 24px;
+    }
+    details {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+      overflow: hidden;
+    }
+    details details {
+      border-width: 1px 0 0;
+      border-radius: 0;
+    }
+    summary {
+      cursor: pointer;
+      padding: 8px 10px;
+      background: var(--panel-strong);
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    .section-summary {
+      background: #fff;
+      color: #344054;
+      font-size: 13px;
+    }
+    .question-list {
+      display: grid;
+      gap: 2px;
+      padding: 5px;
+      background: #fff;
+    }
+    .question-node {
+      width: 100%;
+      border: 1px solid transparent;
+      background: transparent;
+      text-align: left;
+      padding: 7px 8px 7px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--ink);
+      font: inherit;
+      font-size: 13px;
+    }
+    .question-node:hover { background: #eef2f7; }
+    .question-node.active {
+      background: var(--accent-soft);
+      border-color: #93c5fd;
+      color: #0f3f9c;
+      font-weight: 700;
+    }
+    .question-node.has-image {
+      background: #ecfdf3;
+      border-color: #bbf7d0;
+    }
+    .question-node.has-image.active {
+      background: #bbf7d0;
+      border-color: #22c55e;
+      color: #14532d;
+    }
+    .empty {
+      padding: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+    article {
+      overflow: auto;
+      padding: 22px 28px 40px;
+      min-width: 0;
+    }
+    .card-head {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+      margin-bottom: 18px;
+      background: #fff;
+    }
+    .head-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .head-nav {
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0;
+    }
+    .file-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: baseline;
+      color: var(--muted);
+      font-size: 13px;
+      margin-bottom: 6px;
+      line-height: 1.5;
+    }
+    .section-note {
+      color: #475467;
+    }
+    .section-note::before {
+      content: "·";
+      margin-right: 6px;
+      color: var(--muted);
+    }
+    .section-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 4px;
+      line-height: 1.4;
+    }
+    .q-number {
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .content-grid {
+      display: grid;
+      gap: 16px;
+      align-items: start;
+    }
+    .paired-row {
+      min-width: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.72fr);
+      gap: 16px;
+      align-items: start;
+    }
+    section {
+      min-width: 0;
+    }
+    h2 {
+      font-size: 14px;
+      margin: 0 0 8px;
+      color: var(--muted);
+    }
+    .text-block {
+      white-space: pre-wrap;
+      line-height: 1.65;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 12px;
+      margin: 0;
+      background: #fff;
+      font-family: inherit;
+      overflow-wrap: anywhere;
+    }
+    .answer-block {
+      background: var(--answer-bg);
+    }
+    .note-block {
+      border-color: #bfdbfe;
+      background: var(--note-bg);
+    }
+    .choice-list {
+      padding-left: 34px;
+    }
+    .choice-list li {
+      margin: 4px 0;
+      padding-left: 4px;
+    }
+    .image-note-entry {
+      border-top: 1px solid #bfdbfe;
+      padding-top: 10px;
+      margin-top: 10px;
+    }
+    .image-note-entry:first-child {
+      border-top: 0;
+      padding-top: 0;
+      margin-top: 0;
+    }
+    .entry-index {
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .note-row {
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 8px;
+      margin: 6px 0;
+    }
+    .note-key {
+      color: var(--muted);
+      font-weight: 700;
+    }
+    .note-value {
+      white-space: pre-wrap;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    @media (max-width: 860px) {
+      header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      main {
+        height: auto;
+        min-height: calc(100vh - 135px);
+        grid-template-columns: 1fr;
+      }
+      .resizer {
+        display: none;
+      }
+      nav {
+        max-height: 38vh;
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+      article {
+        padding: 18px 16px 32px;
+      }
+      .paired-row {
+        grid-template-columns: 1fr;
+      }
+      .head-top {
+        display: grid;
+      }
+      .head-nav {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>전체 문항 HTML 뷰어</h1>
+    <span id="count">0개 문항</span>
+  </header>
+  <div class="load-bar">
+    <label class="load-button">
+      JSON 파일 선택
+      <input id="file-input" type="file" accept=".json,application/json" multiple>
+    </label>
+    <button id="folder-button" class="load-button" type="button">JSON 폴더 선택</button>
+    <button id="restore-folder" class="load-button" type="button" disabled>최근 폴더 다시 열기</button>
+    <input id="folder-input" type="file" accept=".json,application/json" multiple webkitdirectory hidden>
+    <span id="load-status" class="load-status">JSON 파일 또는 폴더를 선택해 주세요.</span>
+    <span id="remember-status" class="load-status"></span>
+  </div>
+  <main>
+    <nav>
+      <div class="filters">
+        <input id="search" class="search-input" type="search" placeholder="문항 찾기">
+        <div class="filter-row">
+          <label id="image-toggle-label" class="image-toggle"><input id="image-only" type="checkbox"> 그림 있는 문항만</label>
+          <span id="result-count">0개 표시</span>
+        </div>
+        <div class="fold-actions">
+          <button id="expand-all" class="fold-button" type="button">전체 펼치기</button>
+          <button id="collapse-all" class="fold-button" type="button">전체 접기</button>
+        </div>
+      </div>
+      <div id="nav-tree" class="tree"></div>
+    </nav>
+    <div id="resizer" class="resizer" role="separator" aria-label="좌측 패널 폭 조정"></div>
+    <article id="card"></article>
+  </main>
+  <script>
+    const IMAGE_TAG_PATTERN = /\[img(?::[^\]]*)?\]/i;
+    const STORAGE_KEYS = {
+      recentSelection: 'allQuestionHtmlViewer.recentSelection',
+      navWidth: 'allQuestionHtmlViewer.navWidth',
+    };
+    const DB_NAME = 'all-question-html-viewer';
+    const DB_STORE = 'handles';
+    const FOLDER_HANDLE_KEY = 'recent-folder';
+    const MIN_NAV_WIDTH = 260;
+    const MAX_NAV_WIDTH_RATIO = 0.6;
+    let cards = [];
+    let activeIndex = 0;
+
+    const fileInput = document.getElementById('file-input');
+    const folderInput = document.getElementById('folder-input');
+    const folderButton = document.getElementById('folder-button');
+    const restoreFolderButton = document.getElementById('restore-folder');
+    const loadStatus = document.getElementById('load-status');
+    const rememberStatus = document.getElementById('remember-status');
+    const navTree = document.getElementById('nav-tree');
+    const cardRoot = document.getElementById('card');
+    const searchInput = document.getElementById('search');
+    const imageOnlyInput = document.getElementById('image-only');
+    const imageToggleLabel = document.getElementById('image-toggle-label');
+    const expandAllButton = document.getElementById('expand-all');
+    const collapseAllButton = document.getElementById('collapse-all');
+    const resizer = document.getElementById('resizer');
+    const count = document.getElementById('count');
+    const resultCount = document.getElementById('result-count');
+    const openState = new Map();
+
+    function clampNavWidth(width) {
+      const maxWidth = Math.max(MIN_NAV_WIDTH, Math.floor(window.innerWidth * MAX_NAV_WIDTH_RATIO));
+      return Math.min(Math.max(Math.round(width), MIN_NAV_WIDTH), maxWidth);
+    }
+
+    function setNavWidth(width, shouldSave = true) {
+      const clamped = clampNavWidth(width);
+      document.documentElement.style.setProperty('--nav-width', `${clamped}px`);
+      if (shouldSave) {
+        localStorage.setItem(STORAGE_KEYS.navWidth, String(clamped));
+      }
+    }
+
+    function restoreNavWidth() {
+      const saved = Number(localStorage.getItem(STORAGE_KEYS.navWidth));
+      if (Number.isFinite(saved) && saved > 0) {
+        setNavWidth(saved, false);
+      }
+    }
+
+    function summarizeFileNames(files) {
+      const names = Array.from(files).map((file) => file.name).filter(Boolean);
+      const shown = names.slice(0, 4).join(', ');
+      return names.length > 4 ? `${shown} 외 ${names.length - 4}개` : shown;
+    }
+
+    function saveRecentSelection(sourceLabel, files, questionCount) {
+      const info = {
+        sourceLabel,
+        fileCount: files.length,
+        questionCount,
+        names: Array.from(files).map((file) => file.name).slice(0, 8),
+        savedAt: new Date().toISOString(),
+      };
+      localStorage.setItem(STORAGE_KEYS.recentSelection, JSON.stringify(info));
+      renderRecentSelectionHint();
+    }
+
+    function renderRecentSelectionHint(extraMessage = '') {
+      const saved = localStorage.getItem(STORAGE_KEYS.recentSelection);
+      if (!saved) {
+        rememberStatus.textContent = extraMessage;
+        return;
+      }
+      try {
+        const info = JSON.parse(saved);
+        const names = Array.isArray(info.names) && info.names.length ? ` (${info.names.slice(0, 3).join(', ')})` : '';
+        const base = `최근 선택: ${info.sourceLabel || 'JSON'} ${info.fileCount || 0}개 / 문항 ${info.questionCount || 0}개${names}`;
+        rememberStatus.textContent = extraMessage ? `${base} · ${extraMessage}` : base;
+      } catch {
+        rememberStatus.textContent = extraMessage;
+      }
+    }
+
+    function supportsDirectoryPicker() {
+      return typeof window.showDirectoryPicker === 'function';
+    }
+
+    function openHandleDb() {
+      return new Promise((resolve, reject) => {
+        const request = indexedDB.open(DB_NAME, 1);
+        request.onupgradeneeded = () => {
+          request.result.createObjectStore(DB_STORE);
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function saveDirectoryHandle(handle) {
+      const db = await openHandleDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(DB_STORE, 'readwrite');
+        transaction.objectStore(DB_STORE).put(handle, FOLDER_HANDLE_KEY);
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error);
+      });
+    }
+
+    async function getDirectoryHandle() {
+      const db = await openHandleDb();
+      return new Promise((resolve, reject) => {
+        const transaction = db.transaction(DB_STORE, 'readonly');
+        const request = transaction.objectStore(DB_STORE).get(FOLDER_HANDLE_KEY);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error);
+      });
+    }
+
+    async function ensureReadPermission(handle) {
+      if (!handle || typeof handle.queryPermission !== 'function') {
+        return false;
+      }
+      if ((await handle.queryPermission({ mode: 'read' })) === 'granted') {
+        return true;
+      }
+      if (typeof handle.requestPermission === 'function') {
+        return (await handle.requestPermission({ mode: 'read' })) === 'granted';
+      }
+      return false;
+    }
+
+    async function refreshRestoreFolderButton() {
+      if (!supportsDirectoryPicker()) {
+        restoreFolderButton.disabled = true;
+        renderRecentSelectionHint('이 브라우저에서는 폴더 기억을 지원하지 않으면 다시 선택해 주세요.');
+        return;
+      }
+      try {
+        const handle = await getDirectoryHandle();
+        restoreFolderButton.disabled = !handle;
+        renderRecentSelectionHint(handle ? `최근 폴더: ${handle.name || '이름 없음'}` : '');
+      } catch {
+        restoreFolderButton.disabled = true;
+        renderRecentSelectionHint('최근 폴더 정보를 읽지 못했습니다.');
+      }
+    }
+
+    async function filesFromDirectoryHandle(handle) {
+      const files = [];
+      for await (const entry of handle.values()) {
+        if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.json')) {
+          files.push(await entry.getFile());
+        }
+      }
+      return files;
+    }
+
+    async function loadDirectoryHandle(handle) {
+      const granted = await ensureReadPermission(handle);
+      if (!granted) {
+        loadStatus.textContent = '최근 폴더 권한이 필요합니다. JSON 폴더 선택을 다시 눌러 주세요.';
+        loadStatus.classList.add('error');
+        return;
+      }
+      const files = await filesFromDirectoryHandle(handle);
+      await loadFiles(files, `폴더 ${handle.name || ''}`.trim());
+    }
+
+    function setText(parent, className, text) {
+      const node = document.createElement('div');
+      node.className = className;
+      node.textContent = text || '-';
+      parent.appendChild(node);
+      return node;
+    }
+
+    function addSection(parent, title, text, className = 'text-block') {
+      const section = document.createElement('section');
+      const heading = document.createElement('h2');
+      heading.textContent = title;
+      section.appendChild(heading);
+      const body = document.createElement('div');
+      body.className = className;
+      body.textContent = text || '-';
+      section.appendChild(body);
+      parent.appendChild(section);
+    }
+
+    function displayValue(value) {
+      if (value === null || value === undefined || value === '') {
+        return '-';
+      }
+      if (typeof value === 'string') {
+        return value;
+      }
+      return JSON.stringify(value, null, 2);
+    }
+
+    function hasDisplayValue(value) {
+      if (value === null || value === undefined) {
+        return false;
+      }
+      if (typeof value === 'string') {
+        return value.trim() !== '';
+      }
+      if (Array.isArray(value)) {
+        return value.length > 0;
+      }
+      if (typeof value === 'object') {
+        return Object.keys(value).length > 0;
+      }
+      return true;
+    }
+
+    function containsImageTag(value) {
+      if (typeof value === 'string') {
+        return IMAGE_TAG_PATTERN.test(value);
+      }
+      if (Array.isArray(value)) {
+        return value.some((child) => containsImageTag(child));
+      }
+      if (value && typeof value === 'object') {
+        return Object.values(value).some((child) => containsImageTag(child));
+      }
+      return false;
+    }
+
+    function formatIndexLabel(value) {
+      const text = String(value ?? '').trim();
+      if (/^\d+$/.test(text)) {
+        return `[${String(Number(text)).padStart(2, '0')}]`;
+      }
+      return `[${text || '--'}]`;
+    }
+
+    function stringifyValue(value) {
+      if (typeof value === 'string') {
+        return value;
+      }
+      return JSON.stringify(value, null, 2);
+    }
+
+    function sectionLabel(sectionIndex, sectionTitle) {
+      return `${formatIndexLabel(sectionIndex + 1)} ${sectionTitle || '-'}`;
+    }
+
+    function qNumberLabel(qNumber) {
+      return `${String(qNumber || '-')}번`;
+    }
+
+    function buildCardsFromPayload(fileName, payload) {
+      const result = [];
+      const sections = Array.isArray(payload?.sections) ? payload.sections : [];
+      sections.forEach((section, sectionIndex) => {
+        if (!section || typeof section !== 'object') {
+          return;
+        }
+        const items = Array.isArray(section.items) ? section.items : [];
+        const sectionTitle = String(section.section_title ?? '');
+        const sectionNote = String(section.note ?? '');
+        items.forEach((item) => {
+          if (!item || typeof item !== 'object') {
+            return;
+          }
+          const question = item.question && typeof item.question === 'object' ? item.question : {};
+          const imageEditNotes = item.image_edit_notes;
+          const blocks = question.blocks ?? [];
+          result.push({
+            fileName,
+            sectionIndex,
+            sectionLabel: sectionLabel(sectionIndex, sectionTitle),
+            sectionNote,
+            qNumberLabel: qNumberLabel(item.q_number),
+            stem: String(question.stem ?? ''),
+            blocks: stringifyValue(blocks),
+            hasBlocks: hasDisplayValue(blocks),
+            choices: item.choices ?? [],
+            answerType: String(item.answer_type ?? ''),
+            answer: stringifyValue(item.answer ?? ''),
+            explanation: String(item.explanation ?? ''),
+            imageEditNotes,
+            hasImage: containsImageTag(item) || hasDisplayValue(imageEditNotes),
+          });
+        });
+      });
+      return result;
+    }
+
+    async function loadFiles(fileList, sourceLabel = '파일') {
+      const jsonFiles = Array.from(fileList).filter((file) => file.name.toLowerCase().endsWith('.json'));
+      const loadedCards = [];
+      const errors = [];
+      for (const file of jsonFiles) {
+        try {
+          const text = await file.text();
+          const payload = JSON.parse(text);
+          loadedCards.push(...buildCardsFromPayload(file.name, payload));
+        } catch (error) {
+          errors.push(`${file.name}: ${error.message}`);
+        }
+      }
+      cards = loadedCards;
+      activeIndex = 0;
+      openState.clear();
+      searchInput.value = '';
+      imageOnlyInput.checked = false;
+      count.textContent = `${cards.length}개 문항`;
+      saveRecentSelection(sourceLabel, jsonFiles, cards.length);
+      const fileSummary = summarizeFileNames(jsonFiles);
+      const message = `${sourceLabel} ${jsonFiles.length}개 / 문항 ${cards.length}개${fileSummary ? ` · ${fileSummary}` : ''}`;
+      loadStatus.textContent = errors.length ? `${message} / 오류 ${errors.length}개` : message;
+      loadStatus.classList.toggle('error', errors.length > 0);
+      renderNav();
+    }
+
+    function searchText(data) {
+      return [
+        data.fileName,
+        data.sectionLabel,
+        data.sectionNote,
+        data.qNumberLabel,
+        data.stem,
+        displayValue(data.blocks),
+        displayValue(data.choices),
+        data.answerType,
+        data.answer,
+        data.explanation,
+        displayValue(data.imageEditNotes),
+      ].join('\n').toLowerCase();
+    }
+
+    function addChoicesSection(parent, choices) {
+      if (!Array.isArray(choices)) {
+        addSection(parent, 'choices', displayValue(choices));
+        return;
+      }
+      const section = document.createElement('section');
+      const heading = document.createElement('h2');
+      heading.textContent = 'choices';
+      section.appendChild(heading);
+      const list = document.createElement('ol');
+      list.className = 'text-block choice-list';
+      if (!choices.length) {
+        const item = document.createElement('li');
+        item.textContent = '-';
+        list.appendChild(item);
+      } else {
+        choices.forEach((choice) => {
+          const item = document.createElement('li');
+          item.textContent = displayValue(choice);
+          list.appendChild(item);
+        });
+      }
+      section.appendChild(list);
+      parent.appendChild(section);
+    }
+
+    function addNoteRow(parent, key, value) {
+      const row = document.createElement('div');
+      row.className = 'note-row';
+      const keyNode = document.createElement('div');
+      keyNode.className = 'note-key';
+      keyNode.textContent = key;
+      const valueNode = document.createElement('div');
+      valueNode.className = 'note-value';
+      valueNode.textContent = displayValue(value);
+      row.appendChild(keyNode);
+      row.appendChild(valueNode);
+      parent.appendChild(row);
+    }
+
+    function addImageNoteEntry(parent, entry, index) {
+      const item = document.createElement('div');
+      item.className = 'image-note-entry';
+      if (index !== null) {
+        const indexNode = document.createElement('div');
+        indexNode.className = 'entry-index';
+        indexNode.textContent = `#${index}`;
+        item.appendChild(indexNode);
+      }
+      if (entry && typeof entry === 'object' && !Array.isArray(entry)) {
+        const keys = Object.keys(entry);
+        ['image', 'note'].forEach((key) => {
+          if (Object.prototype.hasOwnProperty.call(entry, key)) {
+            addNoteRow(item, key, entry[key]);
+          }
+        });
+        keys.forEach((key) => {
+          if (key !== 'image' && key !== 'note') {
+            addNoteRow(item, key, entry[key]);
+          }
+        });
+      } else {
+        const valueNode = document.createElement('div');
+        valueNode.className = 'note-value';
+        valueNode.textContent = displayValue(entry);
+        item.appendChild(valueNode);
+      }
+      parent.appendChild(item);
+    }
+
+    function addImageEditNotesSection(parent, imageEditNotes) {
+      if (!hasDisplayValue(imageEditNotes)) {
+        return;
+      }
+      const section = document.createElement('section');
+      const heading = document.createElement('h2');
+      heading.textContent = 'image_edit_notes';
+      section.appendChild(heading);
+      const body = document.createElement('div');
+      body.className = 'text-block note-block';
+      if (Array.isArray(imageEditNotes)) {
+        if (!imageEditNotes.length) {
+          body.textContent = '-';
+        } else {
+          imageEditNotes.forEach((entry, index) => addImageNoteEntry(body, entry, index + 1));
+        }
+      } else {
+        addImageNoteEntry(body, imageEditNotes, null);
+      }
+      section.appendChild(body);
+      parent.appendChild(section);
+    }
+
+    function setActiveQuestionNode() {
+      document.querySelectorAll('.question-node').forEach((button) => {
+        button.classList.toggle('active', Number(button.dataset.index) === activeIndex);
+      });
+    }
+
+    function filteredIndexes() {
+      const query = searchInput.value.trim().toLowerCase();
+      const imageOnly = imageOnlyInput.checked;
+      return cards
+        .map((data, index) => ({ data, index }))
+        .filter((entry) => (!imageOnly || entry.data.hasImage) && (!query || searchText(entry.data).includes(query)))
+        .map((entry) => entry.index);
+    }
+
+    function groupIndexes(indexes) {
+      const files = new Map();
+      indexes.forEach((index) => {
+        const data = cards[index];
+        if (!files.has(data.fileName)) {
+          files.set(data.fileName, new Map());
+        }
+        const sections = files.get(data.fileName);
+        const sectionKey = `${data.sectionIndex}::${data.sectionLabel}`;
+        if (!sections.has(sectionKey)) {
+          sections.set(sectionKey, { label: data.sectionLabel, items: [] });
+        }
+        sections.get(sectionKey).items.push(index);
+      });
+      return files;
+    }
+
+    function renderNav() {
+      const indexes = filteredIndexes();
+      resultCount.textContent = `${indexes.length}개 표시`;
+      imageToggleLabel.classList.toggle('active', imageOnlyInput.checked);
+      navTree.replaceChildren();
+      if (!cards.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.textContent = 'JSON 파일 또는 폴더를 선택해 주세요.';
+        navTree.appendChild(empty);
+        renderCard(null);
+        return;
+      }
+      if (!indexes.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.textContent = '일치하는 문항이 없습니다.';
+        navTree.appendChild(empty);
+        renderCard(null);
+        return;
+      }
+
+      const grouped = groupIndexes(indexes);
+      grouped.forEach((sections, fileName) => {
+        const fileKey = `file::${fileName}`;
+        const fileDetails = document.createElement('details');
+        fileDetails.dataset.key = fileKey;
+        fileDetails.open = openState.has(fileKey) ? openState.get(fileKey) : true;
+        fileDetails.addEventListener('toggle', () => openState.set(fileKey, fileDetails.open));
+        const fileSummary = document.createElement('summary');
+        fileSummary.textContent = fileName;
+        fileDetails.appendChild(fileSummary);
+
+        sections.forEach((section) => {
+          const sectionKey = `section::${fileName}::${section.label}`;
+          const sectionDetails = document.createElement('details');
+          sectionDetails.dataset.key = sectionKey;
+          sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : true;
+          sectionDetails.addEventListener('toggle', () => openState.set(sectionKey, sectionDetails.open));
+          const sectionSummary = document.createElement('summary');
+          sectionSummary.className = 'section-summary';
+          sectionSummary.textContent = section.label;
+          sectionDetails.appendChild(sectionSummary);
+
+          const list = document.createElement('div');
+          list.className = 'question-list';
+          section.items.forEach((index) => {
+            const data = cards[index];
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'question-node';
+            button.dataset.index = String(index);
+            button.classList.toggle('active', index === activeIndex);
+            button.classList.toggle('has-image', data.hasImage);
+            button.textContent = data.qNumberLabel;
+            button.addEventListener('click', () => {
+              activeIndex = index;
+              renderCard(index);
+              setActiveQuestionNode();
+            });
+            list.appendChild(button);
+          });
+          sectionDetails.appendChild(list);
+          fileDetails.appendChild(sectionDetails);
+        });
+        navTree.appendChild(fileDetails);
+      });
+
+      if (!indexes.includes(activeIndex)) {
+        activeIndex = indexes[0];
+        renderCard(activeIndex);
+      } else {
+        renderCard(activeIndex);
+      }
+    }
+
+    function currentFilteredPosition() {
+      const indexes = filteredIndexes();
+      return { indexes, position: indexes.indexOf(activeIndex) };
+    }
+
+    function moveBy(delta) {
+      const { indexes, position } = currentFilteredPosition();
+      const nextPosition = position + delta;
+      if (nextPosition < 0 || nextPosition >= indexes.length) {
+        return;
+      }
+      activeIndex = indexes[nextPosition];
+      renderCard(activeIndex);
+      setActiveQuestionNode();
+      const activeNode = document.querySelector('.question-node.active');
+      if (activeNode) {
+        activeNode.scrollIntoView({ block: 'nearest' });
+      }
+    }
+
+    function renderCard(index) {
+      const data = index === null ? null : cards[index];
+      cardRoot.replaceChildren();
+      if (!data) {
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.textContent = cards.length ? '표시할 문항이 없습니다.' : 'JSON 파일 또는 폴더를 선택해 주세요.';
+        cardRoot.appendChild(empty);
+        return;
+      }
+
+      const { indexes, position } = currentFilteredPosition();
+      const head = document.createElement('div');
+      head.className = 'card-head';
+      const headTop = document.createElement('div');
+      headTop.className = 'head-top';
+      const headInfo = document.createElement('div');
+      const headNav = document.createElement('div');
+      headNav.className = 'head-nav';
+      const prevButton = document.createElement('button');
+      prevButton.type = 'button';
+      prevButton.className = 'nav-button';
+      prevButton.textContent = '이전문항';
+      prevButton.disabled = position <= 0;
+      prevButton.addEventListener('click', () => moveBy(-1));
+      const nextButton = document.createElement('button');
+      nextButton.type = 'button';
+      nextButton.className = 'nav-button';
+      nextButton.textContent = '다음문항';
+      nextButton.disabled = position < 0 || position >= indexes.length - 1;
+      nextButton.addEventListener('click', () => moveBy(1));
+      headNav.appendChild(prevButton);
+      headNav.appendChild(nextButton);
+
+      const fileLine = document.createElement('div');
+      fileLine.className = 'file-line';
+      setText(fileLine, 'file-name', data.fileName);
+      if (data.sectionNote) {
+        setText(fileLine, 'section-note', data.sectionNote);
+      }
+      headInfo.appendChild(fileLine);
+      setText(headInfo, 'section-title', data.sectionLabel);
+      setText(headInfo, 'q-number', data.qNumberLabel);
+      headTop.appendChild(headInfo);
+      headTop.appendChild(headNav);
+      head.appendChild(headTop);
+      cardRoot.appendChild(head);
+
+      const content = document.createElement('div');
+      content.className = 'content-grid';
+      cardRoot.appendChild(content);
+
+      addImageEditNotesSection(content, data.imageEditNotes);
+      addSection(content, '문제', data.stem);
+      if (data.hasBlocks) {
+        addSection(content, 'blocks', data.blocks);
+      }
+
+      const pairedRow = document.createElement('div');
+      pairedRow.className = 'paired-row';
+      const choicesColumn = document.createElement('div');
+      const answerColumn = document.createElement('div');
+      pairedRow.appendChild(choicesColumn);
+      pairedRow.appendChild(answerColumn);
+      content.appendChild(pairedRow);
+      addChoicesSection(choicesColumn, data.choices);
+      addSection(answerColumn, 'answer_type', data.answerType, 'text-block answer-block');
+      addSection(answerColumn, 'answer', data.answer, 'text-block answer-block');
+      addSection(content, '해설', data.explanation);
+
+      if (window.MathJax) {
+        const typeset = () => window.MathJax.typesetPromise && window.MathJax.typesetPromise([cardRoot]).catch(() => {});
+        if (window.MathJax.startup && window.MathJax.startup.promise) {
+          window.MathJax.startup.promise.then(typeset).catch(() => {});
+        } else {
+          typeset();
+        }
+      }
+    }
+
+    const autoSamplePayload = [{"text":"{\n  \"sections\": [\n    {\n      \"section_title\": \"일차방정식의 계산\",\n      \"note\": \"계산 원리 확인\",\n      \"items\": [\n        {\n          \"q_number\": 1,\n          \"question\": {\n            \"stem\": \"$2x+3=9$ 를 만족하는 $x$의 값을 구하시오.\",\n            \"blocks\": []\n          },\n          \"choices\": [\"1\", \"2\", \"3\", \"4\", \"5\"],\n          \"answer_type\": \"single\",\n          \"answer\": \"3\",\n          \"explanation\": \"$2x=6$ 이므로 $x=3$ 입니다.\",\n          \"image_edit_notes\": []\n        },\n        {\n          \"q_number\": 2,\n          \"question\": {\n            \"stem\": \"다음 식을 정리하시오.\",\n            \"blocks\": [\n              \"$3(a+2)-a$\",\n              \"동류항끼리 모아 계산합니다.\"\n            ]\n          },\n          \"choices\": [\"$2a+6$\", \"$3a+2$\", \"$4a+6$\", \"$2a+3$\"],\n          \"answer_type\": \"text\",\n          \"answer\": \"$2a+6$\",\n          \"explanation\": \"$3(a+2)-a=3a+6-a=2a+6$ 입니다.\",\n          \"image_edit_notes\": []\n        }\n      ]\n    }\n  ]\n}\n","name":"sample_기본.json"},{"text":"{\n  \"sections\": [\n    {\n      \"section_title\": \"그림이 포함된 문항\",\n      \"note\": \"그림 태그와 image_edit_notes 검수\",\n      \"items\": [\n        {\n          \"q_number\": 10,\n          \"question\": {\n            \"stem\": \"[img:circle-01] 원의 반지름이 $4$일 때 넓이를 구하시오.\",\n            \"blocks\": []\n          },\n          \"choices\": [\"$8\\\\pi$\", \"$12\\\\pi$\", \"$16\\\\pi$\", \"$20\\\\pi$\"],\n          \"answer_type\": \"single\",\n          \"answer\": \"$16\\\\pi$\",\n          \"explanation\": \"원의 넓이는 $\\\\pi r^2$ 이므로 $16\\\\pi$ 입니다.\",\n          \"image_edit_notes\": []\n        },\n        {\n          \"q_number\": 11,\n          \"question\": {\n            \"stem\": \"그림을 보고 삼각형의 높이를 판단하시오.\",\n            \"blocks\": [\n              {\n                \"kind\": \"image\",\n                \"value\": \"[img]\"\n              }\n            ]\n          },\n          \"choices\": [\"2\", \"4\", \"6\", \"8\"],\n          \"answer_type\": \"number\",\n          \"answer\": 6,\n          \"explanation\": \"밑변과 수직인 선분의 길이가 높이입니다.\",\n          \"image_edit_notes\": [\n            {\n              \"image\": \"triangle-height\",\n              \"note\": \"높이를 나타내는 수직 표시가 선명해야 합니다.\"\n            }\n          ]\n        }\n      ]\n    }\n  ]\n}\n","name":"sample_그림.json"}];
+    if (location.search.includes('autoload=1')) {
+      loadFiles(autoSamplePayload.map((sample) => ({ name: sample.name, text: async () => sample.text })), '검수샘플');
+    }
+    fileInput.addEventListener('change', () => loadFiles(fileInput.files, '파일'));
+    folderButton.addEventListener('click', async () => {
+      if (!supportsDirectoryPicker()) {
+        folderInput.click();
+        return;
+      }
+      try {
+        const handle = await window.showDirectoryPicker({ mode: 'read' });
+        await saveDirectoryHandle(handle);
+        await refreshRestoreFolderButton();
+        await loadDirectoryHandle(handle);
+      } catch (error) {
+        if (error && error.name === 'AbortError') {
+          return;
+        }
+        loadStatus.textContent = `폴더 선택 중 오류가 발생했습니다: ${error.message}`;
+        loadStatus.classList.add('error');
+      }
+    });
+    folderInput.addEventListener('change', () => loadFiles(folderInput.files, '폴더'));
+    restoreFolderButton.addEventListener('click', async () => {
+      try {
+        const handle = await getDirectoryHandle();
+        if (!handle) {
+          loadStatus.textContent = '기억된 폴더가 없습니다. JSON 폴더 선택을 눌러 주세요.';
+          loadStatus.classList.add('error');
+          return;
+        }
+        await loadDirectoryHandle(handle);
+      } catch (error) {
+        loadStatus.textContent = `최근 폴더를 열지 못했습니다: ${error.message}`;
+        loadStatus.classList.add('error');
+      }
+    });
+    searchInput.addEventListener('input', renderNav);
+    imageOnlyInput.addEventListener('change', renderNav);
+    expandAllButton.addEventListener('click', () => {
+      document.querySelectorAll('details').forEach((details) => {
+        details.open = true;
+        const key = details.dataset.key;
+        if (key) {
+          openState.set(key, true);
+        }
+      });
+    });
+    collapseAllButton.addEventListener('click', () => {
+      document.querySelectorAll('details').forEach((details) => {
+        details.open = false;
+        const key = details.dataset.key;
+        if (key) {
+          openState.set(key, false);
+        }
+      });
+    });
+    resizer.addEventListener('pointerdown', (event) => {
+      if (window.matchMedia('(max-width: 860px)').matches) {
+        return;
+      }
+      resizer.classList.add('dragging');
+      resizer.setPointerCapture(event.pointerId);
+      const move = (moveEvent) => setNavWidth(moveEvent.clientX);
+      const up = () => {
+        resizer.classList.remove('dragging');
+        resizer.removeEventListener('pointermove', move);
+        resizer.removeEventListener('pointerup', up);
+        resizer.removeEventListener('pointercancel', up);
+      };
+      resizer.addEventListener('pointermove', move);
+      resizer.addEventListener('pointerup', up);
+      resizer.addEventListener('pointercancel', up);
+    });
+    window.addEventListener('resize', () => {
+      const saved = Number(localStorage.getItem(STORAGE_KEYS.navWidth));
+      if (Number.isFinite(saved) && saved > 0) {
+        setNavWidth(saved, false);
+      }
+    });
+    restoreNavWidth();
+    renderRecentSelectionHint();
+    refreshRestoreFolderButton();
+    renderNav();
+  </script>
+</body>
+</html>
