@@ -48,16 +48,18 @@
       font-size: 18px;
       font-weight: 700;
       letter-spacing: 0;
+      white-space: nowrap;
     }
     header span { color: var(--muted); font-size: 13px; white-space: nowrap; }
-    .load-bar {
+    .top-bar {
+      flex-wrap: nowrap;
+    }
+    .top-actions {
       display: flex;
-      flex-wrap: wrap;
       align-items: center;
       gap: 8px;
-      padding: 10px 18px;
-      border-bottom: 1px solid var(--line);
-      background: #fafbfc;
+      min-width: 0;
+      flex: 1 1 auto;
     }
     .load-button {
       display: inline-flex;
@@ -83,12 +85,17 @@
       color: var(--muted);
       font-size: 13px;
       line-height: 1.5;
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
     .load-status.error { color: var(--danger); font-weight: 700; }
     main {
-      height: calc(100vh - 105px);
+      height: calc(100vh - 53px);
       display: grid;
       grid-template-columns: minmax(260px, var(--nav-width)) 6px minmax(0, 1fr);
+      background: #fff;
     }
     nav {
       border-right: 1px solid var(--line);
@@ -112,7 +119,7 @@
     }
     .filters {
       position: relative;
-      z-index: 1;
+      z-index: 3;
       display: grid;
       gap: 8px;
       padding: 10px;
@@ -131,9 +138,20 @@
     }
     .filter-row {
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
-      justify-content: space-between;
+      justify-content: flex-start;
       gap: 8px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .filter-row.primary {
+      justify-content: space-between;
+    }
+    .filter-row.primary .image-toggle {
+      flex: 1 1 0;
+    }
+    .result-count {
       color: var(--muted);
       font-size: 12px;
     }
@@ -154,9 +172,49 @@
       background: #dcfce7;
       color: #166534;
     }
+    .image-toggle.compact {
+      flex: 0 0 auto;
+      padding: 4px 7px;
+      font-size: 12px;
+    }
+    .image-size-control {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--ink);
+      white-space: nowrap;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 4px 6px;
+      background: #fff;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .image-size-control input {
+      width: 72px;
+    }
+    .image-size-control.disabled {
+      color: #98a2b3;
+      background: #f2f4f7;
+    }
+    .image-size-control.disabled input {
+      cursor: not-allowed;
+    }
+    .image-size-value {
+      min-width: 34px;
+      color: var(--muted);
+      font-weight: 700;
+      text-align: right;
+    }
     .fold-actions {
       display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
       gap: 6px;
+    }
+    .filter-row.image-controls .image-size-control {
+      flex: 1 1 auto;
+      min-width: 150px;
     }
     .fold-button,
     .nav-button {
@@ -168,6 +226,7 @@
       cursor: pointer;
       font: inherit;
       font-size: 12px;
+      white-space: nowrap;
     }
     .fold-button:hover,
     .nav-button:hover:not(:disabled) { background: #eef2f7; }
@@ -177,6 +236,8 @@
       background: #f2f4f7;
     }
     .tree {
+      position: relative;
+      z-index: 1;
       display: grid;
       gap: 6px;
       padding: 10px 10px 24px;
@@ -246,14 +307,18 @@
       line-height: 1.6;
     }
     article {
+      position: relative;
+      z-index: 0;
       min-width: 0;
       min-height: 0;
       overflow: hidden;
       padding: 0;
       display: flex;
       flex-direction: column;
+      background: #fff;
     }
     .card-head {
+      position: relative;
       z-index: 2;
       flex: 0 0 auto;
       padding: 22px 28px 14px;
@@ -292,14 +357,23 @@
     .section-title {
       font-size: 20px;
       font-weight: 700;
-      margin-bottom: 4px;
       line-height: 1.4;
+    }
+    .title-line {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 4px;
     }
     .q-number {
       color: var(--accent);
       font-weight: 700;
+      font-size: 18px;
     }
     .content-grid {
+      position: relative;
+      z-index: 1;
       display: grid;
       gap: 16px;
       align-items: start;
@@ -308,6 +382,7 @@
       min-height: 0;
       padding: 22px 28px 40px;
       align-content: start;
+      background: #fff;
     }
     .paired-row {
       min-width: 0;
@@ -358,6 +433,25 @@
     .block-line + .block-line {
       margin-top: 6px;
     }
+    .rendered-image {
+      display: block;
+      max-width: min(100%, var(--rendered-image-max-width, 200px));
+      height: auto;
+      margin: 8px 0;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      background: #fff;
+    }
+    .missing-image {
+      display: inline-block;
+      margin: 4px 0;
+      padding: 4px 7px;
+      border: 1px solid #fecaca;
+      border-radius: 4px;
+      background: #fef2f2;
+      color: #b42318;
+      font-weight: 700;
+    }
     .choice-list {
       padding-left: 34px;
     }
@@ -395,6 +489,31 @@
       min-width: 0;
       overflow-wrap: anywhere;
     }
+    .note-heading-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .note-heading-row h2 {
+      margin: 0;
+    }
+    .copy-button,
+    .note-toggle-button {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 3px 7px;
+      background: #fff;
+      color: #344054;
+      cursor: pointer;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .copy-button:hover,
+    .note-toggle-button:hover {
+      background: #eef2f7;
+    }
     @media (max-width: 860px) {
       header {
         align-items: flex-start;
@@ -402,7 +521,7 @@
       }
       main {
         height: auto;
-        min-height: calc(100vh - 135px);
+        min-height: calc(100vh - 82px);
         grid-template-columns: 1fr;
       }
       .resizer {
@@ -435,29 +554,33 @@
   </style>
 </head>
 <body>
-  <header>
+  <header class="top-bar">
     <h1>전체 문항 HTML 뷰어</h1>
+    <div class="top-actions">
+      <button id="folder-button" class="load-button" type="button">JSON 폴더 선택</button>
+      <button id="restore-folder" class="load-button" type="button" disabled>최근 폴더 다시 열기</button>
+      <input id="folder-input" type="file" accept=".json,application/json,image/png,image/jpeg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif" multiple webkitdirectory hidden>
+      <span id="load-status" class="load-status">JSON 폴더를 선택해 주세요.</span>
+      <span id="remember-status" class="load-status"></span>
+    </div>
     <span id="count">파일 0개 / section 0개 / 문항 0개</span>
   </header>
-  <div class="load-bar">
-    <button id="folder-button" class="load-button" type="button">JSON 폴더 선택</button>
-    <button id="restore-folder" class="load-button" type="button" disabled>최근 폴더 다시 열기</button>
-    <input id="folder-input" type="file" accept=".json,application/json" multiple webkitdirectory hidden>
-    <span id="load-status" class="load-status">JSON 폴더를 선택해 주세요.</span>
-    <span id="remember-status" class="load-status"></span>
-  </div>
   <main>
     <nav>
       <div class="filters">
         <input id="search" class="search-input" type="search" placeholder="문항 찾기">
-        <div class="filter-row">
+        <div class="filter-row primary">
           <label id="image-toggle-label" class="image-toggle"><input id="image-only" type="checkbox"> 그림 있는 문항만</label>
           <label id="blocks-toggle-label" class="image-toggle"><input id="blocks-only" type="checkbox"> blocks 있는 문항만</label>
-          <span id="result-count">0개 표시</span>
+        </div>
+        <div class="filter-row image-controls">
+          <label id="render-image-toggle-label" class="image-toggle compact"><input id="render-images" type="checkbox"> 이미지 표시</label>
+          <label id="image-size-control" class="image-size-control disabled">이미지 크기 <input id="image-size" type="range" min="100" max="500" step="20" value="200" disabled><span id="image-size-value" class="image-size-value">200px</span></label>
         </div>
         <div class="fold-actions">
           <button id="expand-all" class="fold-button" type="button">전체 펼치기</button>
           <button id="collapse-all" class="fold-button" type="button">전체 접기</button>
+          <span id="result-count" class="result-count">0개 표시</span>
         </div>
       </div>
       <div id="nav-tree" class="tree"></div>
@@ -466,7 +589,9 @@
     <article id="card"></article>
   </main>
   <script>
-    const IMAGE_TAG_PATTERN = /\[img(?::[^\]]*)?\]/i;
+    const IMAGE_TAG_PATTERN = /\[img(?:\s*:[^\]]*)?\]/i;
+    const IMAGE_TAG_RENDER_PATTERN = /\[img\s*:\s*([^\]]+)\]/gi;
+    const IMAGE_FILE_PATTERN = /\.(png|jpe?g|webp|gif)$/i;
     const STORAGE_KEYS = {
       recentSelection: 'allQuestionHtmlViewer.recentSelection',
       navWidth: 'allQuestionHtmlViewer.navWidth',
@@ -478,6 +603,10 @@
     const MAX_NAV_WIDTH_RATIO = 0.6;
     let cards = [];
     let activeIndex = 0;
+    let imageIndex = new Map();
+    let imageObjectUrls = [];
+    let imageNotesExpanded = false;
+    let sharedContentScrollTop = 0;
 
     const folderInput = document.getElementById('folder-input');
     const folderButton = document.getElementById('folder-button');
@@ -488,8 +617,13 @@
     const cardRoot = document.getElementById('card');
     const searchInput = document.getElementById('search');
     const imageOnlyInput = document.getElementById('image-only');
+    const renderImagesInput = document.getElementById('render-images');
+    const imageSizeControl = document.getElementById('image-size-control');
+    const imageSizeInput = document.getElementById('image-size');
+    const imageSizeValue = document.getElementById('image-size-value');
     const blocksOnlyInput = document.getElementById('blocks-only');
     const imageToggleLabel = document.getElementById('image-toggle-label');
+    const renderImageToggleLabel = document.getElementById('render-image-toggle-label');
     const blocksToggleLabel = document.getElementById('blocks-toggle-label');
     const expandAllButton = document.getElementById('expand-all');
     const collapseAllButton = document.getElementById('collapse-all');
@@ -515,6 +649,31 @@
       const saved = Number(localStorage.getItem(STORAGE_KEYS.navWidth));
       if (Number.isFinite(saved) && saved > 0) {
         setNavWidth(saved, false);
+      }
+    }
+
+    function updateImageSize() {
+      const size = Number(imageSizeInput.value) || 200;
+      document.documentElement.style.setProperty('--rendered-image-max-width', `${size}px`);
+      imageSizeValue.textContent = `${size}px`;
+    }
+
+    function updateImageSizeAvailability() {
+      imageSizeInput.disabled = !renderImagesInput.checked;
+      imageSizeControl.classList.toggle('disabled', !renderImagesInput.checked);
+    }
+
+    function saveSharedScrollPosition() {
+      const content = cardRoot.querySelector('.content-grid');
+      if (content) {
+        sharedContentScrollTop = content.scrollTop;
+      }
+    }
+
+    function restoreSharedScrollPosition() {
+      const content = cardRoot.querySelector('.content-grid');
+      if (content) {
+        content.scrollTop = sharedContentScrollTop;
       }
     }
 
@@ -616,11 +775,63 @@
       }
     }
 
-    async function filesFromDirectoryHandle(handle) {
+    function isImageFile(file) {
+      return IMAGE_FILE_PATTERN.test(file?.name || '');
+    }
+
+    function imageLookupKey(name) {
+      return String(name || '')
+        .trim()
+        .replace(/^["']|["']$/g, '')
+        .replace(/[\u200b-\u200d\ufeff]/g, '')
+        .split(/[\\/]/)
+        .pop()
+        .normalize('NFC')
+        .toLowerCase();
+    }
+
+    function imageLookupKeys(name) {
+      const raw = String(name || '')
+        .trim()
+        .replace(/^["']|["']$/g, '')
+        .replace(/[\u200b-\u200d\ufeff]/g, '')
+        .replace(/\\/g, '/');
+      const normalized = raw.normalize('NFC').toLowerCase();
+      const base = imageLookupKey(raw);
+      return [...new Set([normalized, base].filter(Boolean))];
+    }
+
+    function clearImageIndex() {
+      imageObjectUrls.forEach((url) => URL.revokeObjectURL(url));
+      imageObjectUrls = [];
+      imageIndex = new Map();
+    }
+
+    function buildImageIndex(files) {
+      clearImageIndex();
+      files.filter(isImageFile).forEach((file) => {
+        const url = URL.createObjectURL(file);
+        imageObjectUrls.push(url);
+        imageLookupKeys(file.viewerRelativePath || file.webkitRelativePath || file.name).forEach((key) => {
+          if (!imageIndex.has(key)) {
+            imageIndex.set(key, url);
+          }
+        });
+      });
+    }
+
+    async function filesFromDirectoryHandle(handle, prefix = '') {
       const files = [];
       for await (const entry of handle.values()) {
-        if (entry.kind === 'file' && entry.name.toLowerCase().endsWith('.json')) {
-          files.push(await entry.getFile());
+        if (entry.kind === 'file') {
+          const file = await entry.getFile();
+          Object.defineProperty(file, 'viewerRelativePath', {
+            value: `${prefix}${entry.name}`,
+            configurable: true,
+          });
+          files.push(file);
+        } else if (entry.kind === 'directory') {
+          files.push(...await filesFromDirectoryHandle(entry, `${prefix}${entry.name}/`));
         }
       }
       return files;
@@ -652,9 +863,47 @@
       section.appendChild(heading);
       const body = document.createElement('div');
       body.className = className;
-      body.textContent = text || '-';
+      appendTextWithImages(body, text || '-');
       section.appendChild(body);
       parent.appendChild(section);
+    }
+
+    function appendTextWithImages(parent, text) {
+      const value = String(text || '-');
+      if (!renderImagesInput.checked) {
+        parent.textContent = value;
+        return;
+      }
+
+      let cursor = 0;
+      let matched = false;
+      IMAGE_TAG_RENDER_PATTERN.lastIndex = 0;
+      for (const match of value.matchAll(IMAGE_TAG_RENDER_PATTERN)) {
+        matched = true;
+        if (match.index > cursor) {
+          parent.appendChild(document.createTextNode(value.slice(cursor, match.index)));
+        }
+        const fileName = match[1].trim();
+        const imageUrl = imageLookupKeys(fileName).map((key) => imageIndex.get(key)).find(Boolean);
+        if (imageUrl) {
+          const image = document.createElement('img');
+          image.className = 'rendered-image';
+          image.src = imageUrl;
+          image.alt = fileName;
+          parent.appendChild(image);
+        } else {
+          const missing = document.createElement('span');
+          missing.className = 'missing-image';
+          missing.textContent = `이미지 없음: ${fileName}`;
+          parent.appendChild(missing);
+        }
+        cursor = match.index + match[0].length;
+      }
+      if (!matched) {
+        parent.textContent = value;
+      } else if (cursor < value.length) {
+        parent.appendChild(document.createTextNode(value.slice(cursor)));
+      }
     }
 
     function blockDisplayValue(block) {
@@ -673,12 +922,12 @@
         block.lines.forEach((line) => {
           const lineNode = document.createElement('div');
           lineNode.className = 'block-line';
-          lineNode.textContent = displayValue(line);
+          appendTextWithImages(lineNode, displayValue(line));
           parent.appendChild(lineNode);
         });
         return;
       }
-      parent.textContent = blockDisplayValue(block);
+      appendTextWithImages(parent, blockDisplayValue(block));
     }
 
     function addBlocksSection(parent, blocks) {
@@ -826,7 +1075,9 @@
     }
 
     async function loadFiles(fileList, folderName = '폴더') {
-      const jsonFiles = sortJsonFiles(Array.from(fileList).filter((file) => file.name.toLowerCase().endsWith('.json')));
+      const allFiles = Array.from(fileList);
+      buildImageIndex(allFiles);
+      const jsonFiles = sortJsonFiles(allFiles.filter((file) => file.name.toLowerCase().endsWith('.json')));
       const loadedCards = [];
       const errors = [];
       let sectionCount = 0;
@@ -845,10 +1096,12 @@
       openState.clear();
       searchInput.value = '';
       imageOnlyInput.checked = false;
+      renderImagesInput.checked = false;
       blocksOnlyInput.checked = false;
       count.textContent = formatStats(jsonFiles.length, sectionCount, cards.length);
       saveRecentSelection(folderName, jsonFiles.length, sectionCount, cards.length);
-      const message = `${folderName} 폴더를 열었습니다.`;
+      const imageCount = new Set(imageIndex.values()).size;
+      const message = `${folderName} 폴더를 열었습니다. 이미지 ${imageCount}개를 찾았습니다.`;
       loadStatus.textContent = errors.length ? `${message} / 오류 ${errors.length}개` : message;
       loadStatus.classList.toggle('error', errors.length > 0);
       renderNav();
@@ -888,12 +1141,49 @@
       } else {
         choices.forEach((choice) => {
           const item = document.createElement('li');
-          item.textContent = displayValue(choice);
+          appendTextWithImages(item, displayValue(choice));
           list.appendChild(item);
         });
       }
       section.appendChild(list);
       parent.appendChild(section);
+    }
+
+    function imageFileNameFromValue(value) {
+      const text = displayValue(value);
+      const tagMatch = /\[img\s*:\s*([^\]]+)\]/i.exec(text);
+      const rawName = tagMatch ? tagMatch[1] : text;
+      const fileName = String(rawName || '').trim().replace(/^["']|["']$/g, '').split(/[\\/]/).pop();
+      return fileName || '';
+    }
+
+    function imageStemFromValue(value) {
+      const fileName = imageFileNameFromValue(value);
+      return fileName.replace(/\.[^.]+$/, '');
+    }
+
+    async function copyText(text, button) {
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          const area = document.createElement('textarea');
+          area.value = text;
+          area.style.position = 'fixed';
+          area.style.opacity = '0';
+          document.body.appendChild(area);
+          area.select();
+          document.execCommand('copy');
+          area.remove();
+        }
+        const original = button.textContent;
+        button.textContent = '복사됨';
+        setTimeout(() => { button.textContent = original; }, 900);
+      } catch {
+        const original = button.textContent;
+        button.textContent = '복사 실패';
+        setTimeout(() => { button.textContent = original; }, 1200);
+      }
     }
 
     function addNoteRow(parent, key, value) {
@@ -904,7 +1194,19 @@
       keyNode.textContent = key;
       const valueNode = document.createElement('div');
       valueNode.className = 'note-value';
-      valueNode.textContent = displayValue(value);
+      appendTextWithImages(valueNode, displayValue(value));
+      if (key === 'image') {
+        const stem = imageStemFromValue(value);
+        if (stem) {
+          const copyButton = document.createElement('button');
+          copyButton.type = 'button';
+          copyButton.className = 'copy-button';
+          copyButton.textContent = '파일명 복사';
+          copyButton.addEventListener('click', () => copyText(stem, copyButton));
+          valueNode.appendChild(document.createTextNode(' '));
+          valueNode.appendChild(copyButton);
+        }
+      }
       row.appendChild(keyNode);
       row.appendChild(valueNode);
       parent.appendChild(row);
@@ -934,7 +1236,7 @@
       } else {
         const valueNode = document.createElement('div');
         valueNode.className = 'note-value';
-        valueNode.textContent = displayValue(entry);
+        appendTextWithImages(valueNode, displayValue(entry));
         item.appendChild(valueNode);
       }
       parent.appendChild(item);
@@ -945,9 +1247,25 @@
         return;
       }
       const section = document.createElement('section');
+      const headingRow = document.createElement('div');
+      headingRow.className = 'note-heading-row';
       const heading = document.createElement('h2');
       heading.textContent = 'image_edit_notes';
-      section.appendChild(heading);
+      const toggleButton = document.createElement('button');
+      toggleButton.type = 'button';
+      toggleButton.className = 'note-toggle-button';
+      toggleButton.textContent = imageNotesExpanded ? '접기' : '펼치기';
+      toggleButton.addEventListener('click', () => {
+        imageNotesExpanded = !imageNotesExpanded;
+        renderCard(activeIndex);
+      });
+      headingRow.appendChild(heading);
+      headingRow.appendChild(toggleButton);
+      section.appendChild(headingRow);
+      if (!imageNotesExpanded) {
+        parent.appendChild(section);
+        return;
+      }
       const body = document.createElement('div');
       body.className = 'text-block note-block';
       if (Array.isArray(imageEditNotes)) {
@@ -1004,6 +1322,8 @@
       const indexes = filteredIndexes();
       resultCount.textContent = `${indexes.length}개 표시`;
       imageToggleLabel.classList.toggle('active', imageOnlyInput.checked);
+      renderImageToggleLabel.classList.toggle('active', renderImagesInput.checked);
+      updateImageSizeAvailability();
       blocksToggleLabel.classList.toggle('active', blocksOnlyInput.checked);
       navTree.replaceChildren();
       if (!cards.length) {
@@ -1098,6 +1418,7 @@
     }
 
     function renderCard(index) {
+      saveSharedScrollPosition();
       const data = index === null ? null : cards[index];
       cardRoot.replaceChildren();
       if (!data) {
@@ -1138,8 +1459,11 @@
         setText(fileLine, 'section-note', data.sectionNote);
       }
       headInfo.appendChild(fileLine);
-      setText(headInfo, 'section-title', data.sectionLabel);
-      setText(headInfo, 'q-number', data.qNumberLabel);
+      const titleLine = document.createElement('div');
+      titleLine.className = 'title-line';
+      setText(titleLine, 'section-title', data.sectionLabel);
+      setText(titleLine, 'q-number', data.qNumberLabel);
+      headInfo.appendChild(titleLine);
       headTop.appendChild(headInfo);
       headTop.appendChild(headNav);
       head.appendChild(headTop);
@@ -1147,6 +1471,9 @@
 
       const content = document.createElement('div');
       content.className = 'content-grid';
+      content.addEventListener('scroll', () => {
+        sharedContentScrollTop = content.scrollTop;
+      });
       cardRoot.appendChild(content);
 
       addImageEditNotesSection(content, data.imageEditNotes);
@@ -1166,6 +1493,8 @@
       addSection(answerColumn, 'answer_type', data.answerType, 'text-block answer-block');
       addSection(answerColumn, 'answer', data.answer, 'text-block answer-block');
       addSection(content, '해설', data.explanation);
+      restoreSharedScrollPosition();
+      requestAnimationFrame(restoreSharedScrollPosition);
 
       if (window.MathJax) {
         const typeset = () => window.MathJax.typesetPromise && window.MathJax.typesetPromise([cardRoot]).catch(() => {});
@@ -1215,6 +1544,17 @@
     });
     searchInput.addEventListener('input', renderNav);
     imageOnlyInput.addEventListener('change', renderNav);
+    renderImagesInput.addEventListener('change', () => {
+      renderImageToggleLabel.classList.toggle('active', renderImagesInput.checked);
+      updateImageSizeAvailability();
+      renderCard(activeIndex);
+    });
+    imageSizeInput.addEventListener('input', () => {
+      updateImageSize();
+      if (renderImagesInput.checked) {
+        renderCard(activeIndex);
+      }
+    });
     blocksOnlyInput.addEventListener('change', renderNav);
     expandAllButton.addEventListener('click', () => {
       document.querySelectorAll('details').forEach((details) => {
@@ -1258,6 +1598,8 @@
       }
     });
     restoreNavWidth();
+    updateImageSize();
+    updateImageSizeAvailability();
     renderRecentSelectionHint();
     refreshRestoreFolderButton();
     renderNav();
