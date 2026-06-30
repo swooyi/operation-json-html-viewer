@@ -558,7 +558,7 @@
     <h1>전체 문항 HTML 뷰어</h1>
     <div class="top-actions">
       <button id="folder-button" class="load-button" type="button">JSON 폴더 선택</button>
-      <button id="restore-folder" class="load-button" type="button" disabled>최근 폴더 다시 열기</button>
+      <button id="restore-folder" class="load-button" type="button" disabled>최근 폴더 다시 읽기</button>
       <input id="folder-input" type="file" accept=".json,application/json,image/png,image/jpeg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif" multiple webkitdirectory hidden>
       <span id="load-status" class="load-status">JSON 폴더를 선택해 주세요.</span>
       <span id="remember-status" class="load-status"></span>
@@ -574,8 +574,8 @@
           <label id="blocks-toggle-label" class="image-toggle"><input id="blocks-only" type="checkbox"> blocks 있는 문항만</label>
         </div>
         <div class="filter-row image-controls">
-          <label id="render-image-toggle-label" class="image-toggle compact"><input id="render-images" type="checkbox"> 이미지 표시</label>
-          <label id="image-size-control" class="image-size-control disabled">이미지 크기 <input id="image-size" type="range" min="100" max="500" step="20" value="200" disabled><span id="image-size-value" class="image-size-value">200px</span></label>
+          <label id="render-image-toggle-label" class="image-toggle compact"><input id="render-images" type="checkbox" checked> 이미지 표시</label>
+          <label id="image-size-control" class="image-size-control">이미지 크기 <input id="image-size" type="range" min="100" max="500" step="20" value="200"><span id="image-size-value" class="image-size-value">200px</span></label>
         </div>
         <div class="fold-actions">
           <button id="expand-all" class="fold-button" type="button">전체 펼치기</button>
@@ -837,7 +837,7 @@
       return files;
     }
 
-    async function loadDirectoryHandle(handle) {
+    async function loadDirectoryHandle(handle, options = {}) {
       const granted = await ensureReadPermission(handle);
       if (!granted) {
         loadStatus.textContent = '최근 폴더 권한이 필요합니다. JSON 폴더 선택을 다시 눌러 주세요.';
@@ -845,7 +845,7 @@
         return;
       }
       const files = await filesFromDirectoryHandle(handle);
-      await loadFiles(files, handle.name || '폴더');
+      await loadFiles(files, handle.name || '폴더', options);
     }
 
     function setText(parent, className, text) {
@@ -1013,6 +1013,26 @@
       return `${String(qNumber || '-')}번`;
     }
 
+    function cardKey(data) {
+      if (!data) {
+        return '';
+      }
+      return [
+        data.fileName,
+        data.sectionIndex,
+        data.sectionLabel,
+        data.qNumberLabel,
+      ].join('::');
+    }
+
+    function captureNavState() {
+      return {
+        activeKey: cardKey(cards[activeIndex]),
+        openEntries: Array.from(openState.entries()),
+        treeScrollTop: navTree.scrollTop,
+      };
+    }
+
     function buildCardsFromPayload(fileName, payload) {
       const result = [];
       const sections = Array.isArray(payload?.sections) ? payload.sections : [];
@@ -1074,7 +1094,9 @@
       return [...files].sort((left, right) => fileNameCollator.compare(fileSortKey(left), fileSortKey(right)));
     }
 
-    async function loadFiles(fileList, folderName = '폴더') {
+    async function loadFiles(fileList, folderName = '폴더', options = {}) {
+      const preserveState = Boolean(options.preserveState);
+      const savedState = preserveState ? (options.state || captureNavState()) : null;
       const allFiles = Array.from(fileList);
       buildImageIndex(allFiles);
       const jsonFiles = sortJsonFiles(allFiles.filter((file) => file.name.toLowerCase().endsWith('.json')));
@@ -1092,12 +1114,19 @@
         }
       }
       cards = loadedCards;
-      activeIndex = 0;
-      openState.clear();
-      searchInput.value = '';
-      imageOnlyInput.checked = false;
-      renderImagesInput.checked = false;
-      blocksOnlyInput.checked = false;
+      if (preserveState && savedState) {
+        openState.clear();
+        savedState.openEntries.forEach(([key, value]) => openState.set(key, value));
+        const restoredIndex = cards.findIndex((card) => cardKey(card) === savedState.activeKey);
+        activeIndex = restoredIndex >= 0 ? restoredIndex : 0;
+      } else {
+        activeIndex = 0;
+        openState.clear();
+        searchInput.value = '';
+        imageOnlyInput.checked = false;
+        renderImagesInput.checked = true;
+        blocksOnlyInput.checked = false;
+      }
       count.textContent = formatStats(jsonFiles.length, sectionCount, cards.length);
       saveRecentSelection(folderName, jsonFiles.length, sectionCount, cards.length);
       const imageCount = new Set(imageIndex.values()).size;
@@ -1105,6 +1134,11 @@
       loadStatus.textContent = errors.length ? `${message} / 오류 ${errors.length}개` : message;
       loadStatus.classList.toggle('error', errors.length > 0);
       renderNav();
+      if (preserveState && savedState) {
+        requestAnimationFrame(() => {
+          navTree.scrollTop = savedState.treeScrollTop;
+        });
+      }
     }
 
     function searchText(data) {
@@ -1441,12 +1475,14 @@
       prevButton.type = 'button';
       prevButton.className = 'nav-button';
       prevButton.textContent = '이전문항';
+      prevButton.title = '이전문항 (Alt+Q)';
       prevButton.disabled = position <= 0;
       prevButton.addEventListener('click', () => moveBy(-1));
       const nextButton = document.createElement('button');
       nextButton.type = 'button';
       nextButton.className = 'nav-button';
       nextButton.textContent = '다음문항';
+      nextButton.title = '다음문항 (Alt+W)';
       nextButton.disabled = position < 0 || position >= indexes.length - 1;
       nextButton.addEventListener('click', () => moveBy(1));
       headNav.appendChild(prevButton);
@@ -1536,7 +1572,10 @@
           loadStatus.classList.add('error');
           return;
         }
-        await loadDirectoryHandle(handle);
+        await loadDirectoryHandle(handle, {
+          preserveState: true,
+          state: captureNavState(),
+        });
       } catch (error) {
         loadStatus.textContent = `최근 폴더를 열지 못했습니다: ${error.message}`;
         loadStatus.classList.add('error');
@@ -1556,6 +1595,23 @@
       }
     });
     blocksOnlyInput.addEventListener('change', renderNav);
+    document.addEventListener('keydown', (event) => {
+      if (!event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+        return;
+      }
+      const target = event.target;
+      if (target && ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName)) {
+        return;
+      }
+      const key = event.key.toLowerCase();
+      if (key === 'q') {
+        event.preventDefault();
+        moveBy(-1);
+      } else if (key === 'w') {
+        event.preventDefault();
+        moveBy(1);
+      }
+    });
     expandAllButton.addEventListener('click', () => {
       document.querySelectorAll('details').forEach((details) => {
         details.open = true;
