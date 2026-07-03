@@ -261,6 +261,10 @@
     .manual-button:hover {
       background: #1d4ed8;
     }
+    .manual-button-spacer {
+      visibility: hidden;
+      pointer-events: none;
+    }
     .manual-overlay {
       position: fixed;
       inset: 0;
@@ -1572,6 +1576,7 @@
       <a class="page-switch-link" href="question-viewer.html?autoload=1" title="문항뷰어로 이동"><h1>통계</h1></a>
     </div>
     <div class="top-actions">
+      <span class="load-button manual-button manual-button-spacer" aria-hidden="true">?</span>
       <button id="folder-button" class="load-button" type="button">폴더 선택</button>
       <div class="recent-folder-control">
         <button id="recent-folder-button" class="load-button recent-folder-button" type="button" disabled aria-expanded="false">
@@ -1980,7 +1985,7 @@
         row.total += 1;
         row.imageCount += card.hasImage ? 1 : 0;
         row.blocksCount += card.hasBlocks ? 1 : 0;
-        row.warningCount += hasWarnings(card) ? 1 : 0;
+        row.warningCount += hasRedWarnings(card) ? 1 : 0;
         const numbers = answerNumbers(card.rawItem?.answer);
         numbers.forEach((number) => {
           answerSet.add(number);
