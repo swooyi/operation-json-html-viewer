@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>연산 JSON 뷰어</title>
+  <title>통계 - 연산 JSON 뷰어</title>
   <script>
     window.MathJax = {
       tex: {
@@ -79,6 +79,15 @@
       line-height: 1;
     }
     .home-link:hover { background: #eef2f7; }
+    .page-switch-link {
+      color: inherit;
+      text-decoration: none;
+    }
+    .page-switch-link:hover {
+      color: var(--accent);
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
     header span { color: var(--muted); font-size: 13px; white-space: nowrap; }
     .top-bar {
       flex-wrap: nowrap;
@@ -587,66 +596,140 @@
       background: #eff6ff;
       color: #1d4ed8;
     }
-    .viewer-main[hidden] {
-      display: none;
-    }
-    body.home-page {
-      min-height: 100vh;
-      display: grid;
-      align-content: center;
-      justify-items: center;
-      gap: 22px;
-      padding: 32px 18px;
-    }
-    body.home-page header {
-      width: min(720px, 100%);
-      min-height: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      justify-items: center;
-      gap: 22px;
-      padding: 0;
-      border-bottom: 0;
-      background: transparent;
-    }
-    body.home-page .header-title {
-      justify-content: center;
-      justify-self: stretch;
-      width: 100%;
-    }
-    body.home-page .home-link {
-      display: none;
-    }
-    body.home-page header h1 {
-      color: #0f172a;
-      font-size: 32px;
-      line-height: 1.2;
-    }
-    body.home-page .top-actions {
-      justify-content: center;
-      flex-wrap: wrap;
-      flex: none;
-      width: 100%;
-    }
-    body.home-page #restore-folder {
-      display: none;
-    }
-    body.home-page #load-status,
-    body.home-page #remember-status,
-    body.home-page #count {
-      display: none;
-    }
-    body.home-page .home-main {
-      width: min(720px, 100%);
-      height: auto;
-      min-height: 0;
+    .stats-main {
+      min-height: calc(100vh - 53px);
       display: block;
-      padding: 0;
+      grid-template-columns: none;
+      padding: 6px;
+      background: #fff;
     }
-    body.home-page .home-panel {
-      width: 100%;
+    .stats-panel {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
     }
-    body.home-page .home-panel h2 {
+    .stats-panel h2 {
+      margin: 0;
+      color: #0f172a;
+      font-size: 20px;
+      line-height: 1.35;
+    }
+    .stats-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+    .stats-empty {
+      border: 1px solid #dbe3ef;
+      border-radius: 8px;
+      padding: 28px 18px;
+      color: var(--muted);
+      text-align: center;
+      background: #f8fafc;
+    }
+    .stats-table-wrap {
+      max-height: calc(100vh - 142px);
+      overflow: auto;
+      border: 1px solid #aeb8c6;
+      border-radius: 0;
+      background: #fff;
+    }
+    .stats-table-wrap[hidden] {
+      display: none;
+    }
+    .stats-table {
+      width: max-content;
+      min-width: 0;
+      border-collapse: collapse;
+      table-layout: auto;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .stats-table th,
+    .stats-table td {
+      border-right: 1px solid #d8dde6;
+      border-bottom: 1px solid #d8dde6;
+      padding: 3px 6px;
+      text-align: left;
+      vertical-align: top;
+      white-space: nowrap;
+    }
+    .stats-table th {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background: #f8fafc;
+      color: #475467;
+      font-weight: 800;
+      text-align: center;
+    }
+    .stats-table tr.file-start td {
+      border-top: 2px solid #8f9bad;
+    }
+    .stats-table tr:hover td {
+      background: #eaf2ff;
+    }
+    .stats-table .file-cell {
+      width: max-content;
+      min-width: 0;
+    }
+    .stats-table .section-cell {
+      width: max-content;
+      min-width: 0;
+    }
+    .stats-table .count-cell {
+      width: 54px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .stats-table .answer-count-cell {
+      width: 48px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .stats-table .image-total-cell,
+    .stats-table .blocks-total-cell,
+    .stats-table .warning-total-cell {
+      width: 72px;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+    .stats-table td.answer-warning {
+      background: #fff3cd;
+      color: #7a4d00;
+      font-weight: 800;
+    }
+    .stats-table td.answer-danger {
+      background: #fde2df;
+      color: #b42318;
+      font-weight: 800;
+    }
+    .stats-table tr:hover td.answer-warning {
+      background: #ffe9a6;
+    }
+    .stats-table tr:hover td.answer-danger {
+      background: #ffc9c3;
+    }
+    .stats-table td.warning-total-cell.answer-danger {
+      background: #fde2df;
+      color: #b42318;
+      font-weight: 800;
+    }
+    .stats-table tr:hover td.warning-total-cell.answer-danger {
+      background: #ffc9c3;
+    }
+    .stats-table .section-link-cell {
+      cursor: pointer;
+      color: #1d4ed8;
+    }
+    .stats-table .section-link-cell:hover,
+    .stats-table .section-link-cell:focus {
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      outline: none;
+    }
+    .viewer-main[hidden] {
       display: none;
     }
     nav {
@@ -1482,14 +1565,13 @@
     }
   </style>
 </head>
-<body class="home-page">
+<body>
   <header class="top-bar">
     <div class="header-title">
       <a class="home-link" href="index.html" aria-label="메인페이지로 이동" title="메인페이지로 이동">⌂</a>
-      <h1>연산 JSON 뷰어</h1>
+      <a class="page-switch-link" href="question-viewer.html?autoload=1" title="문항뷰어로 이동"><h1>통계</h1></a>
     </div>
     <div class="top-actions">
-      <button id="manual-button" class="load-button manual-button" type="button" title="사용 메뉴얼 보기" aria-label="사용 메뉴얼 열기">?</button>
       <button id="folder-button" class="load-button" type="button">폴더 선택</button>
       <div class="recent-folder-control">
         <button id="recent-folder-button" class="load-button recent-folder-button" type="button" disabled aria-expanded="false">
@@ -1505,12 +1587,16 @@
     </div>
     <span id="count">파일 0개 / section 0개 / 문항 0개 / 이미지 0개</span>
   </header>
-  <main class="home-main">
-    <section class="home-panel" aria-labelledby="home-title">
-      <h2 id="home-title">연산 JSON 뷰어</h2>
-      <div class="home-page-links" aria-label="페이지 이동">
-        <a class="home-page-link" href="question-viewer.html">문항뷰어</a>
-        <a class="home-page-link" href="stats.html">통계</a>
+  <main class="stats-main">
+    <section class="stats-panel" aria-labelledby="stats-title">
+      <h2 id="stats-title">section별 정답 개수 분포</h2>
+      <p class="stats-note">JSON 폴더를 선택하면 파일명, section별 문항수, 이미지와 blocks 포함 문항수, 오류/경고 문항수, 정답 번호 개수를 집계합니다.</p>
+      <div id="stats-empty" class="stats-empty">JSON 폴더를 선택해 주세요.</div>
+      <div id="stats-table-wrap" class="stats-table-wrap" hidden>
+        <table class="stats-table">
+          <thead id="stats-table-head"></thead>
+          <tbody id="stats-table-body"></tbody>
+        </table>
       </div>
     </section>
   </main>
@@ -1552,26 +1638,36 @@
       <div class="manual-body">
         <div class="manual-summary-card">
           <h3>처음 사용하는 순서</h3>
-          <p>새 작업 폴더를 사용할 때는 폴더를 먼저 선택하고, 최근 작업한 폴더가 있으면 최근 방문 폴더 목록에서 바로 다시 열 수 있습니다.</p>
+          <p>연산 JSON 뷰어는 작업 폴더를 불러온 뒤, 왼쪽에서 문항을 고르고 오른쪽에서 내용과 이미지를 확인하는 도구입니다.</p>
           <div class="manual-flow" aria-label="사용 흐름">
             <span class="manual-step">폴더 선택</span>
             <span class="manual-arrow" aria-hidden="true">→</span>
-            <span class="manual-step green">화면 선택</span>
+            <span class="manual-step">문항 선택</span>
+            <span class="manual-arrow" aria-hidden="true">→</span>
+            <span class="manual-step green">내용·이미지 확인</span>
+            <span class="manual-arrow" aria-hidden="true">→</span>
+            <span class="manual-step">JSON/이미지 수정</span>
+            <span class="manual-arrow" aria-hidden="true">→</span>
+            <span class="manual-step">다시 읽기(R)</span>
+            <span class="manual-arrow" aria-hidden="true">→</span>
+            <span class="manual-step red">오류 확인</span>
           </div>
-          <div class="manual-highlight"><strong>폴더 선택</strong> 옆 버튼은 최근 방문한 폴더 목록입니다. 같은 폴더에서 다시 작업할 때 이 목록에서 폴더를 고르면 됩니다.</div>
+          <div class="manual-highlight">작업 중 JSON 파일이나 이미지 파일을 수정한 경우, <strong>다시 읽기</strong>를 누르면 변경된 JSON 내용과 이미지 파일을 다시 불러와 화면에서 바로 확인할 수 있습니다.</div>
         </div>
 
         <div class="manual-sections">
           <details class="manual-section" open>
             <summary>1. 빠른 시작</summary>
             <div class="manual-section-content">
-              <p>새로운 폴더에서 작업할 때는 <strong>폴더 선택</strong>을 누른 뒤 <strong>문항뷰어</strong> 또는 <strong>통계</strong> 화면을 선택합니다.</p>
-              <p>최근 작업한 폴더에서 작업할 때는 <strong>폴더 선택</strong> 옆의 최근 방문 폴더 목록에서 폴더를 고른 뒤 화면을 선택합니다.</p>
+              <p><strong>폴더 선택</strong>을 눌러 연산 JSON 파일과 이미지 파일이 들어있는 폴더를 선택합니다. 폴더를 선택하면 상단에 <code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code>가 표시되고, 왼쪽에는 JSON 파일, section, 문항 번호가 트리 형태로 나타납니다.</p>
+              <p>왼쪽에서 문항을 선택하면 오른쪽에서 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 확인할 수 있습니다.</p>
               <div class="manual-highlight">전달받은 작업 폴더의 구조를 유지한 상태로 사용해 주세요. JSON 안의 <code>[img: 파일명]</code> 정보와 실제 이미지 파일이 연결되어야 이미지가 정상 표시됩니다.</div>
               <ol>
-                <li>새 작업이면 <code>폴더 선택</code>을 누르고 작업 폴더를 선택합니다.</li>
-                <li>최근 작업이면 <code>최근 폴더</code> 목록에서 작업 폴더를 선택합니다.</li>
-                <li><code>문항뷰어</code> 또는 <code>통계</code>를 눌러 필요한 화면으로 이동합니다.</li>
+                <li><code>폴더 선택</code>을 누릅니다.</li>
+                <li>연산 JSON 파일과 이미지 파일이 들어있는 작업 폴더를 선택합니다.</li>
+                <li>왼쪽 목록에서 JSON 파일, section, 문항 번호를 차례로 확인합니다.</li>
+                <li>확인할 문항을 클릭합니다.</li>
+                <li>오른쪽 상세 화면에서 문제, 보기, 정답, 해설, 이미지 표시 상태를 확인합니다.</li>
               </ol>
             </div>
           </details>
@@ -1587,7 +1683,7 @@
                 <tbody>
                   <tr><td><code>폴더 선택</code></td><td>JSON 파일과 이미지 파일이 들어있는 폴더를 처음 불러옵니다.</td></tr>
                   <tr><td><code>최근 폴더</code></td><td>이전에 열었던 폴더 목록을 다시 엽니다. 브라우저 권한이 필요할 수 있습니다.</td></tr>
-                  <tr><td><code>다시 읽기</code></td><td>현재 폴더를 다시 불러와 JSON 파일 수정, 이미지 파일 추가, 이미지 파일 수정, 이미지 파일 교체 내용을 갱신해서 확인합니다. 작업 중 파일을 고친 뒤 화면에 바로 반영하고 싶을 때 사용합니다.</td></tr>
+                  <tr><td><code>다시 읽기</code></td><td>현재 폴더를 다시 불러와 JSON 파일 수정, 이미지 파일 추가, 이미지 파일 수정, 이미지 파일 교체 내용을 갱신해서 확인합니다. 작업 중 파일을 고친 뒤 화면에 바로 반영하고 싶을 때 사용합니다. 단축키는 <code>R</code>입니다.</td></tr>
                   <tr><td>상단 개수 표시</td><td><code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code> 형식으로 현재 불러온 데이터를 보여줍니다.</td></tr>
                   <tr><td>왼쪽 목록</td><td>JSON 파일, section, 문항 번호 순서로 표시됩니다.</td></tr>
                   <tr><td>오른쪽 상세 화면</td><td>선택한 문항의 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 보여줍니다.</td></tr>
@@ -1697,6 +1793,7 @@
       recentSelection: 'allQuestionHtmlViewer.recentSelection',
       recentFolders: 'allQuestionHtmlViewer.recentFolders',
       navWidth: 'allQuestionHtmlViewer.navWidth',
+      sectionTarget: 'allQuestionHtmlViewer.sectionTarget',
     };
     const DB_NAME = 'all-question-html-viewer';
     const DB_STORE = 'handles';
@@ -1755,6 +1852,10 @@
     const manualOverlay = document.getElementById('manual-overlay');
     const manualClose = document.getElementById('manual-close');
     const homePageLinks = document.querySelectorAll('.home-page-link');
+    const statsEmpty = document.getElementById('stats-empty');
+    const statsTableWrap = document.getElementById('stats-table-wrap');
+    const statsTableHead = document.getElementById('stats-table-head');
+    const statsTableBody = document.getElementById('stats-table-body');
 
     function clampNavWidth(width) {
       const maxWidth = Math.max(MIN_NAV_WIDTH, Math.floor(window.innerWidth * MAX_NAV_WIDTH_RATIO));
@@ -1810,8 +1911,201 @@
       return document.body.classList.contains('home-page') && path === 'index.html';
     }
 
+    function isStatsPage() {
+      return Boolean(statsTableWrap);
+    }
+
     function formatStats(fileCount, sectionCount, questionCount, imageCount) {
       return `파일 ${fileCount}개 / section ${sectionCount}개 / 문항 ${questionCount}개 / 이미지 ${imageCount}개`;
+    }
+
+    function payloadMeta(payload) {
+      return {
+        subject: String(payload?.subject ?? '').trim() || '-',
+        unitLarge: String(payload?.unit_large ?? '').trim() || '-',
+        unitMedium: String(payload?.unit_medium ?? '').trim() || '-',
+        unitSmall: String(payload?.unit_small ?? '').trim() || '-',
+      };
+    }
+
+    function cardMeta(card) {
+      return {
+        fileName: card.fileName || '-',
+        subject: card.subject || '-',
+        unitLarge: card.unitLarge || '-',
+        unitMedium: card.unitMedium || '-',
+        unitSmall: card.unitSmall || '-',
+      };
+    }
+
+    function cleanSectionTitle(label) {
+      return String(label || '-').trim() || '-';
+    }
+
+    function answerNumbers(value) {
+      const raw = Array.isArray(value) ? value.join(' ') : String(value ?? '');
+      const normalized = raw
+        .replace(/[①]/g, '1')
+        .replace(/[②]/g, '2')
+        .replace(/[③]/g, '3')
+        .replace(/[④]/g, '4')
+        .replace(/[⑤]/g, '5')
+        .replace(/[⑥]/g, '6')
+        .replace(/[⑦]/g, '7')
+        .replace(/[⑧]/g, '8')
+        .replace(/[⑨]/g, '9')
+        .replace(/[⑩]/g, '10');
+      return [...new Set((normalized.match(/\d+/g) || []).map(Number).filter((number) => number > 0))];
+    }
+
+    function buildAnswerDistributionRows() {
+      const rows = new Map();
+      const answerSet = new Set([1, 2, 3, 4, 5]);
+      cards.forEach((card) => {
+        const key = `${card.fileName}::${card.sectionIndex}::${card.sectionLabel}`;
+        if (!rows.has(key)) {
+          rows.set(key, {
+            ...cardMeta(card),
+            sectionIndex: card.sectionIndex,
+            sectionLabel: card.sectionLabel,
+            sectionTitle: cleanSectionTitle(card.sectionLabel),
+            counts: new Map(),
+            total: 0,
+            imageCount: 0,
+            blocksCount: 0,
+            warningCount: 0,
+          });
+        }
+        const row = rows.get(key);
+        row.total += 1;
+        row.imageCount += card.hasImage ? 1 : 0;
+        row.blocksCount += card.hasBlocks ? 1 : 0;
+        row.warningCount += hasWarnings(card) ? 1 : 0;
+        const numbers = answerNumbers(card.rawItem?.answer);
+        numbers.forEach((number) => {
+          answerSet.add(number);
+          row.counts.set(number, (row.counts.get(number) || 0) + 1);
+        });
+      });
+      return {
+        answerNumbers: [...answerSet].sort((left, right) => left - right),
+        rows: [...rows.values()],
+      };
+    }
+
+    function openQuestionViewerForSection(row) {
+      sessionStorage.setItem(STORAGE_KEYS.sectionTarget, JSON.stringify({
+        fileName: row.fileName,
+        sectionIndex: row.sectionIndex,
+        sectionLabel: row.sectionLabel,
+      }));
+      window.location.href = 'question-viewer.html?autoload=1';
+    }
+
+    function renderStatsPage() {
+      if (!statsEmpty || !statsTableWrap || !statsTableHead || !statsTableBody) {
+        return;
+      }
+      if (!cards.length) {
+        statsEmpty.hidden = false;
+        statsTableWrap.hidden = true;
+        statsTableHead.replaceChildren();
+        statsTableBody.replaceChildren();
+        return;
+      }
+      const { answerNumbers: columns, rows } = buildAnswerDistributionRows();
+      statsEmpty.hidden = true;
+      statsTableWrap.hidden = false;
+      statsTableHead.replaceChildren();
+      statsTableBody.replaceChildren();
+
+      const headerRow = document.createElement('tr');
+      [
+        ['파일', 'file-cell'],
+        ['section_title', 'section-cell'],
+        ['문항수', 'count-cell'],
+        ['img 수', 'image-total-cell'],
+        ['blocks 수', 'blocks-total-cell'],
+        ['오류/경고', 'warning-total-cell'],
+      ]
+        .forEach(([label, className]) => {
+          const cell = document.createElement('th');
+          cell.className = className;
+          cell.textContent = label;
+          headerRow.appendChild(cell);
+        });
+      columns.forEach((number) => {
+        const cell = document.createElement('th');
+        cell.className = 'answer-count-cell';
+        cell.textContent = `${number}번`;
+        headerRow.appendChild(cell);
+      });
+      statsTableHead.appendChild(headerRow);
+
+      let previousFileName = '';
+      rows.forEach((row) => {
+        const tableRow = document.createElement('tr');
+        const isFileStart = row.fileName !== previousFileName;
+        tableRow.classList.toggle('file-start', isFileStart);
+        previousFileName = row.fileName;
+        [
+          isFileStart ? `▣ ${row.fileName}` : '',
+          row.sectionTitle,
+          row.total,
+          row.imageCount,
+          row.blocksCount,
+          row.warningCount,
+        ]
+          .forEach((value, index) => {
+            const cell = document.createElement('td');
+            cell.textContent = String(value);
+            if (index === 0) {
+              cell.className = 'file-cell';
+            }
+            if (index === 1) {
+              cell.className = 'section-cell section-link-cell';
+              cell.tabIndex = 0;
+              cell.setAttribute('role', 'link');
+              cell.title = '문항뷰어에서 이 section 열기';
+              cell.addEventListener('click', () => openQuestionViewerForSection(row));
+              cell.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  openQuestionViewerForSection(row);
+                }
+              });
+            }
+            if (index === 2) {
+              cell.className = 'count-cell';
+            }
+            if (index === 3) {
+              cell.className = 'image-total-cell';
+            }
+            if (index === 4) {
+              cell.className = 'blocks-total-cell';
+            }
+            if (index === 5) {
+              cell.className = 'warning-total-cell';
+              if (Number(value) > 0) {
+                cell.classList.add('answer-danger');
+              }
+            }
+            tableRow.appendChild(cell);
+          });
+        columns.forEach((number) => {
+          const cell = document.createElement('td');
+          const value = row.counts.get(number) || 0;
+          cell.className = 'answer-count-cell';
+          if (value === 0 || value >= 9) {
+            cell.classList.add('answer-danger');
+          } else if (value <= 2 || value >= 7) {
+            cell.classList.add('answer-warning');
+          }
+          cell.textContent = String(value);
+          tableRow.appendChild(cell);
+        });
+        statsTableBody.appendChild(tableRow);
+      });
     }
 
     function readRecentFolders() {
@@ -2548,6 +2842,7 @@
     function buildCardsFromPayload(fileName, payload) {
       const result = [];
       const sections = Array.isArray(payload?.sections) ? payload.sections : [];
+      const meta = payloadMeta(payload);
       let expectedQNumber = 1;
       sections.forEach((section, sectionIndex) => {
         if (!section || typeof section !== 'object') {
@@ -2579,6 +2874,7 @@
           }));
           result.push({
             fileName,
+            ...meta,
             sectionIndex,
             sectionLabel: sectionLabel(sectionIndex, sectionTitle),
             sectionNote,
@@ -2704,6 +3000,14 @@
 
     function updateLoadStatus(folderName, errors) {
       currentFolderName = folderName;
+      if (isStatsPage()) {
+        loadStatus.textContent = '';
+        loadStatus.classList.remove('error', 'clickable', 'filter-active');
+        loadStatus.setAttribute('role', 'status');
+        loadStatus.tabIndex = -1;
+        loadStatus.title = '';
+        return;
+      }
       const redCount = errors.length + cards.filter(hasRedWarnings).length;
       if (!redCount) {
         errorOnlyNav = false;
@@ -2788,6 +3092,7 @@
       saveRecentSelection(folderName, jsonFiles.length, sectionCount, cards.length, options.recentId || currentFolderId);
       updateLoadStatus(folderName, errors);
       renderNav();
+      renderStatsPage();
       if (preserveState && savedState) {
         requestAnimationFrame(() => {
           navTree.scrollTop = savedState.treeScrollTop;
@@ -3303,7 +3608,7 @@
         const fileKey = `file::${fileName}`;
         const fileDetails = document.createElement('details');
         fileDetails.dataset.key = fileKey;
-        fileDetails.open = openState.has(fileKey) ? openState.get(fileKey) : true;
+        fileDetails.open = openState.has(fileKey) ? openState.get(fileKey) : false;
         fileDetails.addEventListener('toggle', () => openState.set(fileKey, fileDetails.open));
         const fileSummary = document.createElement('summary');
         fileSummary.className = 'file-summary';
@@ -3314,7 +3619,7 @@
           const sectionKey = `section::${fileName}::${section.label}`;
           const sectionDetails = document.createElement('details');
           sectionDetails.dataset.key = sectionKey;
-          sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : true;
+          sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : false;
           sectionDetails.addEventListener('toggle', () => openState.set(sectionKey, sectionDetails.open));
           const sectionSummary = document.createElement('summary');
           sectionSummary.className = 'section-summary';
@@ -3579,52 +3884,10 @@
         return;
       }
       manualOverlay.hidden = true;
-      manualButton.focus();
+      manualButton?.focus();
     }
 
-    function setupHomeManual() {
-      if (!isMainPage()) {
-        return;
-      }
-      const manualBody = manualOverlay.querySelector('.manual-body');
-      document.getElementById('manual-title').textContent = '연산 JSON 뷰어 메인 도움말';
-      manualBody.replaceChildren();
-
-      const summary = document.createElement('div');
-      summary.className = 'manual-summary-card';
-      summary.innerHTML = `
-        <h3>처음 사용하는 순서</h3>
-        <p>새 작업 폴더는 폴더를 먼저 선택하고, 최근 작업한 폴더는 최근 방문 폴더 목록에서 다시 연 뒤 화면을 선택합니다.</p>
-        <div class="manual-flow" aria-label="사용 흐름">
-          <span class="manual-step">폴더 선택</span>
-          <span class="manual-arrow" aria-hidden="true">→</span>
-          <span class="manual-step green">화면 선택</span>
-        </div>
-      `;
-      manualBody.appendChild(summary);
-
-      const sections = document.createElement('div');
-      sections.className = 'manual-sections';
-      sections.innerHTML = `
-        <details class="manual-section" open>
-          <summary>1. 메인 버튼 기능</summary>
-          <div class="manual-section-content">
-            <table class="manual-table">
-              <tbody>
-                <tr><td><code>폴더 선택</code></td><td>JSON 파일과 이미지 파일이 들어있는 작업 폴더를 선택합니다.</td></tr>
-                <tr><td><code>최근 폴더</code></td><td><code>폴더 선택</code> 옆에 있는 최근 방문 폴더 목록입니다. 이전에 열었던 작업 폴더를 다시 선택합니다.</td></tr>
-                <tr><td><code>문항뷰어</code></td><td>문항 단위로 문제, 보기, 정답, 해설, 이미지를 확인합니다.</td></tr>
-                <tr><td><code>통계</code></td><td>파일별, section별 문항수와 정답 번호 개수 분포를 확인합니다.</td></tr>
-              </tbody>
-            </table>
-            <div class="manual-highlight">폴더가 선택된 상태에서 화면 버튼을 누르면 해당 페이지로 이동하면서 현재 폴더를 다시 불러옵니다.</div>
-          </div>
-        </details>
-      `;
-      manualBody.appendChild(sections);
-    }
-
-    manualButton.addEventListener('click', (event) => {
+    manualButton?.addEventListener('click', (event) => {
       event.stopPropagation();
       openManual();
     });
@@ -3819,13 +4082,13 @@
       }
     });
     async function initializePage() {
-      setupHomeManual();
       restoreNavWidth();
       updateImageSize();
       updateImageSizeAvailability();
       renderRecentSelectionHint();
       await refreshRestoreFolderButton();
       renderNav();
+      renderStatsPage();
       if (new URLSearchParams(window.location.search).get('autoload') === '1' && !isMainPage()) {
         await reloadCurrentFolder({
           preserveState: true,
