@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>문항뷰어 - 연산 JSON 뷰어</title>
+  <title>문항 뷰 - 연산 JSON 뷰어</title>
   <script>
     window.MathJax = {
       tex: {
@@ -80,14 +80,61 @@
       line-height: 1;
     }
     .home-link:hover { background: #eef2f7; }
-    .page-switch-link {
-      color: inherit;
-      text-decoration: none;
+    .page-switcher {
+      position: relative;
+      display: inline-flex;
     }
-    .page-switch-link:hover {
+    .page-switch-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+    }
+    .page-switch-button:hover,
+    .page-switch-button[aria-expanded="true"] {
       color: var(--accent);
-      text-decoration: underline;
-      text-underline-offset: 4px;
+    }
+    .page-switch-caret {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+    }
+    .page-switch-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      z-index: 30;
+      min-width: 150px;
+      display: grid;
+      gap: 2px;
+      border: 1px solid #dbe3ef;
+      border-radius: 6px;
+      padding: 6px;
+      background: #fff;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+    }
+    .page-switch-menu[hidden] { display: none; }
+    .page-switch-menu a {
+      border-radius: 4px;
+      padding: 8px 10px;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .page-switch-menu a:hover {
+      background: #f1f5f9;
+      color: var(--accent);
+    }
+    .page-switch-menu a[aria-current="page"] {
+      background: #eff6ff;
+      color: #1d4ed8;
     }
     header span { color: var(--muted); font-size: 13px; white-space: nowrap; }
     .top-bar {
@@ -1394,7 +1441,17 @@
   <header class="top-bar">
     <div class="header-title">
       <a class="home-link" href="index.html" aria-label="메인페이지로 이동" title="메인페이지로 이동">⌂</a>
-      <a class="page-switch-link" href="stats.html?autoload=1" title="통계로 이동"><h1>문항뷰어</h1></a>
+      <div class="page-switcher">
+        <button id="page-switch-button" class="page-switch-button" type="button" aria-haspopup="true" aria-expanded="false">
+          <h1>문항 뷰</h1>
+          <span class="page-switch-caret" aria-hidden="true">▼</span>
+        </button>
+        <div id="page-switch-menu" class="page-switch-menu" hidden>
+          <a href="question-viewer.html?autoload=1" aria-current="page">문항 뷰</a>
+          <a href="section-viewer.html?autoload=1">소단원 뷰</a>
+          <a href="stats.html?autoload=1">통계</a>
+        </div>
+      </div>
     </div>
     <div class="top-actions">
       <button id="manual-button" class="load-button manual-button" type="button" title="사용 매뉴얼 보기" aria-label="사용 매뉴얼 열기">?</button>
@@ -1445,13 +1502,13 @@
   <div id="manual-overlay" class="manual-overlay" hidden>
     <section class="manual-dialog" role="dialog" aria-modal="true" aria-labelledby="manual-title">
       <div class="manual-header">
-        <h2 id="manual-title">문항뷰어 사용 매뉴얼</h2>
+        <h2 id="manual-title">문항 뷰 사용 매뉴얼</h2>
         <button id="manual-close" class="manual-close" type="button" aria-label="사용 매뉴얼 닫기">×</button>
       </div>
       <div class="manual-body">
         <div class="manual-summary-card">
           <h3>처음 사용하는 순서</h3>
-          <p>문항뷰어는 왼쪽 문항 목록에서 문항을 고르고 오른쪽 상세 화면에서 내용과 이미지를 확인하는 화면입니다.</p>
+          <p>문항 뷰는 왼쪽 문항 목록에서 문항을 고르고 오른쪽 상세 화면에서 내용과 이미지를 확인하는 화면입니다.</p>
           <div class="manual-flow" aria-label="사용 흐름">
             <span class="manual-step">문항 선택</span>
             <span class="manual-arrow" aria-hidden="true">→</span>
@@ -1491,7 +1548,7 @@
                 </thead>
                 <tbody>
                   <tr><td><code>홈 아이콘</code></td><td>메인페이지로 돌아갑니다.</td></tr>
-                  <tr><td><code>?</code></td><td>문항뷰어 사용 매뉴얼을 엽니다.</td></tr>
+                  <tr><td><code>?</code></td><td>문항 뷰 사용 매뉴얼을 엽니다.</td></tr>
                   <tr><td><code>폴더 선택</code></td><td>JSON 파일과 이미지 파일이 들어있는 폴더를 처음 불러옵니다.</td></tr>
                   <tr><td><code>최근 폴더</code></td><td>이전에 열었던 폴더 목록을 다시 엽니다. 브라우저 권한이 필요할 수 있습니다.</td></tr>
                   <tr><td><code>다시 읽기</code></td><td>현재 폴더를 다시 불러와 JSON 파일 수정, 이미지 파일 추가, 이미지 파일 수정, 이미지 파일 교체 내용을 갱신해서 확인합니다. 작업 중 파일을 고친 뒤 화면에 바로 반영하고 싶을 때 사용합니다. 단축키는 <code>R</code>입니다.</td></tr>
@@ -1639,6 +1696,7 @@
       recentFolders: 'allQuestionHtmlViewer.recentFolders',
       navWidth: 'allQuestionHtmlViewer.navWidth',
       sectionTarget: 'allQuestionHtmlViewer.sectionTarget',
+      questionViewState: 'allQuestionHtmlViewer.questionViewState',
     };
     const DB_NAME = 'all-question-html-viewer';
     const DB_STORE = 'handles';
@@ -1654,6 +1712,7 @@
     let imageNotesExpanded = false;
     let rawJsonVisible = false;
     let sharedContentScrollTop = 0;
+    let skipNextSharedScrollSave = false;
     let currentFolderId = '';
     let currentFolderName = '폴더';
     let loadErrors = [];
@@ -1662,6 +1721,8 @@
 
     const folderInput = document.getElementById('folder-input');
     const folderButton = document.getElementById('folder-button');
+    const pageSwitchButton = document.getElementById('page-switch-button');
+    const pageSwitchMenu = document.getElementById('page-switch-menu');
     const recentFolderButton = document.getElementById('recent-folder-button');
     const recentFolderButtonLabel = document.getElementById('recent-folder-button-label');
     const recentFolderMenu = document.getElementById('recent-folder-menu');
@@ -1777,6 +1838,47 @@
 
     function currentRecentFolder() {
       return readRecentFolders().find((folder) => folder.id === currentFolderId) || null;
+    }
+
+    function normalizeNavState(state) {
+      if (!state || typeof state !== 'object') {
+        return null;
+      }
+      return {
+        folderId: String(state.folderId || ''),
+        folderName: String(state.folderName || ''),
+        activeKey: String(state.activeKey || ''),
+        openEntries: Array.isArray(state.openEntries) ? state.openEntries : [],
+        treeScrollTop: Number(state.treeScrollTop) || 0,
+        contentScrollTop: Number(state.contentScrollTop) || 0,
+      };
+    }
+
+    function readQuestionViewState() {
+      try {
+        return normalizeNavState(JSON.parse(localStorage.getItem(STORAGE_KEYS.questionViewState) || 'null'));
+      } catch {
+        return null;
+      }
+    }
+
+    function writeQuestionViewState() {
+      const state = captureNavState();
+      if (!state.activeKey) {
+        return;
+      }
+      localStorage.setItem(STORAGE_KEYS.questionViewState, JSON.stringify(state));
+    }
+
+    function savedQuestionViewStateForCurrentFolder() {
+      const state = readQuestionViewState();
+      if (!state) {
+        return null;
+      }
+      if (currentFolderId && state.folderId !== currentFolderId) {
+        return null;
+      }
+      return state;
     }
 
     function saveRecentSelection(folderName, fileCount, sectionCount, questionCount, id = currentFolderId) {
@@ -1908,6 +2010,17 @@
     function closeRecentFolderMenu() {
       recentFolderMenu.hidden = true;
       recentFolderButton.setAttribute('aria-expanded', 'false');
+    }
+
+    function closePageSwitchMenu() {
+      pageSwitchMenu.hidden = true;
+      pageSwitchButton.setAttribute('aria-expanded', 'false');
+    }
+
+    function togglePageSwitchMenu() {
+      const nextOpen = pageSwitchMenu.hidden;
+      pageSwitchMenu.hidden = !nextOpen;
+      pageSwitchButton.setAttribute('aria-expanded', String(nextOpen));
     }
 
     function supportsDirectoryPicker() {
@@ -2496,10 +2609,14 @@
     }
 
     function captureNavState() {
+      saveSharedScrollPosition();
       return {
+        folderId: currentFolderId,
+        folderName: currentFolderName,
         activeKey: cardKey(cards[activeIndex]),
         openEntries: Array.from(openState.entries()),
         treeScrollTop: navTree.scrollTop,
+        contentScrollTop: sharedContentScrollTop,
       };
     }
 
@@ -2740,14 +2857,17 @@
         blocksOnlyInput.checked = false;
         missingImageOnlyInput.checked = false;
         latexWarningOnlyInput.checked = false;
+        sharedContentScrollTop = 0;
       } else if (preserveState && savedState) {
         openState.clear();
         savedState.openEntries.forEach(([key, value]) => openState.set(key, value));
         const restoredIndex = cards.findIndex((card) => cardKey(card) === savedState.activeKey);
         activeIndex = restoredIndex >= 0 ? restoredIndex : 0;
+        sharedContentScrollTop = savedState.contentScrollTop || 0;
       } else {
         activeIndex = 0;
         openState.clear();
+        sharedContentScrollTop = 0;
         errorOnlyNav = false;
         searchInput.value = '';
         imageOnlyInput.checked = false;
@@ -2760,12 +2880,15 @@
       count.textContent = formatStats(jsonFiles.length, sectionCount, cards.length, imageCount);
       saveRecentSelection(folderName, jsonFiles.length, sectionCount, cards.length, options.recentId || currentFolderId);
       updateLoadStatus(folderName, errors);
+      skipNextSharedScrollSave = preserveState && Boolean(savedState);
       renderNav();
       if (preserveState && savedState) {
         requestAnimationFrame(() => {
           navTree.scrollTop = savedState.treeScrollTop;
+          restoreSharedScrollPosition();
         });
       }
+      writeQuestionViewState();
     }
 
     function searchText(data) {
@@ -3277,7 +3400,10 @@
         const fileDetails = document.createElement('details');
         fileDetails.dataset.key = fileKey;
         fileDetails.open = openState.has(fileKey) ? openState.get(fileKey) : false;
-        fileDetails.addEventListener('toggle', () => openState.set(fileKey, fileDetails.open));
+        fileDetails.addEventListener('toggle', () => {
+          openState.set(fileKey, fileDetails.open);
+          writeQuestionViewState();
+        });
         const fileSummary = document.createElement('summary');
         fileSummary.className = 'file-summary';
         appendSummaryContent(fileSummary, displayFileName(fileName), fileWarningBundle(fileName, indexes));
@@ -3288,7 +3414,10 @@
           const sectionDetails = document.createElement('details');
           sectionDetails.dataset.key = sectionKey;
           sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : false;
-          sectionDetails.addEventListener('toggle', () => openState.set(sectionKey, sectionDetails.open));
+          sectionDetails.addEventListener('toggle', () => {
+            openState.set(sectionKey, sectionDetails.open);
+            writeQuestionViewState();
+          });
           const sectionSummary = document.createElement('summary');
           sectionSummary.className = 'section-summary';
           appendSummaryContent(sectionSummary, section.label, sectionWarningBundle(section.items));
@@ -3314,6 +3443,7 @@
               activeIndex = index;
               renderCard(index);
               setActiveQuestionNode();
+              writeQuestionViewState();
             });
             list.appendChild(button);
           });
@@ -3347,6 +3477,7 @@
       activeIndex = indexes[nextPosition];
       renderCard(activeIndex);
       setActiveQuestionNode();
+      writeQuestionViewState();
       const activeNode = document.querySelector('.question-node.active');
       if (activeNode) {
         activeNode.scrollIntoView({ block: 'nearest' });
@@ -3429,7 +3560,11 @@
     }
 
     function renderCard(index) {
-      saveSharedScrollPosition();
+      if (skipNextSharedScrollSave) {
+        skipNextSharedScrollSave = false;
+      } else {
+        saveSharedScrollPosition();
+      }
       const data = index === null ? null : cards[index];
       clearMathJaxTypeset(cardRoot);
       cardRoot.replaceChildren();
@@ -3595,16 +3730,30 @@
       event.stopPropagation();
       toggleRecentFolderMenu();
     });
+    pageSwitchButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      closeRecentFolderMenu();
+      closeFilterPanel();
+      togglePageSwitchMenu();
+    });
+    pageSwitchMenu.addEventListener('click', (event) => {
+      if (event.target.closest('a')) {
+        writeQuestionViewState();
+      }
+      event.stopPropagation();
+    });
     recentFolderMenu.addEventListener('click', (event) => {
       event.stopPropagation();
     });
     document.addEventListener('click', () => {
+      closePageSwitchMenu();
       closeRecentFolderMenu();
       closeFilterPanel();
     });
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         closeManual();
+        closePageSwitchMenu();
         closeRecentFolderMenu();
         closeFilterPanel();
       }
@@ -3705,6 +3854,7 @@
           openState.set(key, true);
         }
       });
+      writeQuestionViewState();
     });
     collapseAllButton.addEventListener('click', () => {
       document.querySelectorAll('nav details').forEach((details) => {
@@ -3714,6 +3864,7 @@
           openState.set(key, false);
         }
       });
+      writeQuestionViewState();
     });
     resizer.addEventListener('pointerdown', (event) => {
       if (window.matchMedia('(max-width: 860px)').matches) {
@@ -3738,6 +3889,7 @@
         setNavWidth(saved, false);
       }
     });
+    window.addEventListener('pagehide', writeQuestionViewState);
     async function initializePage() {
       restoreNavWidth();
       updateImageSize();
@@ -3748,7 +3900,7 @@
       if (new URLSearchParams(window.location.search).get('autoload') === '1') {
         await reloadCurrentFolder({
           preserveState: true,
-          state: captureNavState(),
+          state: savedQuestionViewStateForCurrentFolder() || captureNavState(),
         });
         window.history.replaceState(null, '', window.location.pathname);
       }
