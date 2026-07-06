@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>연산 JSON 뷰어</title>
+  <title>소단원 뷰 - 연산 JSON 뷰어</title>
   <script>
     window.MathJax = {
       tex: {
@@ -79,6 +79,62 @@
       line-height: 1;
     }
     .home-link:hover { background: #eef2f7; }
+    .page-switcher {
+      position: relative;
+      display: inline-flex;
+    }
+    .page-switch-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 0;
+      padding: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      font: inherit;
+    }
+    .page-switch-button:hover,
+    .page-switch-button[aria-expanded="true"] {
+      color: var(--accent);
+    }
+    .page-switch-caret {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1;
+    }
+    .page-switch-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      z-index: 30;
+      min-width: 150px;
+      display: grid;
+      gap: 2px;
+      border: 1px solid #dbe3ef;
+      border-radius: 6px;
+      padding: 6px;
+      background: #fff;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.16);
+    }
+    .page-switch-menu[hidden] { display: none; }
+    .page-switch-menu a {
+      border-radius: 4px;
+      padding: 8px 10px;
+      color: var(--ink);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .page-switch-menu a:hover {
+      background: #f1f5f9;
+      color: var(--accent);
+    }
+    .page-switch-menu a[aria-current="page"] {
+      background: #eff6ff;
+      color: #1d4ed8;
+    }
     header span { color: var(--muted); font-size: 13px; white-space: nowrap; }
     .top-bar {
       flex-wrap: nowrap;
@@ -234,23 +290,6 @@
     .recent-folder-delete:hover {
       background: #fee2e2;
       color: var(--danger);
-    }
-    .manual-button {
-      width: 34px;
-      min-width: 34px;
-      height: 34px;
-      justify-content: center;
-      border-color: #1d4ed8;
-      border-radius: 50%;
-      padding: 0;
-      background: var(--accent);
-      color: #fff;
-      font-size: 18px;
-      font-weight: 800;
-      line-height: 1;
-    }
-    .manual-button:hover {
-      background: #1d4ed8;
     }
     .manual-overlay {
       position: fixed;
@@ -539,115 +578,6 @@
       display: grid;
       grid-template-columns: minmax(260px, var(--nav-width)) 6px minmax(0, 1fr);
       background: #fff;
-    }
-    .home-main {
-      min-height: calc(100vh - 53px);
-      display: grid;
-      place-items: center;
-      padding: 32px 18px;
-      background: #fff;
-    }
-    .home-panel {
-      width: min(620px, 100%);
-      display: grid;
-      justify-items: center;
-      gap: 22px;
-      text-align: center;
-    }
-    .home-panel h2 {
-      margin: 0;
-      color: #0f172a;
-      font-size: 30px;
-      line-height: 1.2;
-      letter-spacing: 0;
-    }
-    .home-page-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    .home-page-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-width: 116px;
-      min-height: 40px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 9px 14px;
-      background: #fff;
-      color: #0f172a;
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-    }
-    .home-page-link:hover {
-      border-color: #bfdbfe;
-      background: #eff6ff;
-      color: #1d4ed8;
-    }
-    .viewer-main[hidden] {
-      display: none;
-    }
-    body.home-page {
-      min-height: 100vh;
-      display: grid;
-      align-content: center;
-      justify-items: center;
-      gap: 22px;
-      padding: 32px 18px;
-    }
-    body.home-page header {
-      width: min(720px, 100%);
-      min-height: 0;
-      display: grid;
-      grid-template-columns: 1fr;
-      justify-items: center;
-      gap: 22px;
-      padding: 0;
-      border-bottom: 0;
-      background: transparent;
-    }
-    body.home-page .header-title {
-      justify-content: center;
-      justify-self: stretch;
-      width: 100%;
-    }
-    body.home-page .home-link {
-      display: none;
-    }
-    body.home-page header h1 {
-      color: #0f172a;
-      font-size: 32px;
-      line-height: 1.2;
-    }
-    body.home-page .top-actions {
-      justify-content: center;
-      flex-wrap: wrap;
-      flex: none;
-      width: 100%;
-    }
-    body.home-page #restore-folder {
-      display: none;
-    }
-    body.home-page #load-status,
-    body.home-page #remember-status,
-    body.home-page #count {
-      display: none;
-    }
-    body.home-page .home-main {
-      width: min(720px, 100%);
-      height: auto;
-      min-height: 0;
-      display: block;
-      padding: 0;
-    }
-    body.home-page .home-panel {
-      width: 100%;
-    }
-    body.home-page .home-panel h2 {
-      display: none;
     }
     nav {
       border-right: 1px solid var(--line);
@@ -1232,6 +1162,311 @@
       align-content: start;
       background: #fff;
     }
+    .exam-toolbar {
+      position: relative;
+      z-index: 2;
+      flex: 0 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+      background: #fff;
+    }
+    .exam-toolbar-group {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-width: 0;
+    }
+    .exam-file-title {
+      min-width: 0;
+      color: #0f172a;
+      font-size: 14px;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .exam-page-status,
+    .exam-zoom-status {
+      min-width: 64px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+      white-space: nowrap;
+    }
+    .exam-page-input {
+      width: 54px;
+      min-height: 30px;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 4px 6px;
+      color: #0f172a;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      text-align: center;
+    }
+    .exam-page-total {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .exam-stage {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow: auto;
+      padding: 24px;
+      background: #e9eef5;
+    }
+    .exam-page-frame {
+      width: calc(210mm * var(--exam-zoom, 1));
+      height: calc(297mm * var(--exam-zoom, 1));
+      margin: 0 auto;
+    }
+    .pdf-page {
+      width: 210mm;
+      height: 297mm;
+      overflow: hidden;
+      padding: 14mm 14mm 15mm;
+      background: #fff;
+      color: #111;
+      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
+      font-size: 10pt;
+      line-height: 1.6;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
+      transform: scale(var(--exam-zoom, 1));
+      transform-origin: top left;
+      display: flex;
+      flex-direction: column;
+    }
+    .pdf-page-header {
+      margin-bottom: 7mm;
+      border-bottom: 0.5pt solid #d7e2ec;
+      padding-bottom: 3mm;
+    }
+    .pdf-unit-line {
+      display: flex;
+      gap: 1.8em;
+      color: #4e6679;
+      font-size: 9.5pt;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .pdf-title {
+      margin-top: 1.5mm;
+      color: #245c86;
+      font-size: 18pt;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+    .pdf-section-title {
+      break-inside: avoid;
+      padding: 6pt;
+      border: 0.5pt solid #d8e3ed;
+      background: #f3f7fb;
+      color: #4e6679;
+      font-size: 11pt;
+      font-weight: 700;
+      margin-bottom: 3.8mm;
+    }
+    .pdf-problem-columns,
+    .pdf-answer-columns {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8mm;
+    }
+    .pdf-problem-columns::before,
+    .pdf-answer-columns::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      border-left: 0.4pt solid #d7e2ec;
+      transform: translateX(-0.2pt);
+      pointer-events: none;
+    }
+    .pdf-column {
+      min-width: 0;
+    }
+    .pdf-item {
+      break-inside: avoid;
+      margin-bottom: 10mm;
+    }
+    .pdf-answer-item {
+      break-inside: avoid;
+      margin-bottom: 4mm;
+    }
+    .pdf-question-line {
+      display: grid;
+      grid-template-columns: 2.2em minmax(0, 1fr);
+      align-items: start;
+      gap: 0.2em;
+    }
+    .pdf-question-no {
+      color: #245c86;
+      font-weight: 700;
+    }
+    .pdf-question-body,
+    .pdf-answer-body,
+    .pdf-explanation,
+    .pdf-choice-content,
+    .pdf-block-content {
+      min-width: 0;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    .pdf-blocks {
+      display: grid;
+      gap: 2mm;
+      margin: 1.5mm 0 0 2.2em;
+    }
+    .pdf-box-block {
+      width: 72%;
+      margin: 0 auto;
+      padding: 6pt;
+      border: 0.5pt solid #222;
+      text-align: center;
+    }
+    .pdf-statement-label {
+      margin-left: 1.8em;
+      font-weight: 700;
+    }
+    .pdf-statement-box {
+      width: 100%;
+      padding: 6pt;
+      border: 0.5pt solid #222;
+      text-align: left;
+    }
+    .pdf-centered-lines {
+      text-align: center;
+    }
+    .pdf-table {
+      width: 98%;
+      margin: 1mm auto;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .pdf-table td {
+      border: 1px solid #222;
+      padding: 4pt;
+      text-align: center;
+      vertical-align: middle;
+    }
+    .pdf-image-wrap {
+      margin: 1mm 0;
+      text-align: center;
+    }
+    .pdf-image-wrap img {
+      max-width: min(95%, var(--rendered-image-max-width, 200px));
+      height: auto;
+      background: #fff;
+    }
+    .pdf-missing-image {
+      display: grid;
+      justify-items: center;
+      gap: 1mm;
+      margin: 1mm auto;
+      padding: 3mm;
+      border: 0.5pt dashed #c2410c;
+      color: #9a3412;
+      background: #fff7ed;
+      text-align: center;
+    }
+    .pdf-choices {
+      display: grid;
+      gap: 0.6mm 4%;
+      list-style: none;
+      padding: 0;
+      margin: 1.5mm 0 0 2.2em;
+    }
+    .pdf-choices.layout-3 {
+      grid-template-columns: repeat(3, 31%);
+      justify-content: space-between;
+    }
+    .pdf-choices.layout-2 {
+      grid-template-columns: repeat(2, 48%);
+      justify-content: space-between;
+    }
+    .pdf-choices.layout-1 {
+      grid-template-columns: 1fr;
+    }
+    .pdf-choice {
+      display: grid;
+      grid-template-columns: 1.35em minmax(0, 1fr);
+      align-items: start;
+      min-width: 0;
+    }
+    .pdf-answer-header {
+      margin-bottom: 7mm;
+      border-bottom: 0.5pt solid #d7e2ec;
+      padding-bottom: 3mm;
+      color: #245c86;
+      font-size: 18pt;
+      font-weight: 700;
+    }
+    .pdf-answer-line strong:first-child {
+      color: #245c86;
+    }
+    .pdf-page-footer {
+      flex: 0 0 auto;
+      margin-top: 3mm;
+      color: #111;
+      font-size: 8pt;
+      line-height: 1;
+      text-align: center;
+    }
+    .pdf-measure-root {
+      position: fixed;
+      left: -10000px;
+      top: 0;
+      width: 210mm;
+      height: auto;
+      visibility: hidden;
+      pointer-events: none;
+      z-index: -1;
+    }
+    @media print {
+      body,
+      main,
+      article {
+        display: block;
+        height: auto;
+        overflow: visible;
+      }
+      header,
+      nav,
+      .resizer,
+      .exam-toolbar {
+        display: none;
+      }
+      .pdf-measure-root {
+        display: none;
+      }
+      .exam-stage {
+        padding: 0;
+        overflow: visible;
+        background: #fff;
+      }
+      .exam-page-frame {
+        width: auto;
+        height: auto;
+      }
+      .pdf-page {
+        height: 297mm;
+        transform: none;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
     .paired-row {
       min-width: 0;
       display: grid;
@@ -1482,14 +1717,23 @@
     }
   </style>
 </head>
-<body class="home-page">
+<body>
   <header class="top-bar">
     <div class="header-title">
       <a class="home-link" href="index.html" aria-label="메인페이지로 이동" title="메인페이지로 이동">⌂</a>
-      <h1>연산 JSON 뷰어</h1>
+      <div class="page-switcher">
+        <button id="page-switch-button" class="page-switch-button" type="button" aria-haspopup="true" aria-expanded="false">
+          <h1>소단원 뷰</h1>
+          <span class="page-switch-caret" aria-hidden="true">▼</span>
+        </button>
+        <div id="page-switch-menu" class="page-switch-menu" hidden>
+          <a href="question-viewer.html?autoload=1">문항 뷰</a>
+          <a href="section-viewer.html?autoload=1" aria-current="page">소단원 뷰</a>
+          <a href="stats.html?autoload=1">통계</a>
+        </div>
+      </div>
     </div>
     <div class="top-actions">
-      <button id="manual-button" class="load-button manual-button" type="button" title="사용 메뉴얼 보기" aria-label="사용 메뉴얼 열기">?</button>
       <button id="folder-button" class="load-button" type="button">폴더 선택</button>
       <div class="recent-folder-control">
         <button id="recent-folder-button" class="load-button recent-folder-button" type="button" disabled aria-expanded="false">
@@ -1505,39 +1749,23 @@
     </div>
     <span id="count">파일 0개 / section 0개 / 문항 0개 / 이미지 0개</span>
   </header>
-  <main class="home-main">
-    <section class="home-panel" aria-labelledby="home-title">
-      <h2 id="home-title">연산 JSON 뷰어</h2>
-      <div class="home-page-links" aria-label="페이지 이동">
-        <a class="home-page-link" href="question-viewer.html">문항 뷰</a>
-        <a class="home-page-link" href="section-viewer.html">소단원 뷰</a>
-        <a class="home-page-link" href="stats.html">통계</a>
-      </div>
-    </section>
-  </main>
-  <main class="viewer-main" hidden>
+  <main class="viewer-main">
     <nav>
       <div class="filters">
-        <input id="search" class="search-input" type="search" placeholder="문항 찾기">
-        <div class="filter-menu-row">
-          <button id="filter-menu-button" class="filter-menu-button" type="button" aria-expanded="false">필터</button>
-          <div id="filter-panel" class="filter-panel" hidden>
-            <div class="filter-panel-title">필터</div>
-            <label id="image-toggle-label" class="image-toggle"><input id="image-only" type="checkbox"> img 있는 문항 <span class="filter-dot green" aria-hidden="true"></span></label>
-            <label id="blocks-toggle-label" class="image-toggle"><input id="blocks-only" type="checkbox"> blocks 있는 문항 <span class="filter-dot purple" aria-hidden="true"></span></label>
-            <label id="missing-image-toggle-label" class="image-toggle"><input id="missing-image-only" type="checkbox"> 이미지 파일을 찾을 수 없는 문항 <span class="filter-dot yellow" aria-hidden="true"></span></label>
-            <label id="latex-warning-toggle-label" class="image-toggle"><input id="latex-warning-only" type="checkbox"> latex 오류있는 문항 <span class="filter-dot red" aria-hidden="true"></span></label>
-          </div>
-        </div>
-        <div class="filter-row image-controls">
-          <label id="render-image-toggle-label" class="image-toggle compact"><input id="render-images" type="checkbox" checked> 이미지 표시</label>
-          <label id="image-size-control" class="image-size-control">이미지 크기 <input id="image-size" type="range" min="100" max="500" step="20" value="200"><span id="image-size-value" class="image-size-value">200px</span></label>
-        </div>
-        <div class="fold-actions">
-          <button id="expand-all" class="fold-button" type="button">전체 펼치기</button>
-          <button id="collapse-all" class="fold-button" type="button">전체 접기</button>
-          <span id="result-count" class="result-count">0개 표시</span>
-        </div>
+        <input id="search" class="search-input" type="search" placeholder="JSON 파일명 검색">
+      </div>
+      <div hidden>
+        <button id="filter-menu-button" type="button" aria-expanded="false">필터</button>
+        <div id="filter-panel" hidden></div>
+        <label id="image-toggle-label"><input id="image-only" type="checkbox"></label>
+        <label id="blocks-toggle-label"><input id="blocks-only" type="checkbox"></label>
+        <label id="missing-image-toggle-label"><input id="missing-image-only" type="checkbox"></label>
+        <label id="latex-warning-toggle-label"><input id="latex-warning-only" type="checkbox"></label>
+        <label id="render-image-toggle-label"><input id="render-images" type="checkbox" checked></label>
+        <label id="image-size-control" class="image-size-control">그림 크기 <input id="image-size" type="range" min="80" max="300" step="10" value="160"><span id="image-size-value" class="image-size-value">160px</span></label>
+        <button id="expand-all" type="button">전체 펼치기</button>
+        <button id="collapse-all" type="button">전체 접기</button>
+        <span id="result-count">0개 표시</span>
       </div>
       <div id="nav-tree" class="tree"></div>
     </nav>
@@ -1553,26 +1781,36 @@
       <div class="manual-body">
         <div class="manual-summary-card">
           <h3>처음 사용하는 순서</h3>
-          <p>새 작업 폴더를 사용할 때는 폴더를 먼저 선택하고, 최근 작업한 폴더가 있으면 최근 방문 폴더 목록에서 바로 다시 열 수 있습니다.</p>
+          <p>연산 JSON 뷰어는 작업 폴더를 불러온 뒤, 왼쪽에서 JSON 파일명을 고르고 오른쪽에서 내용과 이미지를 확인하는 도구입니다.</p>
           <div class="manual-flow" aria-label="사용 흐름">
             <span class="manual-step">폴더 선택</span>
             <span class="manual-arrow" aria-hidden="true">→</span>
-            <span class="manual-step green">화면 선택</span>
+            <span class="manual-step">문항 선택</span>
+            <span class="manual-arrow" aria-hidden="true">→</span>
+            <span class="manual-step green">내용·이미지 확인</span>
+            <span class="manual-arrow" aria-hidden="true">→</span>
+            <span class="manual-step">JSON/이미지 수정</span>
+            <span class="manual-arrow" aria-hidden="true">→</span>
+            <span class="manual-step">다시 읽기(R)</span>
+            <span class="manual-arrow" aria-hidden="true">→</span>
+            <span class="manual-step red">오류 확인</span>
           </div>
-          <div class="manual-highlight"><strong>폴더 선택</strong> 옆 버튼은 최근 방문한 폴더 목록입니다. 같은 폴더에서 다시 작업할 때 이 목록에서 폴더를 고르면 됩니다.</div>
+          <div class="manual-highlight">작업 중 JSON 파일이나 이미지 파일을 수정한 경우, <strong>다시 읽기</strong>를 누르면 변경된 JSON 내용과 이미지 파일을 다시 불러와 화면에서 바로 확인할 수 있습니다.</div>
         </div>
 
         <div class="manual-sections">
           <details class="manual-section" open>
             <summary>1. 빠른 시작</summary>
             <div class="manual-section-content">
-              <p>새로운 폴더에서 작업할 때는 <strong>폴더 선택</strong>을 누른 뒤 <strong>문항 뷰</strong>, <strong>소단원 뷰</strong>, <strong>통계</strong> 화면을 선택합니다.</p>
-              <p>최근 작업한 폴더에서 작업할 때는 <strong>폴더 선택</strong> 옆의 최근 방문 폴더 목록에서 폴더를 고른 뒤 화면을 선택합니다.</p>
+              <p><strong>폴더 선택</strong>을 눌러 연산 JSON 파일과 이미지 파일이 들어있는 폴더를 선택합니다. 폴더를 선택하면 상단에 <code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code>가 표시되고, 왼쪽에는 JSON 파일명이 나타납니다.</p>
+              <p>왼쪽에서 JSON 파일명을 선택하면 오른쪽에서 해당 파일의 첫 문항부터 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 확인할 수 있습니다.</p>
               <div class="manual-highlight">전달받은 작업 폴더의 구조를 유지한 상태로 사용해 주세요. JSON 안의 <code>[img: 파일명]</code> 정보와 실제 이미지 파일이 연결되어야 이미지가 정상 표시됩니다.</div>
               <ol>
-                <li>새 작업이면 <code>폴더 선택</code>을 누르고 작업 폴더를 선택합니다.</li>
-                <li>최근 작업이면 <code>최근 폴더</code> 목록에서 작업 폴더를 선택합니다.</li>
-                <li><code>문항 뷰</code>, <code>소단원 뷰</code>, <code>통계</code>를 눌러 필요한 화면으로 이동합니다.</li>
+                <li><code>폴더 선택</code>을 누릅니다.</li>
+                <li>연산 JSON 파일과 이미지 파일이 들어있는 작업 폴더를 선택합니다.</li>
+                <li>왼쪽 목록에서 JSON 파일명을 확인합니다.</li>
+                <li>확인할 JSON 파일명을 클릭합니다.</li>
+                <li>오른쪽 상세 화면에서 문제, 보기, 정답, 해설, 이미지 표시 상태를 확인합니다.</li>
               </ol>
             </div>
           </details>
@@ -1580,7 +1818,7 @@
           <details class="manual-section">
             <summary>2. 화면 구성</summary>
             <div class="manual-section-content">
-              <p>화면은 상단 작업 영역, 왼쪽 문항 목록, 오른쪽 상세 화면으로 나뉩니다.</p>
+              <p>화면은 상단 작업 영역, 왼쪽 JSON 파일 목록, 오른쪽 상세 화면으로 나뉩니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>항목</th><th>설명</th></tr>
@@ -1588,9 +1826,9 @@
                 <tbody>
                   <tr><td><code>폴더 선택</code></td><td>JSON 파일과 이미지 파일이 들어있는 폴더를 처음 불러옵니다.</td></tr>
                   <tr><td><code>최근 폴더</code></td><td>이전에 열었던 폴더 목록을 다시 엽니다. 브라우저 권한이 필요할 수 있습니다.</td></tr>
-                  <tr><td><code>다시 읽기</code></td><td>현재 폴더를 다시 불러와 JSON 파일 수정, 이미지 파일 추가, 이미지 파일 수정, 이미지 파일 교체 내용을 갱신해서 확인합니다. 작업 중 파일을 고친 뒤 화면에 바로 반영하고 싶을 때 사용합니다.</td></tr>
+                  <tr><td><code>다시 읽기</code></td><td>현재 폴더를 다시 불러와 JSON 파일 수정, 이미지 파일 추가, 이미지 파일 수정, 이미지 파일 교체 내용을 갱신해서 확인합니다. 작업 중 파일을 고친 뒤 화면에 바로 반영하고 싶을 때 사용합니다. 단축키는 <code>R</code>입니다.</td></tr>
                   <tr><td>상단 개수 표시</td><td><code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code> 형식으로 현재 불러온 데이터를 보여줍니다.</td></tr>
-                  <tr><td>왼쪽 목록</td><td>JSON 파일, section, 문항 번호 순서로 표시됩니다.</td></tr>
+                  <tr><td>왼쪽 목록</td><td>JSON 파일명이 표시됩니다.</td></tr>
                   <tr><td>오른쪽 상세 화면</td><td>선택한 문항의 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 보여줍니다.</td></tr>
                 </tbody>
               </table>
@@ -1601,7 +1839,7 @@
           <details class="manual-section">
             <summary>3. 문항 확인 방법</summary>
             <div class="manual-section-content">
-              <p>왼쪽 목록에서 JSON 파일명을 펼치면 section 목록이 보입니다. section을 펼치면 <code>1번</code>, <code>2번</code> 같은 문항 번호가 표시됩니다. 문항을 클릭하면 오른쪽 상세 화면에서 해당 문항을 확인합니다.</p>
+              <p>왼쪽 목록에서 JSON 파일명을 클릭하면 오른쪽 상세 화면에서 해당 파일의 A4 시험지를 확인합니다. 이후 상단의 <code>이전 페이지</code>, <code>다음 페이지</code>로 페이지를 이동합니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>항목</th><th>의미</th></tr>
@@ -1618,35 +1856,17 @@
                 </tbody>
               </table>
               <ul>
-                <li><code>이전문항</code>: 현재 필터와 검색 결과 안에서 이전 문항으로 이동합니다.</li>
-                <li><code>다음문항</code>: 현재 필터와 검색 결과 안에서 다음 문항으로 이동합니다.</li>
-                <li><code>Alt+Q</code>: 이전 문항으로 이동합니다.</li>
-                <li><code>Alt+W</code>: 다음 문항으로 이동합니다.</li>
+                <li><code>이전 페이지</code>: 이전 A4 페이지로 이동합니다.</li>
+                <li><code>다음 페이지</code>: 다음 A4 페이지로 이동합니다.</li>
+                <li><code>←</code>, <code>→</code>: 이전/다음 페이지로 이동합니다.</li>
+                <li><code>Home</code>, <code>End</code>: 첫 페이지/마지막 페이지로 이동합니다.</li>
+                <li><code>Ctrl + +</code>, <code>Ctrl + -</code>, <code>Ctrl + 0</code>: 확대, 축소, 100% 복귀입니다.</li>
               </ul>
             </div>
           </details>
 
           <details class="manual-section">
-            <summary>4. 검색과 필터</summary>
-            <div class="manual-section-content">
-              <p><code>문항 찾기</code>에는 파일명, section, 문항 번호, 문제, blocks, choices, answer, 해설, image_edit_notes에 포함된 내용을 검색할 수 있습니다.</p>
-              <p>LaTeX 명령을 찾을 때는 <code>\frac</code>, <code>₩frac</code>, <code>\dfrac</code>, <code>₩dfrac</code> 같은 입력도 사용할 수 있습니다.</p>
-              <table class="manual-table">
-                <thead>
-                  <tr><th>색상</th><th>필터</th><th>설명</th></tr>
-                </thead>
-                <tbody>
-                  <tr><td><span class="manual-badge green">초록</span></td><td><code>img 있는 문항</code></td><td><code>[img: 파일명]</code> 또는 <code>image_edit_notes</code>가 있는 문항만 표시합니다.</td></tr>
-                  <tr><td><span class="manual-badge purple">보라</span></td><td><code>blocks 있는 문항</code></td><td><code>question.blocks</code>가 있는 문항만 표시합니다.</td></tr>
-                  <tr><td><span class="manual-badge yellow">노랑</span></td><td><code>이미지 파일을 찾을 수 없는 문항</code></td><td>JSON에는 이미지 참조가 있지만 실제 이미지 파일을 찾지 못한 문항만 표시합니다.</td></tr>
-                  <tr><td><span class="manual-badge red">빨강</span></td><td><code>latex 오류있는 문항</code></td><td><code>$</code>, <code>$$</code>, <code>\(</code>, <code>\)</code>, <code>\[</code>, <code>\]</code> 구분자 개수가 맞지 않는 문항만 표시합니다.</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </details>
-
-          <details class="manual-section">
-            <summary>5. 이미지 확인</summary>
+            <summary>4. 이미지 확인</summary>
             <div class="manual-section-content">
               <p>이미지는 JSON 본문 안의 <code>[img: 파일명]</code> 형식을 기준으로 표시됩니다. 뷰어는 선택한 폴더 안의 <code>png</code>, <code>jpg</code>, <code>jpeg</code>, <code>webp</code>, <code>gif</code> 파일을 찾아 이미지 목록을 만들고, JSON에 적힌 이미지 파일명과 연결합니다.</p>
               <table class="manual-table">
@@ -1654,8 +1874,6 @@
                   <tr><th>기능</th><th>설명</th></tr>
                 </thead>
                 <tbody>
-                  <tr><td><span class="manual-badge green">이미지 표시</span></td><td>체크하면 <code>[img: 파일명]</code> 위치에 이미지를 보여줍니다. 해제하면 원문 텍스트로 봅니다.</td></tr>
-                  <tr><td><code>이미지 크기</code></td><td>표시되는 이미지 크기를 <code>100px-500px</code>까지 조절합니다.</td></tr>
                   <tr><td><span class="manual-badge yellow">이미지 없음: 파일명</span></td><td>JSON에는 이미지가 적혀 있지만 실제 파일을 찾지 못한 상태입니다.</td></tr>
                   <tr><td><code>파일명 복사</code></td><td><code>image_edit_notes</code>의 image 값에서 확장자를 제외한 파일명을 복사합니다.</td></tr>
                 </tbody>
@@ -1665,7 +1883,7 @@
           </details>
 
           <details class="manual-section">
-            <summary>6. 오류와 경고</summary>
+            <summary>5. 오류와 경고</summary>
             <div class="manual-section-content">
               <p>상단에 <span class="manual-badge red">오류 N개</span>가 표시되면 JSON 문법 오류, 넘버링 오류, LaTeX 경고가 있다는 뜻입니다. <code>오류 N개</code>를 클릭하면 <code>오류만 보기 ON / 오류 N개</code> 상태가 되며, 오류가 있는 항목만 왼쪽 목록에 표시됩니다.</p>
               <table class="manual-table">
@@ -1698,6 +1916,7 @@
       recentSelection: 'allQuestionHtmlViewer.recentSelection',
       recentFolders: 'allQuestionHtmlViewer.recentFolders',
       navWidth: 'allQuestionHtmlViewer.navWidth',
+      examZoom: 'allQuestionHtmlViewer.examZoom',
     };
     const DB_NAME = 'all-question-html-viewer';
     const DB_STORE = 'handles';
@@ -1706,8 +1925,17 @@
     const MAX_RECENT_FOLDERS = 10;
     const MIN_NAV_WIDTH = 260;
     const MAX_NAV_WIDTH_RATIO = 0.6;
+    const MIN_EXAM_ZOOM = 0.6;
+    const MAX_EXAM_ZOOM = 1.6;
+    const EXAM_ZOOM_STEP = 0.1;
+    const PDF_COLUMN_COUNT = 2;
+    const PDF_MEASURE_SELECTOR = '.pdf-measure-root';
     let cards = [];
+    let worksheetPayloads = new Map();
     let activeIndex = 0;
+    let currentPageIndex = 0;
+    let currentExamPages = [];
+    let examZoom = 1;
     let imageIndex = new Map();
     let imageObjectUrls = [];
     let imageNotesExpanded = false;
@@ -1721,6 +1949,8 @@
 
     const folderInput = document.getElementById('folder-input');
     const folderButton = document.getElementById('folder-button');
+    const pageSwitchButton = document.getElementById('page-switch-button');
+    const pageSwitchMenu = document.getElementById('page-switch-menu');
     const recentFolderButton = document.getElementById('recent-folder-button');
     const recentFolderButtonLabel = document.getElementById('recent-folder-button-label');
     const recentFolderMenu = document.getElementById('recent-folder-menu');
@@ -1752,10 +1982,8 @@
     const resultCount = document.getElementById('result-count');
     const openState = new Map();
     let mathRenderToken = 0;
-    const manualButton = document.getElementById('manual-button');
     const manualOverlay = document.getElementById('manual-overlay');
     const manualClose = document.getElementById('manual-close');
-    const homePageLinks = document.querySelectorAll('.home-page-link');
 
     function clampNavWidth(width) {
       const maxWidth = Math.max(MIN_NAV_WIDTH, Math.floor(window.innerWidth * MAX_NAV_WIDTH_RATIO));
@@ -1973,6 +2201,17 @@
     function closeRecentFolderMenu() {
       recentFolderMenu.hidden = true;
       recentFolderButton.setAttribute('aria-expanded', 'false');
+    }
+
+    function closePageSwitchMenu() {
+      pageSwitchMenu.hidden = true;
+      pageSwitchButton.setAttribute('aria-expanded', 'false');
+    }
+
+    function togglePageSwitchMenu() {
+      const nextOpen = pageSwitchMenu.hidden;
+      pageSwitchMenu.hidden = !nextOpen;
+      pageSwitchButton.setAttribute('aria-expanded', String(nextOpen));
     }
 
     function supportsDirectoryPicker() {
@@ -2751,6 +2990,7 @@
       buildImageIndex(allFiles);
       const jsonFiles = sortJsonFiles(allFiles.filter((file) => file.name.toLowerCase().endsWith('.json') && !isWorkingJsonFile(file)));
       const loadedCards = [];
+      const loadedPayloads = new Map();
       const errors = [];
       let sectionCount = 0;
       for (const file of jsonFiles) {
@@ -2759,6 +2999,7 @@
           text = await file.text();
           const payload = JSON.parse(text);
           validatePayloadShape(payload);
+          loadedPayloads.set(file.name, payload);
           sectionCount += countSections(payload);
           loadedCards.push(...buildCardsFromPayload(file.name, payload));
         } catch (error) {
@@ -2767,7 +3008,10 @@
       }
       loadErrors = errors;
       cards = loadedCards;
+      worksheetPayloads = loadedPayloads;
       activeLoadError = null;
+      currentPageIndex = 0;
+      currentExamPages = [];
       if (preserveState && savedState) {
         openState.clear();
         savedState.openEntries.forEach(([key, value]) => openState.set(key, value));
@@ -3081,7 +3325,10 @@
 
     function setActiveQuestionNode() {
       document.querySelectorAll('.question-node').forEach((button) => {
-        button.classList.toggle('active', Number(button.dataset.index) === activeIndex);
+        const isActiveIndex = Number(button.dataset.index) === activeIndex;
+        const isActiveFile = button.dataset.fileName && cards[activeIndex]?.fileName === button.dataset.fileName;
+        const isActiveError = button.dataset.fileName && activeLoadError?.fileName === button.dataset.fileName;
+        button.classList.toggle('active', isActiveIndex || isActiveFile || isActiveError);
       });
     }
 
@@ -3160,7 +3407,7 @@
           && (!missingImageOnly || entry.data.missingImageRefs.length > 0)
           && (!blocksOnly || entry.data.hasBlocks)
           && (!latexWarningOnly || entry.data.latexWarnings.length > 0)
-          && (!query || matchesSearch(entry.data, query))
+          && (!query || displayFileName(entry.data.fileName).toLowerCase().includes(query) || entry.data.fileName.toLowerCase().includes(query))
         ))
         .map((entry) => entry.index);
     }
@@ -3170,14 +3417,9 @@
       indexes.forEach((index) => {
         const data = cards[index];
         if (!files.has(data.fileName)) {
-          files.set(data.fileName, new Map());
+          files.set(data.fileName, []);
         }
-        const sections = files.get(data.fileName);
-        const sectionKey = `${data.sectionIndex}::${data.sectionLabel}`;
-        if (!sections.has(sectionKey)) {
-          sections.set(sectionKey, { label: data.sectionLabel, items: [] });
-        }
-        sections.get(sectionKey).items.push(index);
+        files.get(data.fileName).push(index);
       });
       return files;
     }
@@ -3229,14 +3471,17 @@
     }
 
     function appendLoadErrorNavItem(parent, error) {
-      const fileDetails = document.createElement('details');
-      fileDetails.open = true;
-      const fileSummary = document.createElement('summary');
-      fileSummary.className = 'file-summary';
-      appendSummaryContent(fileSummary, displayFileName(error.fileName), { red: [`JSON 오류: ${error.message}`] });
-      fileSummary.addEventListener('click', () => selectLoadError(error));
-      fileDetails.appendChild(fileSummary);
-      parent.appendChild(fileDetails);
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'question-node file-node';
+      button.dataset.fileName = error.fileName;
+      button.classList.toggle('active', activeLoadError === error);
+      const label = document.createElement('span');
+      label.className = 'question-label';
+      label.textContent = displayFileName(error.fileName);
+      button.appendChild(label);
+      button.addEventListener('click', () => selectLoadError(error));
+      parent.appendChild(button);
     }
 
     function fileWarningBundle(fileName, visibleIndexes) {
@@ -3300,61 +3545,32 @@
         }
         appendLoadErrorNavItem(navTree, error);
       });
-      grouped.forEach((sections, fileName) => {
-        const fileKey = `file::${fileName}`;
-        const fileDetails = document.createElement('details');
-        fileDetails.dataset.key = fileKey;
-        fileDetails.open = openState.has(fileKey) ? openState.get(fileKey) : true;
-        fileDetails.addEventListener('toggle', () => openState.set(fileKey, fileDetails.open));
-        const fileSummary = document.createElement('summary');
-        fileSummary.className = 'file-summary';
-        appendSummaryContent(fileSummary, displayFileName(fileName), fileWarningBundle(fileName, indexes));
-        fileDetails.appendChild(fileSummary);
-
-        sections.forEach((section) => {
-          const sectionKey = `section::${fileName}::${section.label}`;
-          const sectionDetails = document.createElement('details');
-          sectionDetails.dataset.key = sectionKey;
-          sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : true;
-          sectionDetails.addEventListener('toggle', () => openState.set(sectionKey, sectionDetails.open));
-          const sectionSummary = document.createElement('summary');
-          sectionSummary.className = 'section-summary';
-          appendSummaryContent(sectionSummary, section.label, sectionWarningBundle(section.items));
-          sectionDetails.appendChild(sectionSummary);
-
-          const list = document.createElement('div');
-          list.className = 'question-list';
-          section.items.forEach((index) => {
-            const data = cards[index];
-            const button = document.createElement('button');
-            button.type = 'button';
-            button.className = 'question-node';
-            button.dataset.index = String(index);
-            button.classList.toggle('active', index === activeIndex);
-            button.classList.toggle('has-image', data.hasImage);
-            const label = document.createElement('span');
-            label.className = 'question-label';
-            label.textContent = data.qNumberLabel;
-            button.appendChild(label);
-            addWarningDot(button, warningBundle(data));
-            button.addEventListener('click', () => {
-              activeLoadError = null;
-              activeIndex = index;
-              renderCard(index);
-              setActiveQuestionNode();
-            });
-            list.appendChild(button);
-          });
-          sectionDetails.appendChild(list);
-          fileDetails.appendChild(sectionDetails);
+      grouped.forEach((fileIndexes, fileName) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'question-node file-node';
+        button.dataset.fileName = fileName;
+        button.dataset.index = String(fileIndexes[0]);
+        button.classList.toggle('active', cards[activeIndex]?.fileName === fileName);
+        const label = document.createElement('span');
+        label.className = 'question-label';
+        label.textContent = displayFileName(fileName);
+        button.appendChild(label);
+        button.addEventListener('click', () => {
+          activeLoadError = null;
+          activeIndex = fileIndexes[0];
+          currentPageIndex = 0;
+          renderCard(activeIndex);
+          setActiveQuestionNode();
         });
-        navTree.appendChild(fileDetails);
+        navTree.appendChild(button);
       });
 
       if (activeLoadError) {
         renderJsonErrorDetail(activeLoadError);
       } else if (!indexes.includes(activeIndex)) {
         activeIndex = indexes[0];
+        currentPageIndex = 0;
         renderCard(activeIndex);
       } else {
         renderCard(activeIndex);
@@ -3403,6 +3619,576 @@
       } else {
         typeset();
       }
+    }
+
+    function clampExamZoom(value) {
+      const rounded = Math.round(Number(value) * 10) / 10;
+      if (!Number.isFinite(rounded)) {
+        return 1;
+      }
+      return Math.min(Math.max(rounded, MIN_EXAM_ZOOM), MAX_EXAM_ZOOM);
+    }
+
+    function setExamZoom(value, shouldSave = true) {
+      examZoom = clampExamZoom(value);
+      document.documentElement.style.setProperty('--exam-zoom', String(examZoom));
+      if (shouldSave) {
+        localStorage.setItem(STORAGE_KEYS.examZoom, String(examZoom));
+      }
+    }
+
+    function restoreExamZoom() {
+      setExamZoom(Number(localStorage.getItem(STORAGE_KEYS.examZoom)) || 1, false);
+    }
+
+    function formatExamZoom() {
+      return `${Math.round(examZoom * 100)}%`;
+    }
+
+    function selectedFileName(index = activeIndex) {
+      return cards[index]?.fileName || '';
+    }
+
+    function romanizeLeadingNumber(text) {
+      const value = String(text || '').trim();
+      const match = /^(\d+)\.\s*(.+)$/.exec(value);
+      if (!match) {
+        return value;
+      }
+      const romans = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
+      const number = Number(match[1]);
+      return `${romans[number] || match[1]}. ${match[2]}`;
+    }
+
+    function worksheetItems(payload) {
+      return (Array.isArray(payload?.sections) ? payload.sections : [])
+        .flatMap((section) => (Array.isArray(section?.items) ? section.items : []));
+    }
+
+    function ensurePdfMeasureRoot() {
+      let root = document.querySelector(PDF_MEASURE_SELECTOR);
+      if (!root) {
+        root = document.createElement('div');
+        root.className = 'pdf-measure-root';
+        root.setAttribute('aria-hidden', 'true');
+        document.body.appendChild(root);
+      }
+      return root;
+    }
+
+    function clearPdfMeasureRoot() {
+      const root = document.querySelector(PDF_MEASURE_SELECTOR);
+      if (root) {
+        root.replaceChildren();
+      }
+    }
+
+    function createPdfColumns(className) {
+      const columns = document.createElement('div');
+      columns.className = className;
+      for (let index = 0; index < PDF_COLUMN_COUNT; index += 1) {
+        const column = document.createElement('div');
+        column.className = 'pdf-column';
+        columns.appendChild(column);
+      }
+      return columns;
+    }
+
+    function createPdfSectionTitle(sectionTitle) {
+      const title = document.createElement('div');
+      title.className = 'pdf-section-title';
+      title.textContent = sectionTitle;
+      return title;
+    }
+
+    function createPdfPageBase(pageData) {
+      const page = document.createElement('section');
+      page.className = `pdf-page ${pageData.type === 'answer' ? 'pdf-answer-page' : 'pdf-problem-page'}`;
+      if (pageData.type === 'answer') {
+        const header = document.createElement('header');
+        header.className = 'pdf-answer-header';
+        header.textContent = '정답 및 해설';
+        page.appendChild(header);
+      } else {
+        appendPdfHeader(page, pageData.payload);
+      }
+      return page;
+    }
+
+    function appendPdfPageFooter(page, pageData) {
+      const footer = document.createElement('footer');
+      footer.className = 'pdf-page-footer';
+      footer.textContent = String(pageData.pageNumber || '');
+      page.appendChild(footer);
+    }
+
+    function measurePdfColumnHeight(pageData) {
+      const root = ensurePdfMeasureRoot();
+      root.replaceChildren();
+      const page = createPdfPageBase(pageData);
+      const columns = createPdfColumns(pageData.type === 'answer' ? 'pdf-answer-columns' : 'pdf-problem-columns');
+      page.appendChild(columns);
+      appendPdfPageFooter(page, pageData);
+      root.appendChild(page);
+      const height = columns.firstElementChild.getBoundingClientRect().height;
+      root.replaceChildren();
+      return height;
+    }
+
+    function measuredElementHeight(element) {
+      const rect = element.getBoundingClientRect();
+      const style = window.getComputedStyle(element);
+      return rect.height + parseFloat(style.marginTop || '0') + parseFloat(style.marginBottom || '0');
+    }
+
+    function measurePdfEntry(entry, pageData) {
+      const root = ensurePdfMeasureRoot();
+      root.replaceChildren();
+      const page = createPdfPageBase(pageData);
+      const columns = createPdfColumns(pageData.type === 'answer' ? 'pdf-answer-columns' : 'pdf-problem-columns');
+      const column = columns.firstElementChild;
+      page.appendChild(columns);
+      appendPdfPageFooter(page, pageData);
+      root.appendChild(page);
+      column.appendChild(createPdfEntryElement(entry));
+      const height = measuredElementHeight(column.firstElementChild);
+      root.replaceChildren();
+      return height;
+    }
+
+    function createEmptyPdfPageModel(basePageData) {
+      return {
+        type: basePageData.type,
+        fileName: basePageData.fileName,
+        payload: basePageData.payload,
+        sectionIndex: basePageData.sectionIndex,
+        columns: Array.from({ length: PDF_COLUMN_COUNT }, () => []),
+      };
+    }
+
+    function paginatePdfEntries(basePageData, entries) {
+      const availableHeight = measurePdfColumnHeight(basePageData);
+      const pages = [];
+      let page = createEmptyPdfPageModel(basePageData);
+      let columnIndex = 0;
+      let usedHeight = 0;
+
+      entries.forEach((entry) => {
+        const entryHeight = measurePdfEntry(entry, basePageData);
+        const shouldMoveColumn = usedHeight > 0 && usedHeight + entryHeight > availableHeight;
+        if (shouldMoveColumn) {
+          columnIndex += 1;
+          usedHeight = 0;
+        }
+        if (columnIndex >= PDF_COLUMN_COUNT) {
+          pages.push(page);
+          page = createEmptyPdfPageModel(basePageData);
+          columnIndex = 0;
+          usedHeight = 0;
+        }
+        page.columns[columnIndex].push(entry);
+        usedHeight += entryHeight;
+      });
+
+      if (page.columns.some((column) => column.length)) {
+        pages.push(page);
+      }
+      return pages;
+    }
+
+    function buildExamPages(fileName) {
+      const payload = worksheetPayloads.get(fileName);
+      if (!payload) {
+        return [];
+      }
+      const pages = [];
+      const sections = Array.isArray(payload.sections) ? payload.sections : [];
+      sections.forEach((section, sectionIndex) => {
+        const basePageData = {
+          type: 'problem',
+          fileName,
+          payload,
+          section,
+          sectionIndex,
+        };
+        const entries = [];
+        if (section?.section_title) {
+          entries.push({ type: 'section-title', text: section.section_title });
+        }
+        const items = Array.isArray(section?.items) ? section.items : [];
+        items.forEach((item) => entries.push({ type: 'problem', item }));
+        pages.push(...paginatePdfEntries(basePageData, entries));
+      });
+      const answerBasePageData = {
+        type: 'answer',
+        fileName,
+        payload,
+      };
+      const answerEntries = worksheetItems(payload).map((item) => ({ type: 'answer', item }));
+      pages.push(...paginatePdfEntries(answerBasePageData, answerEntries));
+      pages.forEach((page, index) => {
+        page.pageNumber = index + 1;
+        page.totalPages = pages.length;
+      });
+      clearPdfMeasureRoot();
+      return pages;
+    }
+
+    function appendPdfHeader(page, payload) {
+      const header = document.createElement('header');
+      header.className = 'pdf-page-header';
+      const unitLine = document.createElement('div');
+      unitLine.className = 'pdf-unit-line';
+      const unitLarge = document.createElement('span');
+      unitLarge.textContent = romanizeLeadingNumber(payload?.unit_large || '');
+      const unitMedium = document.createElement('span');
+      unitMedium.textContent = payload?.unit_medium || '';
+      unitLine.appendChild(unitLarge);
+      unitLine.appendChild(unitMedium);
+      const title = document.createElement('div');
+      title.className = 'pdf-title';
+      title.textContent = payload?.worksheet_title || '워크시트';
+      header.appendChild(unitLine);
+      header.appendChild(title);
+      page.appendChild(header);
+    }
+
+    function splitPipeCells(line) {
+      const cells = [];
+      let current = '';
+      let inMath = false;
+      for (let index = 0; index < line.length; index += 1) {
+        const char = line[index];
+        if (char === '$') {
+          inMath = !inMath;
+        }
+        if (char === '|' && !inMath) {
+          cells.push(current.trim());
+          current = '';
+        } else {
+          current += char;
+        }
+      }
+      cells.push(current.trim());
+      return cells.filter((cell, index, array) => cell || index > 0 && index < array.length - 1);
+    }
+
+    function isMarkdownDividerRow(cells) {
+      return cells.every((cell) => /^:?-{3,}:?$/.test(cell.trim()));
+    }
+
+    function parsePipeTableLines(lines) {
+      const rows = lines
+        .map((line) => splitPipeCells(String(line || '').trim()))
+        .filter((cells) => cells.length >= 2)
+        .filter((cells) => !isMarkdownDividerRow(cells));
+      if (rows.length < 2) {
+        return null;
+      }
+      const width = rows[0].length;
+      return rows.every((row) => row.length === width) ? rows : null;
+    }
+
+    function appendPdfTable(parent, rows, context) {
+      const table = document.createElement('table');
+      table.className = 'pdf-table';
+      const body = document.createElement('tbody');
+      rows.forEach((row) => {
+        const tr = document.createElement('tr');
+        row.forEach((cell) => {
+          const td = document.createElement('td');
+          appendPdfText(td, cell, context);
+          tr.appendChild(td);
+        });
+        body.appendChild(tr);
+      });
+      table.appendChild(body);
+      parent.appendChild(table);
+    }
+
+    function appendPdfMissingImage(parent, fileName) {
+      const box = document.createElement('div');
+      box.className = 'pdf-missing-image';
+      const mark = document.createElement('strong');
+      mark.textContent = '×';
+      const label = document.createElement('span');
+      label.textContent = '이미지 없음';
+      const name = document.createElement('small');
+      name.textContent = fileName || '-';
+      box.appendChild(mark);
+      box.appendChild(label);
+      box.appendChild(name);
+      parent.appendChild(box);
+    }
+
+    function appendPdfImage(parent, fileName) {
+      const wrap = document.createElement('div');
+      wrap.className = 'pdf-image-wrap';
+      const imageUrl = imageLookupKeys(fileName).map((key) => imageIndex.get(key)).find(Boolean);
+      if (imageUrl) {
+        const image = document.createElement('img');
+        image.src = imageUrl;
+        image.alt = fileName;
+        wrap.appendChild(image);
+      } else {
+        appendPdfMissingImage(wrap, fileName);
+      }
+      parent.appendChild(wrap);
+    }
+
+    function appendPdfText(parent, text, context = {}) {
+      const value = String(text ?? '');
+      const tableRows = parsePipeTableLines(value.split(/\r\n|\r|\n/).filter((line) => line.trim()));
+      if (tableRows) {
+        appendPdfTable(parent, tableRows, context);
+        return;
+      }
+      const imageCursor = context.imageCursor || { value: 0 };
+      const images = Array.isArray(context.item?.images) ? context.item.images : [];
+      const pattern = /\[img(?:\s*:\s*([^\]]+))?\]/gi;
+      let cursor = 0;
+      let matched = false;
+      for (const match of value.matchAll(pattern)) {
+        matched = true;
+        if (match.index > cursor) {
+          parent.appendChild(document.createTextNode(value.slice(cursor, match.index)));
+        }
+        const explicitName = String(match[1] || '').trim();
+        const sequentialName = explicitName || imageFileNameFromValue(images[imageCursor.value]);
+        if (!explicitName) {
+          imageCursor.value += 1;
+        }
+        appendPdfImage(parent, sequentialName);
+        cursor = match.index + match[0].length;
+      }
+      if (!matched) {
+        parent.appendChild(document.createTextNode(value || '-'));
+      } else if (cursor < value.length) {
+        parent.appendChild(document.createTextNode(value.slice(cursor)));
+      }
+    }
+
+    function blockLines(block) {
+      if (block && typeof block === 'object' && !Array.isArray(block) && Array.isArray(block.lines)) {
+        return block.lines.map((line) => displayValue(line));
+      }
+      return String(blockDisplayValue(block)).split(/\r\n|\r|\n/);
+    }
+
+    function appendPdfBlock(parent, block, context) {
+      const lines = blockLines(block);
+      const type = block && typeof block === 'object' && !Array.isArray(block) ? block.type : '';
+      const tableRows = parsePipeTableLines(lines.filter((line) => line.trim()));
+      if (!type && tableRows) {
+        appendPdfTable(parent, tableRows, context);
+        return;
+      }
+      const wrapper = document.createElement('div');
+      if (type === 'box') {
+        wrapper.className = 'pdf-box-block';
+      } else if (type === 'statement_set') {
+        wrapper.className = 'pdf-statement-set';
+        const label = document.createElement('div');
+        label.className = 'pdf-statement-label';
+        label.textContent = '| 보기 |';
+        const box = document.createElement('div');
+        box.className = 'pdf-statement-box pdf-block-content';
+        lines.forEach((line, index) => {
+          if (index > 0) {
+            box.appendChild(document.createElement('br'));
+          }
+          appendPdfText(box, line, context);
+        });
+        wrapper.appendChild(label);
+        wrapper.appendChild(box);
+        parent.appendChild(wrapper);
+        return;
+      } else {
+        wrapper.className = 'pdf-centered-lines pdf-block-content';
+      }
+      lines.forEach((line, index) => {
+        if (index > 0) {
+          wrapper.appendChild(document.createElement('br'));
+        }
+        appendPdfText(wrapper, line, context);
+      });
+      parent.appendChild(wrapper);
+    }
+
+    function appendPdfBlocks(parent, blocks, context) {
+      if (!hasDisplayValue(blocks)) {
+        return;
+      }
+      const wrap = document.createElement('div');
+      wrap.className = 'pdf-blocks';
+      const items = Array.isArray(blocks) ? blocks : [blocks];
+      items.forEach((block) => appendPdfBlock(wrap, block, context));
+      parent.appendChild(wrap);
+    }
+
+    function normalizedChoiceLength(choice) {
+      return displayValue(choice)
+        .replace(/\\(frac|dfrac|sqrt|times|div|cdot|left|right)\b/g, '')
+        .replace(/[{}$\\]/g, '')
+        .replace(/\s+/g, '')
+        .length;
+    }
+
+    function pdfChoiceLayout(choices) {
+      const lengths = choices.map(normalizedChoiceLength);
+      const maxLength = lengths.length ? Math.max(...lengths) : 0;
+      const totalLength = lengths.reduce((sum, value) => sum + value, 0);
+      if (maxLength <= 6 && totalLength <= 24) {
+        return 3;
+      }
+      if (maxLength <= 10 && totalLength <= 42) {
+        return 2;
+      }
+      return 1;
+    }
+
+    function appendPdfChoices(parent, choices, context) {
+      if (!Array.isArray(choices) || !choices.length) {
+        return;
+      }
+      const markers = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩'];
+      const list = document.createElement('ol');
+      list.className = `pdf-choices layout-${pdfChoiceLayout(choices)}`;
+      choices.forEach((choice, index) => {
+        const item = document.createElement('li');
+        item.className = 'pdf-choice';
+        const marker = document.createElement('span');
+        marker.textContent = markers[index] || `${index + 1}.`;
+        const content = document.createElement('div');
+        content.className = 'pdf-choice-content';
+        appendPdfText(content, displayValue(choice), context);
+        item.appendChild(marker);
+        item.appendChild(content);
+        list.appendChild(item);
+      });
+      parent.appendChild(list);
+    }
+
+    function createPdfProblemItem(item) {
+      const question = item?.question && typeof item.question === 'object' ? item.question : {};
+      const imageCursor = { value: 0 };
+      const context = { item, imageCursor };
+      const article = document.createElement('article');
+      article.className = 'pdf-item';
+      const line = document.createElement('div');
+      line.className = 'pdf-question-line';
+      const number = document.createElement('span');
+      number.className = 'pdf-question-no';
+      number.textContent = `${item?.q_number ?? '-'}.`;
+      const body = document.createElement('div');
+      body.className = 'pdf-question-body';
+      appendPdfText(body, question.stem || '-', context);
+      line.appendChild(number);
+      line.appendChild(body);
+      article.appendChild(line);
+      appendPdfBlocks(article, question.blocks, context);
+      appendPdfChoices(article, Array.isArray(item?.choices) ? item.choices : [], context);
+      return article;
+    }
+
+    function appendPdfProblemItem(parent, item) {
+      parent.appendChild(createPdfProblemItem(item));
+    }
+
+    function createPdfAnswerItem(item) {
+      const article = document.createElement('article');
+      article.className = 'pdf-answer-item';
+      const answerLine = document.createElement('div');
+      answerLine.className = 'pdf-answer-line';
+      const number = document.createElement('strong');
+      number.textContent = `${item?.q_number ?? '-'}.`;
+      const answer = document.createElement('strong');
+      answer.textContent = displayValue(item?.answer);
+      answerLine.appendChild(number);
+      answerLine.appendChild(document.createTextNode(' 정답: '));
+      answerLine.appendChild(answer);
+      const explanation = document.createElement('div');
+      explanation.className = 'pdf-explanation';
+      const imageCursor = { value: countImageTags(item?.question?.stem || '') };
+      appendPdfText(explanation, item?.explanation || '-', { item, imageCursor });
+      article.appendChild(answerLine);
+      article.appendChild(explanation);
+      return article;
+    }
+
+    function appendPdfAnswerItem(parent, item) {
+      parent.appendChild(createPdfAnswerItem(item));
+    }
+
+    function countImageTags(text) {
+      return [...String(text || '').matchAll(/\[img(?:\s*:\s*([^\]]+))?\]/gi)].filter((match) => !match[1]).length;
+    }
+
+    function createPdfEntryElement(entry) {
+      if (entry.type === 'section-title') {
+        return createPdfSectionTitle(entry.text);
+      }
+      if (entry.type === 'answer') {
+        return createPdfAnswerItem(entry.item);
+      }
+      return createPdfProblemItem(entry.item);
+    }
+
+    function renderProblemPage(pageData) {
+      const page = createPdfPageBase(pageData);
+      const columns = createPdfColumns('pdf-problem-columns');
+      pageData.columns.forEach((entries, index) => {
+        const column = columns.children[index];
+        entries.forEach((entry) => column.appendChild(createPdfEntryElement(entry)));
+      });
+      page.appendChild(columns);
+      appendPdfPageFooter(page, pageData);
+      return page;
+    }
+
+    function renderAnswerPage(pageData) {
+      const page = createPdfPageBase(pageData);
+      const columns = createPdfColumns('pdf-answer-columns');
+      pageData.columns.forEach((entries, index) => {
+        const column = columns.children[index];
+        entries.forEach((entry) => column.appendChild(createPdfEntryElement(entry)));
+      });
+      page.appendChild(columns);
+      appendPdfPageFooter(page, pageData);
+      return page;
+    }
+
+    function renderExamPage(pageData) {
+      return pageData?.type === 'answer' ? renderAnswerPage(pageData) : renderProblemPage(pageData);
+    }
+
+    function changeExamPage(delta) {
+      if (!currentExamPages.length) {
+        return;
+      }
+      const nextIndex = Math.min(Math.max(currentPageIndex + delta, 0), currentExamPages.length - 1);
+      if (nextIndex === currentPageIndex) {
+        return;
+      }
+      currentPageIndex = nextIndex;
+      renderCard(activeIndex);
+    }
+
+    function setExamPage(index) {
+      if (!currentExamPages.length) {
+        return;
+      }
+      currentPageIndex = Math.min(Math.max(index, 0), currentExamPages.length - 1);
+      renderCard(activeIndex);
+    }
+
+    function setExamPageFromInput(input) {
+      const requestedPage = Number(input.value);
+      if (!Number.isFinite(requestedPage)) {
+        input.value = String(currentPageIndex + 1);
+        return;
+      }
+      setExamPage(Math.round(requestedPage) - 1);
     }
 
     function renderJsonErrorDetail(error) {
@@ -3457,7 +4243,6 @@
     }
 
     function renderCard(index) {
-      saveSharedScrollPosition();
       const data = index === null ? null : cards[index];
       clearMathJaxTypeset(cardRoot);
       cardRoot.replaceChildren();
@@ -3474,105 +4259,117 @@
         return;
       }
 
-      const { indexes, position } = currentFilteredPosition();
-      const head = document.createElement('div');
-      head.className = 'card-head';
-      const headTop = document.createElement('div');
-      headTop.className = 'head-top';
-      const headInfo = document.createElement('div');
-      const headActions = document.createElement('div');
-      headActions.className = 'head-actions';
-      const headNav = document.createElement('div');
-      headNav.className = 'head-nav';
+      const fileName = data.fileName;
+      currentExamPages = buildExamPages(fileName);
+      if (!currentExamPages.length) {
+        const empty = document.createElement('div');
+        empty.className = 'empty';
+        empty.textContent = '표시할 소단원 뷰 페이지가 없습니다.';
+        cardRoot.appendChild(empty);
+        return;
+      }
+      currentPageIndex = Math.min(Math.max(currentPageIndex, 0), currentExamPages.length - 1);
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'exam-toolbar';
+      const title = document.createElement('div');
+      title.className = 'exam-file-title';
+      title.textContent = displayFileName(fileName);
+      const pageControls = document.createElement('div');
+      pageControls.className = 'exam-toolbar-group';
       const prevButton = document.createElement('button');
       prevButton.type = 'button';
       prevButton.className = 'nav-button';
-      prevButton.textContent = '이전문항';
-      prevButton.title = '이전문항 (Alt+Q)';
-      prevButton.disabled = position <= 0;
-      prevButton.addEventListener('click', () => moveBy(-1));
+      prevButton.textContent = '이전 페이지';
+      prevButton.title = '이전 페이지 (←)';
+      prevButton.disabled = currentPageIndex <= 0;
+      prevButton.addEventListener('click', () => changeExamPage(-1));
+      const pageInput = document.createElement('input');
+      pageInput.className = 'exam-page-input';
+      pageInput.type = 'number';
+      pageInput.min = '1';
+      pageInput.max = String(currentExamPages.length);
+      pageInput.step = '1';
+      pageInput.value = String(currentPageIndex + 1);
+      pageInput.setAttribute('aria-label', '이동할 페이지 번호');
+      pageInput.addEventListener('change', () => setExamPageFromInput(pageInput));
+      pageInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          setExamPageFromInput(pageInput);
+          pageInput.blur();
+        }
+      });
+      const pageTotal = document.createElement('span');
+      pageTotal.className = 'exam-page-total';
+      pageTotal.textContent = `/ ${currentExamPages.length}`;
       const nextButton = document.createElement('button');
       nextButton.type = 'button';
       nextButton.className = 'nav-button';
-      nextButton.textContent = '다음문항';
-      nextButton.title = '다음문항 (Alt+W)';
-      nextButton.disabled = position < 0 || position >= indexes.length - 1;
-      nextButton.addEventListener('click', () => moveBy(1));
-      headNav.appendChild(prevButton);
-      headNav.appendChild(nextButton);
-      const rawJsonToggle = document.createElement('label');
-      rawJsonToggle.className = 'image-toggle compact';
-      const rawJsonCheckbox = document.createElement('input');
-      rawJsonCheckbox.type = 'checkbox';
-      rawJsonCheckbox.checked = rawJsonVisible;
-      const rawJsonToggleText = document.createElement('span');
-      rawJsonToggleText.textContent = rawJsonVisible ? 'JSON 원문 보기 ON' : 'JSON 원문 보기 OFF';
-      rawJsonCheckbox.addEventListener('change', () => {
-        rawJsonVisible = rawJsonCheckbox.checked;
+      nextButton.textContent = '다음 페이지';
+      nextButton.title = '다음 페이지 (→)';
+      nextButton.disabled = currentPageIndex >= currentExamPages.length - 1;
+      nextButton.addEventListener('click', () => changeExamPage(1));
+      pageControls.appendChild(prevButton);
+      pageControls.appendChild(pageInput);
+      pageControls.appendChild(pageTotal);
+      pageControls.appendChild(nextButton);
+
+      const zoomControls = document.createElement('div');
+      zoomControls.className = 'exam-toolbar-group';
+      const zoomOut = document.createElement('button');
+      zoomOut.type = 'button';
+      zoomOut.className = 'nav-button';
+      zoomOut.textContent = '-';
+      zoomOut.title = '축소 (Ctrl+-)';
+      zoomOut.disabled = examZoom <= MIN_EXAM_ZOOM;
+      zoomOut.addEventListener('click', () => {
+        setExamZoom(examZoom - EXAM_ZOOM_STEP);
         renderCard(activeIndex);
       });
-      rawJsonToggle.appendChild(rawJsonCheckbox);
-      rawJsonToggle.appendChild(rawJsonToggleText);
-      headActions.appendChild(headNav);
-      headActions.appendChild(rawJsonToggle);
-
-      const fileLine = document.createElement('div');
-      fileLine.className = 'file-line';
-      setText(fileLine, 'file-name', data.fileName);
-      if (data.sectionNote) {
-        setText(fileLine, 'section-note', data.sectionNote);
-      }
-      headInfo.appendChild(fileLine);
-      const titleLine = document.createElement('div');
-      titleLine.className = 'title-line';
-      setText(titleLine, 'section-title', data.sectionLabel);
-      setText(titleLine, 'q-number', data.qNumberLabel);
-      headInfo.appendChild(titleLine);
-      headTop.appendChild(headInfo);
-      headTop.appendChild(headActions);
-      head.appendChild(headTop);
-      cardRoot.appendChild(head);
-
-      const content = document.createElement('div');
-      content.className = 'content-grid';
-      content.addEventListener('scroll', () => {
-        sharedContentScrollTop = content.scrollTop;
+      const zoomStatus = document.createElement('button');
+      zoomStatus.type = 'button';
+      zoomStatus.className = 'nav-button exam-zoom-status';
+      zoomStatus.textContent = formatExamZoom();
+      zoomStatus.title = '100%로 복귀 (Ctrl+0)';
+      zoomStatus.addEventListener('click', () => {
+        setExamZoom(1);
+        renderCard(activeIndex);
       });
-      cardRoot.appendChild(content);
+      const zoomIn = document.createElement('button');
+      zoomIn.type = 'button';
+      zoomIn.className = 'nav-button';
+      zoomIn.textContent = '+';
+      zoomIn.title = '확대 (Ctrl++)';
+      zoomIn.disabled = examZoom >= MAX_EXAM_ZOOM;
+      zoomIn.addEventListener('click', () => {
+        setExamZoom(examZoom + EXAM_ZOOM_STEP);
+        renderCard(activeIndex);
+      });
+      zoomControls.appendChild(zoomOut);
+      zoomControls.appendChild(zoomStatus);
+      zoomControls.appendChild(zoomIn);
 
-      addWarningSection(content, data);
-      if (rawJsonVisible) {
-        addRawJsonSection(content, data.rawItem);
-      }
-      addImageEditNotesSection(content, data.imageEditNotes);
-      addSection(content, '문제', data.stem);
-      if (data.hasBlocks) {
-        addBlocksSection(content, data.rawBlocks);
-      }
+      const imageControls = document.createElement('div');
+      imageControls.className = 'exam-toolbar-group';
+      imageControls.appendChild(imageSizeControl);
+      updateImageSizeAvailability();
 
-      const pairedRow = document.createElement('div');
-      pairedRow.className = 'paired-row';
-      const choicesColumn = document.createElement('div');
-      const answerColumn = document.createElement('div');
-      answerColumn.className = 'answer-column';
-      pairedRow.appendChild(choicesColumn);
-      pairedRow.appendChild(answerColumn);
-      content.appendChild(pairedRow);
-      addChoicesSection(choicesColumn, data.choices);
-      addSection(answerColumn, 'answer_type', data.answerType, 'text-block answer-block');
-      addSection(answerColumn, 'answer', data.answer, 'text-block answer-block');
-      addSection(content, '해설', data.explanation);
-      restoreSharedScrollPosition();
-      requestAnimationFrame(restoreSharedScrollPosition);
+      toolbar.appendChild(title);
+      toolbar.appendChild(pageControls);
+      toolbar.appendChild(imageControls);
+      toolbar.appendChild(zoomControls);
+      cardRoot.appendChild(toolbar);
+
+      const stage = document.createElement('div');
+      stage.className = 'exam-stage';
+      const frame = document.createElement('div');
+      frame.className = 'exam-page-frame';
+      frame.appendChild(renderExamPage(currentExamPages[currentPageIndex]));
+      stage.appendChild(frame);
+      cardRoot.appendChild(stage);
 
       typesetMath(cardRoot);
-    }
-
-    function openManual() {
-      manualOverlay.hidden = false;
-      closeRecentFolderMenu();
-      closeFilterPanel();
-      manualClose.focus();
     }
 
     function closeManual() {
@@ -3580,56 +4377,8 @@
         return;
       }
       manualOverlay.hidden = true;
-      manualButton.focus();
     }
 
-    function setupHomeManual() {
-      if (!isMainPage()) {
-        return;
-      }
-      const manualBody = manualOverlay.querySelector('.manual-body');
-      document.getElementById('manual-title').textContent = '연산 JSON 뷰어 메인 도움말';
-      manualBody.replaceChildren();
-
-      const summary = document.createElement('div');
-      summary.className = 'manual-summary-card';
-      summary.innerHTML = `
-        <h3>처음 사용하는 순서</h3>
-        <p>새 작업 폴더는 폴더를 먼저 선택하고, 최근 작업한 폴더는 최근 방문 폴더 목록에서 다시 연 뒤 화면을 선택합니다.</p>
-        <div class="manual-flow" aria-label="사용 흐름">
-          <span class="manual-step">폴더 선택</span>
-          <span class="manual-arrow" aria-hidden="true">→</span>
-          <span class="manual-step green">화면 선택</span>
-        </div>
-      `;
-      manualBody.appendChild(summary);
-
-      const sections = document.createElement('div');
-      sections.className = 'manual-sections';
-      sections.innerHTML = `
-        <details class="manual-section" open>
-          <summary>1. 메인 버튼 기능</summary>
-          <div class="manual-section-content">
-            <table class="manual-table">
-              <tbody>
-                <tr><td><code>폴더 선택</code></td><td>JSON 파일과 이미지 파일이 들어있는 작업 폴더를 선택합니다.</td></tr>
-                <tr><td><code>최근 폴더</code></td><td><code>폴더 선택</code> 옆에 있는 최근 방문 폴더 목록입니다. 이전에 열었던 작업 폴더를 다시 선택합니다.</td></tr>
-                <tr><td><code>문항 뷰</code></td><td>문항 단위로 문제, 보기, 정답, 해설, 이미지를 확인합니다.</td></tr>
-                <tr><td><code>소단원 뷰</code></td><td>JSON 파일별 시험지 내용을 확인합니다.</td></tr>
-                <tr><td><code>통계</code></td><td>파일별, section별 문항수와 정답 번호 개수 분포를 확인합니다.</td></tr>
-              </tbody>
-            </table>
-            <div class="manual-highlight">폴더가 선택된 상태에서 화면 버튼을 누르면 해당 페이지로 이동하면서 현재 폴더를 다시 불러옵니다.</div>
-          </div>
-        </details>
-      `;
-      manualBody.appendChild(sections);
-    }
-
-    manualButton.addEventListener('click', (event) => {
-      event.stopPropagation();
-      openManual();
-    });
     manualClose.addEventListener('click', closeManual);
     manualOverlay.addEventListener('click', (event) => {
       if (event.target === manualOverlay) {
@@ -3666,16 +4415,27 @@
       event.stopPropagation();
       toggleRecentFolderMenu();
     });
+    pageSwitchButton.addEventListener('click', (event) => {
+      event.stopPropagation();
+      closeRecentFolderMenu();
+      closeFilterPanel();
+      togglePageSwitchMenu();
+    });
+    pageSwitchMenu.addEventListener('click', (event) => {
+      event.stopPropagation();
+    });
     recentFolderMenu.addEventListener('click', (event) => {
       event.stopPropagation();
     });
     document.addEventListener('click', () => {
+      closePageSwitchMenu();
       closeRecentFolderMenu();
       closeFilterPanel();
     });
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         closeManual();
+        closePageSwitchMenu();
         closeRecentFolderMenu();
         closeFilterPanel();
       }
@@ -3696,17 +4456,6 @@
       }
       await openRecentFolder(folder.id, options);
     }
-    homePageLinks.forEach((link) => {
-      link.addEventListener('click', (event) => {
-        if (!currentRecentFolder()) {
-          return;
-        }
-        event.preventDefault();
-        const target = new URL(link.getAttribute('href'), window.location.href);
-        target.searchParams.set('autoload', '1');
-        window.location.href = target.href;
-      });
-    });
     loadStatus.addEventListener('click', toggleErrorOnlyNav);
     loadStatus.addEventListener('keydown', (event) => {
       if (event.key !== 'Enter' && event.key !== ' ') {
@@ -3763,20 +4512,39 @@
         }
         return;
       }
-      if (!event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
-        return;
-      }
       const target = event.target;
-      if (isTypingTarget(target)) {
+      const key = event.key;
+      if ((event.ctrlKey || event.metaKey) && !event.altKey) {
+        if (key === '+' || key === '=') {
+          event.preventDefault();
+          setExamZoom(examZoom + EXAM_ZOOM_STEP);
+          renderCard(activeIndex);
+        } else if (key === '-' || key === '_') {
+          event.preventDefault();
+          setExamZoom(examZoom - EXAM_ZOOM_STEP);
+          renderCard(activeIndex);
+        } else if (key === '0') {
+          event.preventDefault();
+          setExamZoom(1);
+          renderCard(activeIndex);
+        }
         return;
       }
-      const key = event.key.toLowerCase();
-      if (key === 'q') {
+      if (isTypingTarget(target) || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
+        return;
+      }
+      if (key === 'ArrowLeft') {
         event.preventDefault();
-        moveBy(-1);
-      } else if (key === 'w') {
+        changeExamPage(-1);
+      } else if (key === 'ArrowRight') {
         event.preventDefault();
-        moveBy(1);
+        changeExamPage(1);
+      } else if (key === 'Home') {
+        event.preventDefault();
+        setExamPage(0);
+      } else if (key === 'End') {
+        event.preventDefault();
+        setExamPage(currentExamPages.length - 1);
       }
     });
     expandAllButton.addEventListener('click', () => {
@@ -3821,8 +4589,8 @@
       }
     });
     async function initializePage() {
-      setupHomeManual();
       restoreNavWidth();
+      restoreExamZoom();
       updateImageSize();
       updateImageSizeAvailability();
       renderRecentSelectionHint();
