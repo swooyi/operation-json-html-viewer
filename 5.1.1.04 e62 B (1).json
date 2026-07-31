@@ -1,0 +1,222 @@
+[
+  {
+    "number": "5.1.1.04 e62 B_91",
+    "id": "",
+    "twin_number": "1",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 긴 원부터 차례대로 기호를 나열한 것은 어느 것입니까?\n[box]\n㉠ 반지름이 $6$ cm인 원\n㉡ 지름이 $15$ cm인 원\n㉢ 지름이 $10$ cm인 원\n[/box]",
+    "choices": [
+      "㉠, ㉡, ㉢",
+      "㉠, ㉢, ㉡",
+      "㉡, ㉠, ㉢",
+      "㉡, ㉢, ㉠",
+      "㉢, ㉠, ㉡"
+    ],
+    "answer": "3",
+    "explanation": "지름이 길어지면 원주가 길어지므로 지름의 길이를 비교합니다.\n㉠ (지름) $=6\\times2=12$ (cm)\n➜ $15$ cm $>12$ cm $>10$ cm이므로 원주가 긴 원부터 차례대로 쓰면 ㉡, ㉠, ㉢입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_92",
+    "id": "",
+    "twin_number": "2",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 긴 원부터 차례대로 기호를 나열한 것은 어느 것입니까?\n[box]\n㉠ 지름이 $18$ cm인 원\n㉡ 반지름이 $7$ cm인 원\n㉢ 지름이 $12$ cm인 원\n[/box]",
+    "choices": [
+      "㉠, ㉡, ㉢",
+      "㉠, ㉢, ㉡",
+      "㉡, ㉠, ㉢",
+      "㉡, ㉢, ㉠",
+      "㉢, ㉠, ㉡"
+    ],
+    "answer": "1",
+    "explanation": "지름이 길어지면 원주가 길어지므로 지름의 길이를 비교합니다.\n㉡ (지름) $=7\\times2=14$ (cm)\n➜ $18$ cm $>14$ cm $>12$ cm이므로 원주가 긴 원부터 차례대로 쓰면 ㉠, ㉡, ㉢입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_93",
+    "id": "",
+    "twin_number": "3",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 긴 원부터 차례대로 기호를 나열한 것은 어느 것입니까?\n[box]\n㉠ 지름이 $11$ cm인 원\n㉡ 지름이 $16$ cm인 원\n㉢ 반지름이 $9$ cm인 원\n[/box]",
+    "choices": [
+      "㉠, ㉡, ㉢",
+      "㉠, ㉢, ㉡",
+      "㉡, ㉠, ㉢",
+      "㉡, ㉢, ㉠",
+      "㉢, ㉡, ㉠"
+    ],
+    "answer": "5",
+    "explanation": "지름이 길어지면 원주가 길어지므로 지름의 길이를 비교합니다.\n㉢ (지름) $=9\\times2=18$ (cm)\n➜ $18$ cm $>16$ cm $>11$ cm이므로 원주가 긴 원부터 차례대로 쓰면 ㉢, ㉡, ㉠입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_94",
+    "id": "",
+    "twin_number": "4",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 짧은 원부터 차례대로 기호를 나열한 것은 어느 것입니까?\n[box]\n㉠ 반지름이 $5$ cm인 원\n㉡ 지름이 $14$ cm인 원\n㉢ 반지름이 $4$ cm인 원\n[/box]",
+    "choices": [
+      "㉠, ㉡, ㉢",
+      "㉠, ㉢, ㉡",
+      "㉡, ㉠, ㉢",
+      "㉢, ㉠, ㉡",
+      "㉢, ㉡, ㉠"
+    ],
+    "answer": "4",
+    "explanation": "원의 지름이 길어지면 원주도 길어지므로 원의 지름을 비교해 봅니다.\n원의 지름이 각각 ㉠ $10$ cm, ㉡ $14$ cm, ㉢ $8$ cm이므로 원주가 짧은 원부터 차례대로 쓰면 ㉢, ㉠, ㉡입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_95",
+    "id": "",
+    "twin_number": "5",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 짧은 원부터 차례대로 기호를 나열한 것은 어느 것입니까?\n[box]\n㉠ 지름이 $9$ cm인 원\n㉡ 반지름이 $6$ cm인 원\n㉢ 반지름이 $4$ cm인 원\n[/box]",
+    "choices": [
+      "㉠, ㉢, ㉡",
+      "㉢, ㉠, ㉡",
+      "㉡, ㉠, ㉢",
+      "㉡, ㉢, ㉠",
+      "㉢, ㉡, ㉠"
+    ],
+    "answer": "2",
+    "explanation": "원의 지름이 길어지면 원주도 길어지므로 원의 지름을 비교해 봅니다.\n원의 지름이 각각 ㉠ $9$ cm, ㉡ $12$ cm, ㉢ $8$ cm이므로 원주가 짧은 원부터 차례대로 쓰면 ㉢, ㉠, ㉡입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_96",
+    "id": "",
+    "twin_number": "6",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 짧은 원부터 차례대로 기호를 나열한 것은 어느 것입니까?\n[box]\n㉠ 반지름이 $7$ cm인 원\n㉡ 반지름이 $5$ cm인 원\n㉢ 지름이 $16$ cm인 원\n[/box]",
+    "choices": [
+      "㉠, ㉡, ㉢",
+      "㉠, ㉢, ㉡",
+      "㉡, ㉠, ㉢",
+      "㉡, ㉢, ㉠",
+      "㉢, ㉡, ㉠"
+    ],
+    "answer": "3",
+    "explanation": "원의 지름이 길어지면 원주도 길어지므로 원의 지름을 비교해 봅니다.\n원의 지름이 각각 ㉠ $14$ cm, ㉡ $10$ cm, ㉢ $16$ cm이므로 원주가 짧은 원부터 차례대로 쓰면 ㉡, ㉠, ㉢입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_97",
+    "id": "",
+    "twin_number": "7",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 가장 긴 원은 어느 것입니까?",
+    "choices": [
+      "지름이 $13$ cm인 원",
+      "반지름이 $9$ cm인 원",
+      "지름이 $16$ cm인 원",
+      "반지름이 $7$ cm인 원",
+      "지름이 $15$ cm인 원"
+    ],
+    "answer": "2",
+    "explanation": "원의 지름이 길어지면 원주도 길어지므로 원의 지름을 비교해 봅니다.\n원의 지름이 각각 ① $13$ cm, ② $18$ cm, ③ $16$ cm, ④ $14$ cm, ⑤ $15$ cm이므로 원주가 가장 긴 원은 ②입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_98",
+    "id": "",
+    "twin_number": "8",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 가장 긴 원은 어느 것입니까?",
+    "choices": [
+      "반지름이 $6$ cm인 원",
+      "지름이 $17$ cm인 원",
+      "지름이 $14$ cm인 원",
+      "반지름이 $10$ cm인 원",
+      "지름이 $18$ cm인 원"
+    ],
+    "answer": "4",
+    "explanation": "원의 지름이 길어지면 원주도 길어지므로 원의 지름을 비교해 봅니다.\n원의 지름이 각각 ① $12$ cm, ② $17$ cm, ③ $14$ cm, ④ $20$ cm, ⑤ $18$ cm이므로 원주가 가장 긴 원은 ④입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_99",
+    "id": "",
+    "twin_number": "9",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 가장 짧은 원은 어느 것입니까?",
+    "choices": [
+      "반지름이 $8$ cm인 원",
+      "지름이 $11$ cm인 원",
+      "반지름이 $5$ cm인 원",
+      "지름이 $13$ cm인 원",
+      "지름이 $15$ cm인 원"
+    ],
+    "answer": "3",
+    "explanation": "원의 지름이 길어지면 원주도 길어지므로 원의 지름을 비교해 봅니다.\n원의 지름이 각각 ① $16$ cm, ② $11$ cm, ③ $10$ cm, ④ $13$ cm, ⑤ $15$ cm이므로 원주가 가장 짧은 원은 ③입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  },
+  {
+    "number": "5.1.1.04 e62 B_100",
+    "id": "",
+    "twin_number": "10",
+    "answer_type": "CHOICE12345",
+    "question": "원주가 가장 짧은 원은 어느 것입니까?",
+    "choices": [
+      "지름이 $12$ cm인 원",
+      "반지름이 $7$ cm인 원",
+      "지름이 $15$ cm인 원",
+      "반지름이 $6$ cm인 원",
+      "지름이 $10$ cm인 원"
+    ],
+    "answer": "5",
+    "explanation": "원의 지름이 길어지면 원주도 길어지므로 원의 지름을 비교해 봅니다.\n원의 지름이 각각 ① $12$ cm, ② $14$ cm, ③ $15$ cm, ④ $12$ cm, ⑤ $10$ cm이므로 원주가 가장 짧은 원은 ⑤입니다.",
+    "image": "",
+    "image_exlp": "",
+    "image_choices": "",
+    "image_choices_exlp": "",
+    "image_solution": "",
+    "image_solution_exlp": ""
+  }
+]

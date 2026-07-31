@@ -1450,6 +1450,7 @@
           <a href="question-viewer.html?autoload=1" aria-current="page">문항 뷰</a>
           <a href="section-viewer.html?autoload=1">소단원 뷰</a>
           <a href="stats.html?autoload=1">통계</a>
+          <a href="all-images.html?autoload=1">그림</a>
         </div>
       </div>
     </div>
@@ -2600,6 +2601,20 @@
       }
     }
 
+    function readQuestionTarget() {
+      const params = new URLSearchParams(window.location.search);
+      const fileName = String(params.get('file') || '').trim();
+      const qNumber = String(params.get('q') || '').trim();
+      return fileName && qNumber ? { fileName, qNumber } : null;
+    }
+
+    function matchesQuestionTarget(card, target) {
+      return card
+        && target
+        && card.fileName === target.fileName
+        && card.qNumberLabel === qNumberLabel(target.qNumber);
+    }
+
     function matchesSectionTarget(card, target) {
       return card
         && target
@@ -2842,8 +2857,11 @@
       loadErrors = errors;
       cards = loadedCards;
       activeLoadError = null;
-      const sectionTarget = readSectionTarget();
-      const targetIndex = sectionTarget ? cards.findIndex((card) => matchesSectionTarget(card, sectionTarget)) : -1;
+      const questionTarget = readQuestionTarget();
+      const sectionTarget = questionTarget ? null : readSectionTarget();
+      const targetIndex = questionTarget
+        ? cards.findIndex((card) => matchesQuestionTarget(card, questionTarget))
+        : (sectionTarget ? cards.findIndex((card) => matchesSectionTarget(card, sectionTarget)) : -1);
       if (targetIndex >= 0) {
         activeIndex = targetIndex;
         openState.clear();

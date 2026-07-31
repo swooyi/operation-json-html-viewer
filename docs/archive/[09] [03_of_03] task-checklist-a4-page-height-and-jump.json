@@ -1,0 +1,77 @@
+{
+  "target_file": "C:\\dev\\연산JSON_HTML 뷰어\\section-viewer.html",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Confirm and correct A4 page height behavior, then add direct page-number input navigation.",
+  "assumptions": [
+    "A4 page chrome should stay exactly 210mm by 297mm at 100% zoom.",
+    "Overflowing section content can remain a follow-up pagination issue, but the page container itself should not grow taller.",
+    "Direct page input should accept 1-based page numbers and clamp invalid ranges."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_fix_a4_height",
+      "order": 1,
+      "title": "Fix A4 visual height",
+      "check": true,
+      "targets": "section-viewer.html A4 CSS",
+      "allowed_fields": [
+        ".exam-page-frame",
+        ".pdf-page",
+        "print CSS overrides if needed"
+      ],
+      "protected_fields": [
+        "Worksheet data loading",
+        "PDF-like content render order"
+      ],
+      "summary": "Use fixed height instead of min-height so the displayed page does not grow beyond A4.",
+      "verify": [
+        ".pdf-page has height: 297mm.",
+        ".exam-page-frame has height based on 297mm and zoom.",
+        "Script syntax still validates."
+      ]
+    },
+    {
+      "id": "02_add_page_input",
+      "order": 2,
+      "title": "Add direct page number input",
+      "check": true,
+      "targets": "section-viewer.html toolbar render and page navigation JS",
+      "allowed_fields": [
+        "Page status controls",
+        "Page input handler",
+        "Small CSS for page input"
+      ],
+      "protected_fields": [
+        "Arrow key navigation",
+        "Zoom controls"
+      ],
+      "summary": "Replace passive page text with a numeric input that jumps to the requested page.",
+      "verify": [
+        "Toolbar contains a numeric page input.",
+        "Enter/change clamps to 1 through total page count.",
+        "The total page count remains visible."
+      ]
+    },
+    {
+      "id": "03_validate_and_archive",
+      "order": 3,
+      "title": "Validate and archive checklist",
+      "check": true,
+      "targets": "section-viewer.html and this checklist JSON",
+      "allowed_fields": [
+        "Checklist check fields",
+        "Checklist filename count"
+      ],
+      "protected_fields": [
+        "Unrelated files"
+      ],
+      "summary": "Run syntax and string checks, then archive this checklist.",
+      "verify": [
+        "section-viewer.html script syntax validates.",
+        "Relevant CSS and input strings are present.",
+        "Checklist parses and filename count matches."
+      ]
+    }
+  ]
+}

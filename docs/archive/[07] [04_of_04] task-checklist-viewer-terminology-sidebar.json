@@ -1,0 +1,106 @@
+{
+  "target_file": "C:\\dev\\연산JSON_HTML 뷰어\\index.html; C:\\dev\\연산JSON_HTML 뷰어\\question-viewer.html; C:\\dev\\연산JSON_HTML 뷰어\\section-viewer.html; C:\\dev\\연산JSON_HTML 뷰어\\stats.html",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Remove the 시험지 center home panel, show a left sidebar with a filename search and JSON filename list only, and standardize viewer terminology.",
+  "assumptions": [
+    "시험지 continues to use section-viewer.html.",
+    "The 시험지 left panel should search JSON filenames, not question text.",
+    "Hidden compatibility controls may remain only if needed to avoid broader JavaScript refactors, but visible filters and fold controls must not appear.",
+    "Folder loading, recent folder behavior, and detail rendering should remain unchanged."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_update_section_viewer_shell",
+      "order": 1,
+      "title": "Remove center home panel and expose sidebar",
+      "check": true,
+      "targets": "section-viewer.html main markup",
+      "allowed_fields": [
+        "Home panel markup",
+        "Viewer-main hidden state",
+        "Visible sidebar search markup"
+      ],
+      "protected_fields": [
+        "Folder input controls",
+        "Recent folder controls",
+        "Detail article structure"
+      ],
+      "summary": "Delete the center home content/buttons and show the viewer shell with a left filename search.",
+      "verify": [
+        "section-viewer.html has no visible home-page-links block.",
+        "viewer-main is not hidden by default.",
+        "The visible left panel contains one search input styled as search-input."
+      ]
+    },
+    {
+      "id": "02_limit_section_search_to_filenames",
+      "order": 2,
+      "title": "Search JSON filenames only",
+      "check": true,
+      "targets": "section-viewer.html renderNav and filtering logic",
+      "allowed_fields": [
+        "Search placeholder",
+        "filteredIndexes query condition",
+        "Empty-state text if needed"
+      ],
+      "protected_fields": [
+        "Card construction",
+        "Question detail rendering",
+        "JSON parsing"
+      ],
+      "summary": "Keep the left list flat and make the search box filter by JSON filename only.",
+      "verify": [
+        "Search placeholder names JSON filenames.",
+        "Search matching uses fileName/displayFileName instead of full question content.",
+        "The rendered nav still creates only file-node buttons."
+      ]
+    },
+    {
+      "id": "03_standardize_viewer_terms",
+      "order": 3,
+      "title": "Standardize viewer terminology",
+      "check": true,
+      "targets": "index.html, question-viewer.html, section-viewer.html, stats.html visible labels and related titles",
+      "allowed_fields": [
+        "Visible page titles",
+        "Navigation labels",
+        "Manual text",
+        "Tooltips that name pages"
+      ],
+      "protected_fields": [
+        "URLs",
+        "Element IDs",
+        "Storage keys",
+        "Data behavior"
+      ],
+      "summary": "Rename 연산 JSON 뷰어 to 연산 JSON viewer, 문항뷰어 to 문항, and 시험지뷰 to 시험지.",
+      "verify": [
+        "No exact 연산 JSON 뷰어, 문항뷰어, or 시험지뷰 strings remain in the four HTML files.",
+        "The page links still point to the same HTML files.",
+        "Generic unrelated wording is not unnecessarily refactored."
+      ]
+    },
+    {
+      "id": "04_validate_and_archive",
+      "order": 4,
+      "title": "Validate and archive checklist",
+      "check": true,
+      "targets": "Edited HTML files and this checklist JSON",
+      "allowed_fields": [
+        "Checklist check fields",
+        "Checklist filename count"
+      ],
+      "protected_fields": [
+        "Archived checklist contents other than this file"
+      ],
+      "summary": "Run syntax/string checks and archive the completed checklist.",
+      "verify": [
+        "Run script syntax validation for edited HTML files.",
+        "Search confirms the requested old terms are gone.",
+        "Parse this checklist JSON successfully.",
+        "Move this checklist to docs/archive if all tasks are complete."
+      ]
+    }
+  ]
+}

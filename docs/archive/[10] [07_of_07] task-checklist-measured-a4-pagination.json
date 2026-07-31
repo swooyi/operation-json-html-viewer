@@ -1,0 +1,180 @@
+{
+    "target_file":  "C:\\dev\\연산JSON_HTML 뷰어\\section-viewer.html",
+    "status_rule":  "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+    "scope":  "Replace the one-section-per-page A4 rendering with measured HTML pagination that mimics LaTeX multicols* flow from make_pdf7.2_260625.py.",
+    "assumptions":  [
+                        "The source PDF generator delegates pagination to LaTeX multicols*, so HTML must measure rendered DOM heights instead of porting a Python height algorithm.",
+                        "The A4 page container should remain fixed at 210mm by 297mm at 100% zoom.",
+                        "Pagination should first support item-level movement between columns/pages; splitting a single over-tall question internally can be a later refinement if needed.",
+                        "The existing left JSON filename panel, page number input, zoom controls, and keyboard shortcuts should remain available.",
+                        "Implementation should follow docs/pdf-html-rendering-rules.md and the confirmed settings in C:\\dev\\연산작업\\패키지\\make_pdf7.2_260625.py."
+                    ],
+    "source_checklists":  [
+                              "docs/archive/[08] [05_of_05] task-checklist-a4-exam-renderer.json",
+                              "docs/archive/[09] [03_of_03] task-checklist-a4-page-height-and-jump.json"
+                          ],
+    "tasks":  [
+                  {
+                      "id":  "01_confirm_layout_constants",
+                      "order":  1,
+                      "title":  "Confirm PDF layout constants for HTML pagination",
+                      "check":  true,
+                      "targets":  "section-viewer.html constants and CSS values",
+                      "allowed_fields":  [
+                                             "A4 size constants",
+                                             "Column count and gap constants",
+                                             "Problem and answer item gap values",
+                                             "Page content height calculation helpers"
+                                         ],
+                      "protected_fields":  [
+                                               "Folder loading behavior",
+                                               "Recent folder behavior",
+                                               "Sidebar search behavior"
+                                           ],
+                      "summary":  "Record and align the HTML pagination constants with make_pdf7.2_260625.py: 2 columns, 8mm column gap, 0.4pt rule, A4 margins, 20mm problem gap, and 4mm answer gap.",
+                      "verify":  [
+                                     "Confirm constants match the Python file values.",
+                                     "Confirm .pdf-page remains fixed 210mm by 297mm.",
+                                     "Confirm content area height excludes top/bottom page padding and dynamic page header height."
+                                 ]
+                  },
+                  {
+                      "id":  "02_build_measurement_area",
+                      "order":  2,
+                      "title":  "Build hidden measurement area",
+                      "check":  true,
+                      "targets":  "section-viewer.html measurement DOM and helper functions",
+                      "allowed_fields":  [
+                                             "Hidden measurement container CSS",
+                                             "DOM clone/measure helpers",
+                                             "Measurement cleanup helpers"
+                                         ],
+                      "protected_fields":  [
+                                               "Visible toolbar controls",
+                                               "Navigation list rendering"
+                                           ],
+                      "summary":  "Create an offscreen A4-width measurement area that can render question/answer items with the same CSS and measure their heights before placing them into pages.",
+                      "verify":  [
+                                     "Measurement elements are hidden from users and print output.",
+                                     "Measured width matches one PDF column width.",
+                                     "Temporary measurement nodes are removed or reused safely."
+                                 ]
+                  },
+                  {
+                      "id":  "03_paginate_problem_pages",
+                      "order":  3,
+                      "title":  "Paginate problem pages by measured item height",
+                      "check":  true,
+                      "targets":  "section-viewer.html problem page model generation",
+                      "allowed_fields":  [
+                                             "buildExamPages problem logic",
+                                             "Problem page data model",
+                                             "Column/page allocation helpers"
+                                         ],
+                      "protected_fields":  [
+                                               "Problem item DOM content order",
+                                               "Choice layout rules",
+                                               "Image lookup behavior"
+                                           ],
+                      "summary":  "Place section title and rendered question items into left/right columns, create a new A4 page when both columns are full, and continue within the same section.",
+                      "verify":  [
+                                     "A section that exceeds one A4 page produces multiple problem pages.",
+                                     "Items fill the left column before the right column, then continue on the next page.",
+                                     "The section title appears at the start of the section flow and consumes measured height.",
+                                     "No page column exceeds the available content height except a single over-tall item fallback."
+                                 ]
+                  },
+                  {
+                      "id":  "04_paginate_answer_pages",
+                      "order":  4,
+                      "title":  "Paginate answer and explanation pages",
+                      "check":  true,
+                      "targets":  "section-viewer.html answer page model generation",
+                      "allowed_fields":  [
+                                             "Answer page allocation helpers",
+                                             "Answer page data model",
+                                             "Answer item gap handling"
+                                         ],
+                      "protected_fields":  [
+                                               "Answer text rendering order",
+                                               "Explanation image mapping"
+                                           ],
+                      "summary":  "Use the same measured 2-column flow for 정답 및 해설 pages, starting after problem pages and creating as many answer pages as needed.",
+                      "verify":  [
+                                     "Answer pages start with 정답 및 해설.",
+                                     "Answer items flow across two columns and then additional pages.",
+                                     "Explanation [img] mapping still skips images used by the question stem."
+                                 ]
+                  },
+                  {
+                      "id":  "05_render_paginated_page_model",
+                      "order":  5,
+                      "title":  "Render the measured page model",
+                      "check":  true,
+                      "targets":  "section-viewer.html renderProblemPage, renderAnswerPage, renderCard",
+                      "allowed_fields":  [
+                                             "Page render functions",
+                                             "Column DOM structure",
+                                             "Page count and direct page input integration"
+                                         ],
+                      "protected_fields":  [
+                                               "Zoom control behavior",
+                                               "Keyboard shortcut behavior",
+                                               "JSON filename list behavior"
+                                           ],
+                      "summary":  "Render pre-paginated columns instead of relying on CSS column-count for overflow, while preserving page input, buttons, zoom, and keyboard shortcuts.",
+                      "verify":  [
+                                     "Rendered page shows fixed left and right columns.",
+                                     "Page input reflects the new total page count.",
+                                     "Previous/next/page input/keyboard navigation still work.",
+                                     "Zoom still scales the fixed A4 page without changing pagination."
+                                 ]
+                  },
+                  {
+                      "id":  "06_visual_compare_sample",
+                      "order":  6,
+                      "title":  "Compare against provided HTML/PDF screenshots",
+                      "check":  true,
+                      "targets":  "section-viewer.html rendered output for representative JSON",
+                      "allowed_fields":  [
+                                             "Manual visual notes",
+                                             "Small spacing/style corrections directly tied to PDF parity"
+                                         ],
+                      "protected_fields":  [
+                                               "Unrelated UI redesign",
+                                               "Global terminology changes"
+                                           ],
+                      "summary":  "Check that the HTML A4 output no longer cuts off and more closely resembles the make_pdf.py output: 2-column page filling, compact item spacing, and correct page continuation.",
+                      "verify":  [
+                                     "No visible content is clipped at the bottom of the A4 page.",
+                                     "Items that do not fit move to the next column or page.",
+                                     "The first page layout is visually closer to the provided PDF screenshot than the current clipped HTML screenshot.",
+                                     "Document any remaining known mismatch such as single over-tall item splitting."
+                                 ]
+                  },
+                  {
+                      "id":  "07_final_validation",
+                      "order":  7,
+                      "title":  "Run final validation and update checklist",
+                      "check":  true,
+                      "targets":  "section-viewer.html and this checklist JSON",
+                      "allowed_fields":  [
+                                             "Checklist check fields",
+                                             "Checklist filename count",
+                                             "Validation notes if needed"
+                                         ],
+                      "protected_fields":  [
+                                               "Archived checklists",
+                                               "Unrelated files"
+                                           ],
+                      "summary":  "Validate syntax and checklist state, then archive the checklist only after implementation and verification are complete.",
+                      "verify":  [
+                                     "section-viewer.html script syntax validates.",
+                                     "Search confirms measured pagination functions/classes are present.",
+                                     "Parse this checklist JSON successfully.",
+                                     "Confirm completed task count in the filename matches tasks[*].check.",
+                                     "Move this checklist to docs/archive only if all tasks are complete."
+                                 ]
+                  }
+              ]
+}

@@ -1,0 +1,203 @@
+{
+  "target_file": "C:\\dev\\연산JSON_HTML 뷰어\\index.html; C:\\dev\\연산JSON_HTML 뷰어\\question-viewer.html; C:\\dev\\연산JSON_HTML 뷰어\\section-viewer.html; C:\\dev\\연산JSON_HTML 뷰어\\stats.html; C:\\dev\\연산JSON_HTML 뷰어\\all-images.html",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Add the 그림 page at all-images.html. It lists only images connected to the selected JSON file, groups repeated image files into one card with every connection shown, provides layout, information, image-note, question-navigation, and later bookmark controls.",
+  "assumptions": [
+    "All visible navigation uses the name 그림; 이미지 뷰 is not used as a visible page label.",
+    "The 그림 sidebar follows the 소단원 뷰 interaction and file-list structure, while its selected-file content is limited to images connected to that one JSON file.",
+    "A repeated image path renders as one card and lists each small-unit reference, question number, and problem-or-explanation connection on separate lines. A connection is classified as 문제 only when its image tag is in question.stem, and as 해설 only when its image tag is in explanation.",
+    "Files without connected images remain selectable and show an empty-state message; the grid itself never renders image-less entries.",
+    "Existing image-note behavior will be reused if it exists and supports the required context; otherwise a minimal 그림-page detail dialog will be added.",
+    "Grid columns, image size, information visibility, and later bookmark selections are stored in browser storage without changing JSON source data.",
+    "Bookmarks are private to each browser profile and GitHub Pages origin; they are not shared or synchronized between people or devices."
+  ],
+  "source_checklists": [
+    "docs/archive/[07] [04_of_04] task-checklist-viewer-terminology-sidebar.json",
+    "docs/archive/[11] [06_of_06] task-checklist-small-unit-view-adjustments.json"
+  ],
+  "tasks": [
+    {
+      "id": "01_inspect_existing_navigation_and_image_data",
+      "order": 1,
+      "title": "Inspect navigation, sidebar, image links, and image notes",
+      "check": true,
+      "targets": "index.html, question-viewer.html, section-viewer.html, stats.html, and existing image-note or image-index code",
+      "allowed_fields": [
+        "Read-only inspection",
+        "Checklist result notes if needed"
+      ],
+      "protected_fields": [
+        "No application-file edits in this task"
+      ],
+      "summary": "Identify the shared navigation patterns, the 소단원 뷰 sidebar construction, the JSON fields that reference problem and explanation images, and the existing image-note and question-deep-link mechanisms.",
+      "verify": [
+        "Identify every page that needs a 그림 link.",
+        "Confirm how JSON filename, small-unit name, question number, and problem-or-explanation context can be derived.",
+        "Confirm whether an image-note implementation already exists and whether it can be reused.",
+        "Identify how question-viewer.html can open an exact file and question number."
+      ]
+    },
+    {
+      "id": "02_build_image_inventory_model",
+      "order": 2,
+      "title": "Build selected-file image inventory and connection metadata",
+      "check": false,
+      "targets": "all-images.html image collection, grouping, sorting, and missing-image state",
+      "allowed_fields": [
+        "New all-images.html data and rendering code",
+        "Image collection helpers",
+        "Missing-image presentation"
+      ],
+      "protected_fields": [
+        "JSON source files",
+        "Existing question and section rendering behavior",
+        "Image file contents"
+      ],
+      "summary": "Collect only the selected JSON file's connected images, merge identical image files into one inventory entry, preserve all connection rows, and order rows by question number then problem before explanation.",
+      "verify": [
+        "A selected JSON file yields only its connected images.",
+        "Repeated image files create one card with multiple connection rows.",
+        "Each row includes JSON filename, small-unit name, question number, and problem or explanation.",
+        "Image-less files show a clear empty state.",
+        "Unavailable image paths show a visible file-specific failure state."
+      ]
+    },
+    {
+      "id": "03_create_picture_page_and_navigation",
+      "order": 3,
+      "title": "Create the 그림 page and page-entry navigation",
+      "check": false,
+      "targets": "all-images.html and visible navigation in index.html, question-viewer.html, section-viewer.html, and stats.html",
+      "allowed_fields": [
+        "New all-images.html markup and styles",
+        "Visible navigation labels",
+        "Links to all-images.html",
+        "Index home-button layout",
+        "그림 page home link"
+      ],
+      "protected_fields": [
+        "Existing page URLs other than the new link target",
+        "Folder loading logic",
+        "Question data parsing behavior"
+      ],
+      "summary": "Add all-images.html with a 소단원 뷰-equivalent sidebar, add 그림 entry links across the app, include the requested two-row home button layout, and provide a home link on the 그림 page.",
+      "verify": [
+        "index.html displays 문항 뷰, 소단원 뷰, 통계, 그림 in the requested 2-by-2 arrangement.",
+        "Each relevant page offers a visible 그림 link in its upper-left navigation area.",
+        "The 그림 sidebar selects one JSON file using the same practical workflow as 소단원 뷰.",
+        "Existing page navigation still works."
+      ]
+    },
+    {
+      "id": "04_add_grid_and_display_preferences",
+      "order": 4,
+      "title": "Add image grid controls and persistent display preferences",
+      "check": false,
+      "targets": "all-images.html grid styles, controls, and browser-storage state",
+      "allowed_fields": [
+        "Grid column controls for 2, 3, and 4 columns",
+        "Image-size controls",
+        "Information visibility control",
+        "Dedicated browser-storage keys for 그림 preferences",
+        "Selected JSON file and content scroll-position storage",
+        "Sticky picture-page toolbar styles"
+      ],
+      "protected_fields": [
+        "JSON source data",
+        "Existing storage keys and settings behavior",
+        "Image inventory ordering"
+      ],
+      "summary": "Use a three-column default grid, let users switch to two or four columns, adjust image size, toggle filenames and connection details, keep the controls visible while scrolling, and restore the selected file and content position after returning from another page.",
+      "verify": [
+        "The default grid has three columns.",
+        "Two-, three-, and four-column controls update card layout correctly.",
+        "Image-size control visibly changes image presentation without breaking cards.",
+        "Information on/off hides and restores filenames and connection rows.",
+        "All three preferences persist after page reload."
+      ]
+    },
+    {
+      "id": "05_add_image_note_and_question_links",
+      "order": 5,
+      "title": "Add image-note detail and exact question navigation",
+      "check": false,
+      "targets": "all-images.html image-card interactions and question-viewer.html deep-link handling only if missing",
+      "allowed_fields": [
+        "Image card click behavior",
+        "Image-note dialog or reuse integration",
+        "Per-connection question navigation controls",
+        "Minimal URL/state handling required for exact question opening",
+        "Escape and arrow-key behavior while image detail is open"
+      ],
+      "protected_fields": [
+        "Question content",
+        "Image files",
+        "Unrelated keyboard shortcuts",
+        "Existing image-note data unrelated to the selected image"
+      ],
+      "summary": "Open image notes from a card, expose every connection in the detail view, and let each connection open its exact question in 문항 뷰 without making card clicks conflict with navigation buttons.",
+      "verify": [
+        "Clicking an image card opens its note/detail view.",
+        "The detail view shows the image filename and every connection row.",
+        "Each connection can open the matching JSON file and question number in 문항 뷰.",
+        "Esc closes the detail view.",
+        "Left and right arrow keys move through images only while the detail view is open and focus is not in a typing control."
+      ]
+    },
+    {
+      "id": "06_add_private_image_bookmarks",
+      "order": 6,
+      "title": "Add per-browser 그림 bookmarks",
+      "check": false,
+      "targets": "all-images.html bookmark controls, filtering, and browser-storage state",
+      "allowed_fields": [
+        "Per-card bookmark button and selected state",
+        "All and bookmarked-only filter controls",
+        "Dedicated browser-storage key using stable JSON filename and image filename identifiers",
+        "Bookmark count display"
+      ],
+      "protected_fields": [
+        "JSON source data",
+        "Image files",
+        "Cross-user sharing or external synchronization",
+        "Existing grid and image-note behavior unless required by the bookmark UI"
+      ],
+      "summary": "Let each user mark 그림 cards for later correction and filter the selected JSON file to bookmarked cards only. Store choices locally per browser profile and deployment origin, including GitHub Pages.",
+      "verify": [
+        "A card bookmark can be added and removed without changing JSON data.",
+        "The bookmarked-only filter shows only bookmarked cards for the selected JSON file.",
+        "Bookmark state persists after reload on the same browser and origin.",
+        "The bookmark key remains stable when the same JSON file and image file are reloaded.",
+        "No user data is transmitted or shared with other browser profiles, devices, or users."
+      ]
+    },
+    {
+      "id": "07_validate_picture_workflow",
+      "order": 7,
+      "title": "Validate the complete 그림 workflow and update checklist",
+      "check": false,
+      "targets": "all changed HTML files and this checklist JSON",
+      "allowed_fields": [
+        "Checklist check fields",
+        "Checklist filename count",
+        "Checklist archive location after full completion",
+        "Small fixes directly required by validation"
+      ],
+      "protected_fields": [
+        "Unrelated pages and styles",
+        "Archived checklist contents",
+        "JSON source files"
+      ],
+      "summary": "Run structural and representative UI checks for navigation, inventory grouping, settings, detail notes, question links, empty states, and missing images before marking completed tasks.",
+      "verify": [
+        "Validate JavaScript syntax for every changed HTML file.",
+        "Parse this checklist JSON successfully.",
+        "Test a JSON file with multiple images, a repeated image reference, no images, and a missing image path when representative data is available.",
+        "Confirm no existing viewer navigation or selected-file behavior regresses.",
+        "Confirm completed count in the checklist filename equals tasks[*].check.",
+        "Validate bookmark persistence and bookmarked-only filtering when task 06 is implemented.",
+        "Move the checklist to docs/archive only after all seven tasks are complete."
+      ]
+    }
+  ]
+}

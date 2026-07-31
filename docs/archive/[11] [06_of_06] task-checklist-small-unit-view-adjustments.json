@@ -1,0 +1,147 @@
+{
+    "target_file":  "C:\\dev\\연산JSON_HTML 뷰어\\index.html; C:\\dev\\연산JSON_HTML 뷰어\\question-viewer.html; C:\\dev\\연산JSON_HTML 뷰어\\section-viewer.html",
+    "status_rule":  "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+    "scope":  "Apply requested terminology rollback, tighten A4 problem spacing, add file-view page numbers, and expose an image-size slider for the small-unit view.",
+    "assumptions":  [
+                        "Screen/menu terminology changes target page titles and navigation labels, not every generic occurrence of the word 문항 in explanatory text.",
+                        "Main title should be 연산 JSON 뷰어 while subpage browser titles may keep the same app name suffix.",
+                        "Problem bottom gap should become 10mm for A4 rendering and measured pagination should use the same CSS value.",
+                        "Page numbers should be centered at the bottom of the A4 page and included in measured content height.",
+                        "The existing image-size controls in section-viewer.html can be exposed instead of building a new settings system."
+                    ],
+    "source_checklists":  [
+                              "docs/archive/[10] [07_of_07] task-checklist-measured-a4-pagination.json"
+                          ],
+    "tasks":  [
+                  {
+                      "id":  "01_confirm_image_rules",
+                      "order":  1,
+                      "title":  "Confirm Python image sizing rules",
+                      "check":  true,
+                      "targets":  "make_pdf7.2_260625.py image sizing constants and section-viewer image CSS",
+                      "allowed_fields":  [
+                                             "Checklist result notes",
+                                             "section-viewer image-size CSS/JS"
+                                         ],
+                      "protected_fields":  [
+                                               "Image lookup behavior",
+                                               "Missing image rendering"
+                                           ],
+                      "summary":  "Confirm py image rules and decide to expose the existing image slider for HTML tuning.",
+                      "verify":  [
+                                     "Identify make_includegraphics_option behavior.",
+                                     "Confirm section-viewer has reusable image controls."
+                                 ],
+                      "result":  "make_pdf uses native DPI width when available: native width * 0.50 capped at current column width * 0.95; fallback is 0.43\\linewidth. HTML exposes a slider for practical tuning."
+                  },
+                  {
+                      "id":  "02_update_terminology",
+                      "order":  2,
+                      "title":  "Update screen terminology",
+                      "check":  true,
+                      "targets":  "index.html, question-viewer.html, section-viewer.html, stats.html navigation/page labels",
+                      "allowed_fields":  [
+                                             "Document title text",
+                                             "Visible page labels",
+                                             "Navigation link labels",
+                                             "Relevant manual menu labels"
+                                         ],
+                      "protected_fields":  [
+                                               "Generic question content labels",
+                                               "Data field names",
+                                               "Search/filter behavior"
+                                           ],
+                      "summary":  "Set main title to 연산 JSON 뷰어, 문항 view label to 문항 뷰, and file/section view label to 소단원 뷰.",
+                      "verify":  [
+                                     "Search confirms old screen labels are gone where applicable.",
+                                     "Main page shows 연산 JSON 뷰어."
+                                 ]
+                  },
+                  {
+                      "id":  "03_reduce_problem_gap",
+                      "order":  3,
+                      "title":  "Reduce A4 problem gap",
+                      "check":  true,
+                      "targets":  "section-viewer.html .pdf-item spacing",
+                      "allowed_fields":  [
+                                             "Problem item margin CSS",
+                                             "Measured pagination behavior that depends on CSS"
+                                         ],
+                      "protected_fields":  [
+                                               "Answer item gap",
+                                               "Column gap",
+                                               "A4 page size"
+                                           ],
+                      "summary":  "Change problem item bottom gap from 20mm to 10mm so more items can fit when there is enough lower space.",
+                      "verify":  [
+                                     "CSS uses 10mm for .pdf-item margin-bottom.",
+                                     "Pagination syntax check passes."
+                                 ]
+                  },
+                  {
+                      "id":  "04_add_page_numbers",
+                      "order":  4,
+                      "title":  "Add centered A4 page numbers",
+                      "check":  true,
+                      "targets":  "section-viewer.html A4 page base and page model",
+                      "allowed_fields":  [
+                                             "Page model pageNumber/totalPages",
+                                             "Footer DOM/CSS",
+                                             "Measurement base page footer"
+                                         ],
+                      "protected_fields":  [
+                                               "Navigation controls",
+                                               "Zoom controls",
+                                               "Sidebar"
+                                           ],
+                      "summary":  "Render centered bottom page numbers inside each A4 page and keep them in the measured layout.",
+                      "verify":  [
+                                     "Footer appears in page DOM.",
+                                     "Measured pagination still has no column overflow on sample."
+                                 ]
+                  },
+                  {
+                      "id":  "05_expose_image_slider",
+                      "order":  5,
+                      "title":  "Expose image size slider in small-unit view",
+                      "check":  true,
+                      "targets":  "section-viewer.html toolbar and PDF image CSS",
+                      "allowed_fields":  [
+                                             "Exam toolbar image controls",
+                                             "PDF image max-width CSS",
+                                             "Existing image-size JS events"
+                                         ],
+                      "protected_fields":  [
+                                               "Question viewer slider behavior",
+                                               "Image file lookup"
+                                           ],
+                      "summary":  "Add an image size slider to the 소단원 뷰 toolbar and apply it to PDF images.",
+                      "verify":  [
+                                     "Slider is visible in section-viewer toolbar.",
+                                     "Changing slider rerenders PDF images.",
+                                     "Script syntax passes."
+                                 ]
+                  },
+                  {
+                      "id":  "06_final_validation",
+                      "order":  6,
+                      "title":  "Run validation and archive checklist",
+                      "check":  true,
+                      "targets":  "Changed HTML files and checklist JSON",
+                      "allowed_fields":  [
+                                             "Checklist check fields",
+                                             "Checklist filename/archive path"
+                                         ],
+                      "protected_fields":  [
+                                               "Unrelated user changes"
+                                           ],
+                      "summary":  "Run syntax/search/browser checks, then archive this checklist when complete.",
+                      "verify":  [
+                                     "HTML script syntax checks pass.",
+                                     "Checklist JSON parses.",
+                                     "Filename count matches completed tasks.",
+                                     "Archive only after all tasks are complete."
+                                 ]
+                  }
+              ]
+}

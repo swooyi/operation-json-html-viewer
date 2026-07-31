@@ -1,0 +1,229 @@
+{
+  "target_file": "C:\\dev\\연산JSON_HTML 뷰어\\index.html",
+  "status_rule": "작업 완료 시 해당 task의 check를 true로 변경한다. 다음 작업 시 check가 false인 task만 진행 대상으로 본다.",
+  "scope": "상단 오류 요약, 좌측 탐색기 표시, 오류/경고 등급, 필터 조건, 폴더 선택 시작 위치와 관련된 index.html 코드만 수정한다.",
+  "assumptions": [
+    "주 사용 브라우저는 Chrome이다.",
+    "Chrome File System Access API 사용을 우선한다.",
+    "Chrome에서 지원하지 않거나 예외가 발생하는 경우 기존 폴더 선택 방식으로 fallback한다."
+  ],
+  "tasks": [
+    {
+      "id": "01_add_top_error_summary_toggle",
+      "order": 1,
+      "title": "상단 오류 요약 클릭 토글 추가",
+      "check": true,
+      "targets": "loadStatus UI, error-only navigation state, filteredIndexes, renderNav, top status event handlers",
+      "allowed_fields": [
+        "loadStatus UI",
+        "error-only navigation state",
+        "filteredIndexes",
+        "renderNav",
+        "top status event handlers"
+      ],
+      "protected_fields": [
+        "폴더 선택/다시 읽기 기본 동작",
+        "문항 상세 렌더링 순서",
+        "검색어 입력 동작",
+        "기존 필터 패널 열기/닫기 동작"
+      ],
+      "summary": "상단 오류 요약 클릭 시 JSON/LaTeX 오류가 있는 항목만 좌측 탐색기에 표시하는 모드를 ON/OFF한다. 이미지 누락 경고는 대상에서 제외한다.",
+      "verify": [
+        "상단 오류 요약이 오류가 있을 때 클릭 가능한 상태로 보인다.",
+        "오류 요약 토글은 JSON/LaTeX 오류 기준으로 동작한다.",
+        "이미지 누락만 있는 문항은 오류 요약 토글 대상에 포함하지 않는다."
+      ]
+    },
+    {
+      "id": "02_exclude_working_json_files",
+      "order": 2,
+      "title": "작업용 JSON 로드 제외",
+      "check": true,
+      "targets": "loadFiles JSON 파일 수집 및 로드 대상 필터",
+      "allowed_fields": [
+        "loadFiles",
+        "jsonFiles filtering",
+        "file path helper functions"
+      ],
+      "protected_fields": [
+        "정상 문항 JSON 파싱 로직",
+        "파일 정렬 로직",
+        "이미지 인덱스 생성 로직",
+        "탐색기 렌더링 로직"
+      ],
+      "summary": "작업체크리스트, 작업명세, docs, .codex, .agents 하위 JSON은 문항 데이터가 아니므로 뷰어 로드 대상에서 제외한다.",
+      "verify": [
+        "docs 하위 작업 체크리스트 JSON이 로드 대상에서 제외된다.",
+        "samples 하위 정상 문항 JSON은 계속 로드 대상으로 남는다."
+      ]
+    },
+    {
+      "id": "03_split_red_errors_and_yellow_warnings",
+      "order": 3,
+      "title": "red 오류와 yellow 경고 분리",
+      "check": true,
+      "targets": "문항별 오류/경고 데이터 구조",
+      "allowed_fields": [
+        "warningSummary",
+        "hasWarnings",
+        "card warning fields",
+        "JSON error collection",
+        "LaTeX warning collection",
+        "missing image warning collection"
+      ],
+      "protected_fields": [
+        "문항 원문 데이터",
+        "MathJax 매크로 설정",
+        "이미지 표시 토글 동작"
+      ],
+      "summary": "JSON 오류와 LaTeX 오류는 red 오류로, 이미지 파일 누락은 yellow 경고로 분리한다. red와 yellow가 동시에 있으면 red를 우선 표시하고 tooltip에는 모두 보이게 한다.",
+      "verify": [
+        "JSON/LaTeX는 red 오류로 분류된다.",
+        "이미지 누락은 yellow 경고로 분류된다.",
+        "red와 yellow가 함께 있으면 red 점이 우선 표시된다."
+      ]
+    },
+    {
+      "id": "04_adjust_body_warning_display",
+      "order": 4,
+      "title": "본문 오류/경고 표시 정리",
+      "check": true,
+      "targets": "문항 상세의 오류 박스와 이미지 없음 표시",
+      "allowed_fields": [
+        "addWarningSection",
+        "appendTextWithImages",
+        "missing-image CSS",
+        "card warning CSS"
+      ],
+      "protected_fields": [
+        "문항 본문 렌더링 순서",
+        "choices 렌더링",
+        "answer/explanation 렌더링",
+        "JSON 원문 보기 기능"
+      ],
+      "summary": "본문 상단 빨간 오류 박스에는 JSON/LaTeX 오류만 표시한다. 이미지 누락은 본문 오류 박스에 넣지 않고 실제 이미지 태그 위치에 노란 박스로 표시한다.",
+      "verify": [
+        "이미지 누락은 본문 상단 빨간 오류 박스에 표시되지 않는다.",
+        "이미지 없음 박스가 노란 계열로 표시된다.",
+        "JSON/LaTeX 오류는 빨간 오류 박스에 표시된다."
+      ]
+    },
+    {
+      "id": "05_update_nav_warning_markers",
+      "order": 5,
+      "title": "탐색기 red/yellow 점 표시 규칙 적용",
+      "check": true,
+      "targets": "좌측 탐색기 파일, section, 문항 항목의 점 표시",
+      "allowed_fields": [
+        "addWarningDot",
+        "appendSummaryContent",
+        "fileWarnings",
+        "sectionWarnings",
+        "renderNav",
+        "warning dot CSS"
+      ],
+      "protected_fields": [
+        "탐색기 접기/펼치기 상태 저장",
+        "문항 클릭 이동",
+        "검색어 매칭 로직"
+      ],
+      "summary": "JSON/LaTeX 오류는 빨간점, 이미지 누락은 노란점으로 표시한다. 같은 위치에 둘 다 있으면 빨간점을 우선 표시하고 tooltip에는 모든 내용을 담는다.",
+      "verify": [
+        "JSON/LaTeX 오류 항목은 빨간점으로 표시된다.",
+        "이미지 누락만 있는 항목은 노란점으로 표시된다.",
+        "점 표시 때문에 파일명/문항 번호 레이아웃이 깨지지 않는다."
+      ]
+    },
+    {
+      "id": "06_update_filter_meanings",
+      "order": 6,
+      "title": "필터 의미 정리",
+      "check": true,
+      "targets": "필터 조건 계산과 필터 패널",
+      "allowed_fields": [
+        "filteredIndexes",
+        "activeFilterCount",
+        "filter state variables",
+        "filter panel labels"
+      ],
+      "protected_fields": [
+        "검색 입력",
+        "전체 펼치기/전체 접기 버튼",
+        "이미지 표시 토글과 이미지 크기 조절"
+      ],
+      "summary": "latex 오류 필터는 red LaTeX 오류 기준으로, 이미지 파일을 찾을 수 없는 문항 필터는 yellow 이미지 누락 기준으로 동작한다. 상단 오류 요약 토글은 red 오류만 대상으로 한다.",
+      "verify": [
+        "latex 오류 필터가 LaTeX red 오류 기준으로 동작한다.",
+        "이미지 파일을 찾을 수 없는 문항 필터가 yellow 이미지 누락 기준으로 동작한다.",
+        "상단 오류 요약 토글은 이미지 누락 문항을 포함하지 않는다."
+      ]
+    },
+    {
+      "id": "07_compact_nav_file_titles",
+      "order": 7,
+      "title": "좌측 파일 제목 압축 표시",
+      "check": true,
+      "targets": "좌측 탐색기 최상단 파일 제목 표시",
+      "allowed_fields": [
+        "file summary display text",
+        "summary CSS",
+        "file title CSS",
+        "renderNav"
+      ],
+      "protected_fields": [
+        "내부 fileName 데이터",
+        "파일명 기반 그룹화",
+        "오류/경고 매칭 로직"
+      ],
+      "summary": "좌측 탐색기의 파일 제목은 표시할 때만 .json 확장자를 제거하고 폰트 크기와 padding을 줄인다. 내부 fileName 값은 그대로 유지한다.",
+      "verify": [
+        "좌측 파일 제목에서 .json이 보이지 않는다.",
+        "내부 파일명 기반 오류/경고 매칭이 유지된다.",
+        "긴 파일명이 탐색창 밖으로 넘치지 않는다."
+      ]
+    },
+    {
+      "id": "08_start_picker_in_current_folder",
+      "order": 8,
+      "title": "Chrome 폴더 선택 시작 위치 개선",
+      "check": true,
+      "targets": "폴더 선택 버튼의 showDirectoryPicker 호출",
+      "allowed_fields": [
+        "folderButton click handler",
+        "getRecentDirectoryHandle",
+        "showDirectoryPicker options",
+        "fallback picker logic"
+      ],
+      "protected_fields": [
+        "최근 폴더 저장 로직",
+        "폴더 다시 읽기 로직",
+        "webkitdirectory fallback",
+        "loadDirectoryHandle"
+      ],
+      "summary": "현재 선택된 최근 폴더 핸들이 있으면 showDirectoryPicker의 startIn 옵션으로 시작 위치를 지정한다. 실패 시 기존 방식으로 다시 시도한다.",
+      "verify": [
+        "현재 폴더 핸들이 있을 때 startIn 옵션을 시도한다.",
+        "startIn 옵션 또는 핸들 조회 실패 시 기존 폴더 선택창으로 fallback한다.",
+        "폴더 선택 후 최근 폴더 저장과 로드는 기존처럼 동작한다."
+      ]
+    },
+    {
+      "id": "09_validate_all_changes",
+      "order": 9,
+      "title": "전체 검증",
+      "check": true,
+      "targets": "오류 요약 토글, 제외 규칙, red/yellow 표시, 좌측 목록 압축, Chrome 폴더 선택 시작 위치",
+      "allowed_fields": [],
+      "protected_fields": [],
+      "summary": "수정 범위 전체가 기존 레이아웃과 문항 탐색, 검색, 필터, 폴더 로드 흐름을 망가뜨리지 않는지 확인한다.",
+      "verify": [
+        "체크리스트 JSON 파싱 확인",
+        "index.html 스크립트 문법 검사 통과",
+        "브라우저 초기 렌더링 확인",
+        "작업용 JSON 제외 확인",
+        "좁은 화면에서 레이아웃 넘침 없음 확인",
+        "브라우저 콘솔 오류 없음 확인"
+      ]
+    }
+  ]
+}

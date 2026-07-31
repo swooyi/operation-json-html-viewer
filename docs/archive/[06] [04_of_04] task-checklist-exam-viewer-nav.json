@@ -1,0 +1,103 @@
+{
+  "target_file": "C:\\dev\\연산JSON_HTML 뷰어\\index.html; C:\\dev\\연산JSON_HTML 뷰어\\section-viewer.html",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Restore the section viewer entry as 시험지뷰 and simplify section-viewer.html left navigation to JSON filenames only, without filters or folding controls.",
+  "assumptions": [
+    "시험지뷰 should continue to use the existing section-viewer.html file.",
+    "The left panel should keep the same loaded-folder/sidebar shell as 문항뷰어 but show only JSON filenames as selectable buttons.",
+    "Question detail rendering and folder loading behavior should remain otherwise unchanged.",
+    "The existing active responsive checklist in docs is unrelated and should not be modified."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_update_main_navigation",
+      "order": 1,
+      "title": "Add 시험지뷰 button to the main page",
+      "check": true,
+      "targets": "index.html home navigation and related manual text",
+      "allowed_fields": [
+        "Visible navigation labels",
+        "Links to section-viewer.html",
+        "Manual page descriptions that list viewer destinations"
+      ],
+      "protected_fields": [
+        "Folder loading logic",
+        "Question rendering logic",
+        "Stats behavior"
+      ],
+      "summary": "Add the middle 시험지뷰 link between 문항뷰어 and 통계 and align nearby wording.",
+      "verify": [
+        "index.html contains home links in the order 문항뷰어, 시험지뷰, 통계.",
+        "The 시험지뷰 link points to section-viewer.html.",
+        "No unrelated links are changed."
+      ]
+    },
+    {
+      "id": "02_rename_section_viewer",
+      "order": 2,
+      "title": "Rename section viewer UI to 시험지뷰",
+      "check": true,
+      "targets": "section-viewer.html title, headings, home links, and relevant manual labels",
+      "allowed_fields": [
+        "Visible labels",
+        "Document title",
+        "Manual copy that names the page"
+      ],
+      "protected_fields": [
+        "Data parsing logic",
+        "Card detail rendering logic"
+      ],
+      "summary": "Replace user-facing section 뷰어 page name with 시험지뷰.",
+      "verify": [
+        "section-viewer.html uses 시험지뷰 for title and visible page links.",
+        "The current-page link remains section-viewer.html."
+      ]
+    },
+    {
+      "id": "03_simplify_left_panel",
+      "order": 3,
+      "title": "Show only JSON filenames in the left panel",
+      "check": true,
+      "targets": "section-viewer.html sidebar markup and navigation rendering code",
+      "allowed_fields": [
+        "Sidebar controls markup",
+        "Navigation grouping/rendering functions",
+        "Event handlers made obsolete by removed controls"
+      ],
+      "protected_fields": [
+        "Folder selection and recent folder behavior",
+        "JSON parsing",
+        "Question detail card rendering"
+      ],
+      "summary": "Remove visible filters and fold controls from 시험지뷰 and render a flat JSON filename list.",
+      "verify": [
+        "The sidebar does not show search, filter, or expand/collapse controls.",
+        "The sidebar lists JSON filenames only.",
+        "Clicking a filename selects the first item from that JSON file.",
+        "JSON parse errors remain selectable in the left panel."
+      ]
+    },
+    {
+      "id": "04_validate_and_archive_checklist",
+      "order": 4,
+      "title": "Validate edits and update checklist",
+      "check": true,
+      "targets": "Edited HTML files and this checklist JSON",
+      "allowed_fields": [
+        "Checklist check fields",
+        "Checklist filename count"
+      ],
+      "protected_fields": [
+        "Unrelated active checklists"
+      ],
+      "summary": "Run available validation and archive this checklist when complete.",
+      "verify": [
+        "Parse the checklist JSON successfully.",
+        "Search confirms expected labels and removed controls.",
+        "Run a syntax-oriented validation command if available.",
+        "Move the checklist to docs/archive when all tasks are complete."
+      ]
+    }
+  ]
+}

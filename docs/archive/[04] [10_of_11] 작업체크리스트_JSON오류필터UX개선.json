@@ -1,0 +1,286 @@
+{
+    "target_file":  "C:\\dev\\연산JSON_HTML 뷰어\\index.html",
+    "source_checklists":  [
+                              "merged and removed: docs/작업체크리스트_JSON오류상세개선_[0／5].json"
+                          ],
+    "status_rule":  "작업 완료 시 해당 task의 check를 true로 변경한다. 다음 작업 시 check가 false인 task만 진행 대상으로 본다.",
+    "scope":  "JSON 파싱 오류 상세 표시, 필터 UX 개선, 상단 오류 요약 토글 표시 개선만 수행한다. 정상 문항 데이터, 이미지 렌더링 자체, LaTeX 렌더링, 최근 폴더 기능은 범위 밖으로 둔다.",
+    "assumptions":  [
+                        "기존 docs/작업체크리스트_JSON오류상세개선.json의 5개 작업은 모두 미완료이므로 새 체크리스트에 합친다.",
+                        "JSON.parse는 파일당 첫 번째 문법 오류만 확정적으로 보고한다.",
+                        "필터 버튼의 초록점과 보라점은 필터 UI 전용이며 좌측 탐색기에는 표시하지 않는다.",
+                        "좌측 탐색기에서는 기존 정책대로 JSON/LaTeX 오류는 빨간점, 이미지 누락은 노란점을 사용한다."
+                    ],
+    "tasks":  [
+                  {
+                      "id":  "01_capture_json_error_position",
+                      "order":  1,
+                      "title":  "JSON 파싱 오류 위치 정보 수집",
+                      "check":  true,
+                      "targets":  "loadFiles의 JSON.parse catch 경로와 loadErrors 데이터 구조",
+                      "allowed_fields":  [
+                                             "loadFiles",
+                                             "loadErrors",
+                                             "JSON parse error helper functions"
+                                         ],
+                      "protected_fields":  [
+                                               "정상 JSON 문항 카드 생성 로직",
+                                               "이미지 인덱스 생성 로직",
+                                               "작업용 JSON 제외 규칙",
+                                               "LaTeX 경고 수집 로직"
+                                           ],
+                      "summary":  "JSON.parse 실패 시 오류 메시지에서 position 값을 추출하고, 원문 텍스트 기준 line/column을 계산해 loadErrors에 저장한다.",
+                      "verify":  [
+                                     "position 값이 있는 SyntaxError에서 line/column이 계산된다.",
+                                     "position 값이 없는 오류도 기존 메시지 표시가 유지된다.",
+                                     "정상 JSON 파일 로드는 기존처럼 동작한다."
+                                 ]
+                  },
+                  {
+                      "id":  "02_build_json_error_excerpt",
+                      "order":  2,
+                      "title":  "오류 주변 원문 스니펫 생성",
+                      "check":  true,
+                      "targets":  "JSON 오류 상세 표시용 helper 함수",
+                      "allowed_fields":  [
+                                             "JSON error excerpt helper",
+                                             "line/column calculation helper"
+                                         ],
+                      "protected_fields":  [
+                                               "문항 원문 데이터",
+                                               "검색 인덱스",
+                                               "필터 조건 계산"
+                                           ],
+                      "summary":  "오류 위치를 기준으로 앞뒤 2줄 또는 3줄 정도의 JSON 원문을 추출하고, 문제가 의심되는 칸에 caret 표시를 만들 수 있는 구조로 저장한다.",
+                      "verify":  [
+                                     "오류 줄 주변의 제한된 줄만 추출된다.",
+                                     "오류 칸 위치에 caret 표시 정보가 맞게 계산된다.",
+                                     "파일 전체 원문을 기본 화면에 길게 뿌리지 않는다."
+                                 ]
+                  },
+                  {
+                      "id":  "03_render_json_error_detail_panel",
+                      "order":  3,
+                      "title":  "JSON 오류 상세 패널 표시",
+                      "check":  true,
+                      "targets":  "좌측 JSON 오류 파일 선택 시 오른쪽 상세 영역",
+                      "allowed_fields":  [
+                                             "renderNav",
+                                             "renderCard",
+                                             "JSON error detail renderer",
+                                             "error file click handler"
+                                         ],
+                      "protected_fields":  [
+                                               "정상 문항 클릭 이동",
+                                               "이전문항/다음문항 이동",
+                                               "필터 패널 UI",
+                                               "이미지 표시 토글"
+                                           ],
+                      "summary":  "좌측 탐색기에서 JSON 오류 파일을 클릭하면 오른쪽 영역에 파일명, 첫 번째 감지 오류 안내, 메시지, 줄/칸, 주변 원문 스니펫을 보여준다.",
+                      "verify":  [
+                                     "JSON 오류 파일 클릭 시 오른쪽에 오류 상세가 표시된다.",
+                                     "정상 문항 클릭 시 기존 문항 상세 화면으로 돌아간다.",
+                                     "오류 상세 화면이 현재 레이아웃을 밀거나 깨뜨리지 않는다."
+                                 ]
+                  },
+                  {
+                      "id":  "04_explain_single_error_limit",
+                      "order":  4,
+                      "title":  "여러 오류 처리 한계 안내",
+                      "check":  true,
+                      "targets":  "JSON 오류 상세 패널 문구",
+                      "allowed_fields":  [
+                                             "JSON error detail copy",
+                                             "loadErrors display text"
+                                         ],
+                      "protected_fields":  [
+                                               "상단 오류 요약 카운트 로직",
+                                               "red/yellow 점 표시 규칙",
+                                               "LaTeX 오류 문구"
+                                           ],
+                      "summary":  "JSON 파서는 파일당 첫 번째 감지 오류만 확정 표시한다는 안내와, 수정 후 다시 읽으면 다음 오류가 표시될 수 있다는 문구를 넣는다.",
+                      "verify":  [
+                                     "상세 패널에 첫 번째 감지 오류 안내가 보인다.",
+                                     "한 파일에 여러 오류가 있을 수 있다는 설명이 과하지 않게 표시된다.",
+                                     "상단 오류 카운트는 기존 정책을 유지한다."
+                                 ]
+                  },
+                  {
+                      "id":  "05_improve_missing_image_filter_dependency",
+                      "order":  5,
+                      "title":  "이미지 누락 필터 자동 연동",
+                      "check":  true,
+                      "targets":  "필터 체크박스 상태 변경 로직",
+                      "allowed_fields":  [
+                                             "missingImageOnlyInput change handler",
+                                             "imageOnlyInput change handler",
+                                             "updateFilterControls",
+                                             "filteredIndexes"
+                                         ],
+                      "protected_fields":  [
+                                               "검색 입력 동작",
+                                               "blocks 필터 동작",
+                                               "LaTeX 오류 필터 동작",
+                                               "이미지 표시 토글과 이미지 크기 조절"
+                                           ],
+                      "summary":  "\u0027이미지 파일을 찾을 수 없는 문항\u0027을 켜면 \u0027img 있는 문항\u0027도 자동으로 켠다. \u0027img 있는 문항\u0027을 끄면 이미지 누락 필터도 함께 끈다. 이미지 누락 필터는 비활성화하지 않고 클릭 가능하게 둔다.",
+                      "verify":  [
+                                     "이미지 누락 필터를 켜면 img 필터가 자동으로 켜진다.",
+                                     "img 필터를 끄면 이미지 누락 필터가 함께 꺼진다.",
+                                     "이미지 누락 필터가 disabled 상태로 보이지 않는다.",
+                                     "필터 결과는 기존 논리와 일치한다."
+                                 ]
+                  },
+                  {
+                      "id":  "06_reorder_filter_panel_and_colors",
+                      "order":  6,
+                      "title":  "필터 순서와 고유 색상 정리",
+                      "check":  true,
+                      "targets":  "필터 패널 항목 순서와 필터 고유색 표시",
+                      "allowed_fields":  [
+                                             "filter panel markup",
+                                             "filter panel CSS",
+                                             "filter color dot CSS",
+                                             "filter label rendering"
+                                         ],
+                      "protected_fields":  [
+                                               "좌측 탐색기 점 표시 규칙",
+                                               "문항 카드 렌더링",
+                                               "상단 오류 요약 로직"
+                                           ],
+                      "summary":  "필터 순서를 img 있는 문항, blocks 있는 문항, 이미지 파일을 찾을 수 없는 문항, latex 오류 있는 문항으로 바꾼다. 색상은 초록, 보라, 노랑, 빨강을 사용하되 초록/보라는 필터 UI 전용으로 둔다.",
+                      "verify":  [
+                                     "필터 패널 순서가 요구 순서와 일치한다.",
+                                     "img 필터에는 초록점이 보인다.",
+                                     "blocks 필터에는 보라점이 보인다.",
+                                     "이미지 누락 필터에는 노란점이 보인다.",
+                                     "latex 오류 필터에는 빨간점이 보인다.",
+                                     "좌측 탐색기에는 초록점과 보라점이 추가되지 않는다."
+                                 ]
+                  },
+                  {
+                      "id":  "07_show_active_filter_dots_on_button",
+                      "order":  7,
+                      "title":  "필터 버튼에 활성 필터 색점 표시",
+                      "check":  true,
+                      "targets":  "필터 버튼 선택 상태 표시",
+                      "allowed_fields":  [
+                                             "filterMenuButton rendering",
+                                             "activeFilterCount",
+                                             "filter button CSS",
+                                             "updateFilterControls"
+                                         ],
+                      "protected_fields":  [
+                                               "필터 패널 열기/닫기 동작",
+                                               "좌측 탐색기 점 표시",
+                                               "검색 입력 동작"
+                                           ],
+                      "summary":  "활성 필터가 있으면 필터 버튼에 기존 개수 표시와 함께 선택된 필터의 색점을 나열한다. 여러 필터가 동시에 켜지면 여러 색점이 함께 보여야 한다.",
+                      "verify":  [
+                                     "필터가 없으면 기존처럼 필터 버튼이 표시된다.",
+                                     "필터 1개 이상 선택 시 개수와 색점이 함께 표시된다.",
+                                     "여러 필터를 동시에 켜면 여러 색점이 버튼에 동시에 표시된다.",
+                                     "점 표시 때문에 버튼 텍스트가 깨지거나 넘치지 않는다."
+                                 ]
+                  },
+                  {
+                      "id":  "08_confirm_multi_color_dot_policy",
+                      "order":  8,
+                      "title":  "여러 색 점 표시 정책 확인",
+                      "check":  true,
+                      "targets":  "필터 버튼과 좌측 탐색기의 점 표시 정책",
+                      "allowed_fields":  [
+                                             "filter button dot rendering",
+                                             "addWarningDot",
+                                             "warning dot tooltip"
+                                         ],
+                      "protected_fields":  [
+                                               "문항 필터 조건",
+                                               "파일/section 그룹화 로직",
+                                               "정상 문항 클릭 이동"
+                                           ],
+                      "summary":  "필터 버튼에서는 초록/보라/노랑/빨강 점이 동시에 나올 수 있게 한다. 좌측 탐색기는 기존처럼 빨간 오류와 노란 경고가 동시에 있으면 빨간점을 우선 표시하고 tooltip에 둘 다 담는다.",
+                      "verify":  [
+                                     "필터 버튼에 여러 색점이 동시에 표시된다.",
+                                     "좌측 탐색기에는 초록/보라점이 표시되지 않는다.",
+                                     "좌측 탐색기 red/yellow 동시 발생 시 빨간점이 우선 표시된다.",
+                                     "좌측 탐색기 tooltip에는 red/yellow 내용이 함께 포함된다."
+                                 ]
+                  },
+                  {
+                      "id":  "09_simplify_top_error_status_text",
+                      "order":  9,
+                      "title":  "상단 오류 상태 텍스트에서 폴더명 제거",
+                      "check":  true,
+                      "targets":  "상단 loadStatus 오류 요약 문구",
+                      "allowed_fields":  [
+                                             "updateLoadStatus",
+                                             "loadStatus text",
+                                             "loadStatus title"
+                                         ],
+                      "protected_fields":  [
+                                               "최근 폴더 버튼 라벨",
+                                               "다시 읽기 버튼",
+                                               "상단 통계 count 표시"
+                                           ],
+                      "summary":  "폴더명은 최근 폴더 버튼에 이미 표시되므로 loadStatus 오류 요약에서는 폴더명을 제거한다. 오류가 없을 때는 상태 텍스트를 비우거나 최소화하고, 오류가 있을 때만 짧게 표시한다.",
+                      "verify":  [
+                                     "오류 상태 텍스트에 폴더명이 반복 표시되지 않는다.",
+                                     "오류가 있을 때는 오류 개수가 보인다.",
+                                     "오류가 없을 때 상단 상태 영역이 불필요하게 길어지지 않는다."
+                                 ]
+                  },
+                  {
+                      "id":  "10_improve_error_only_toggle_visibility",
+                      "order":  10,
+                      "title":  "상단 오류 필터 ON/OFF 인식 개선",
+                      "check":  true,
+                      "targets":  "상단 오류 요약 토글의 활성 상태 표시",
+                      "allowed_fields":  [
+                                             "toggleErrorOnlyNav",
+                                             "updateLoadStatus",
+                                             "loadStatus CSS",
+                                             "loadStatus active state copy"
+                                         ],
+                      "protected_fields":  [
+                                               "오류 필터 대상 계산",
+                                               "이미지 누락 경고 제외 정책",
+                                               "좌측 탐색기 렌더링 기본 흐름"
+                                           ],
+                      "summary":  "오류 요약 토글이 켜졌을 때 문구와 스타일이 명확히 바뀌도록 한다. 추천 문구는 OFF 상태 \u0027오류 1개\u0027, ON 상태 \u0027오류만 보기 ON / 오류 1개\u0027이다.",
+                      "verify":  [
+                                     "OFF 상태에서는 짧은 오류 개수 문구가 보인다.",
+                                     "ON 상태에서는 오류만 보기 ON 문구가 보인다.",
+                                     "ON 상태에서는 배경 또는 테두리 등 시각적 강조가 있다.",
+                                     "다시 클릭하면 OFF 상태로 복귀한다."
+                                 ]
+                  },
+                  {
+                      "id":  "11_validate_json_error_filter_ux_flow",
+                      "order":  11,
+                      "title":  "전체 흐름 검증",
+                      "check":  false,
+                      "targets":  "JSON 오류 상세, 필터 UX, 상단 오류 토글 표시 개선 전체",
+                      "allowed_fields":  [
+
+                                         ],
+                      "protected_fields":  [
+
+                                           ],
+                      "summary":  "체크리스트 JSON, index.html 문법, 깨진 JSON 오류 상세, 필터 자동 연동, 필터 버튼 색점, 좌측 탐색기 점 정책, 상단 오류 토글 상태, 레이아웃을 검증한다.",
+                      "verify":  [
+                                     "체크리스트 JSON 파싱 확인",
+                                     "index.html 스크립트 문법 검사 통과",
+                                     "의도적으로 깨진 JSON에서 파일명, 메시지, 줄/칸, 주변 원문이 표시된다.",
+                                     "정상 문항과 오류 파일이 함께 있을 때 탐색기 전환이 정상 동작한다.",
+                                     "이미지 누락 필터와 img 필터 자동 연동이 정상 동작한다.",
+                                     "필터 버튼에 여러 색점이 동시에 표시된다.",
+                                     "좌측 탐색기 red/yellow 점 정책이 유지된다.",
+                                     "상단 오류 요약 ON/OFF 상태가 명확히 구분된다.",
+                                     "데스크톱과 좁은 화면에서 레이아웃이 깨지지 않는다.",
+                                     "브라우저 콘솔 오류가 없다."
+                                 ],
+                      "note":  "구현 및 스크립트 문법 검사는 완료. 브라우저 검증은 file:// 차단과 로컬 서버 새로고침 시간 제한으로 일부만 확인되어 미완료로 유지."
+                  }
+              ]
+}

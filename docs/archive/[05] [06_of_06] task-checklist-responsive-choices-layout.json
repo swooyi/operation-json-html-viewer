@@ -1,0 +1,144 @@
+{
+  "target_file": "C:\\dev\\연산JSON_HTML \ubdf0\uc5b4\\index.html",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Make the choices area responsive so long choice text does not overlap or create page-level horizontal scrolling. Exclude font-size slider work.",
+  "assumptions": [
+    "The implementation target is the existing single-file viewer in index.html unless repository inspection shows the choices layout is defined elsewhere.",
+    "The answer_type and answer side panel should remain available, but it may stack below the main content at narrower widths if needed.",
+    "The solution should preserve existing data rendering behavior and only adjust layout/CSS/related class names necessary for responsive choices.",
+    "Font-size slider work is explicitly out of scope."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_locate_choices_layout",
+      "order": 1,
+      "title": "Locate choices layout and overflow sources",
+      "check": true,
+      "targets": "index.html styles, markup, and rendering code related to choices, answer_type, answer, and detail layout",
+      "allowed_fields": [
+        "Read-only inspection"
+      ],
+      "protected_fields": [
+        "No file edits in this task"
+      ],
+      "summary": "Identify the CSS selectors and DOM structure that currently constrain choices width or force no-wrap behavior.",
+      "verify": [
+        "Find the selectors/classes responsible for the choices grid or choices container.",
+        "Find any fixed width, min-width, grid column, flex, white-space, overflow, or MathJax-related styles that affect long choices.",
+        "Confirm whether the right-side answer metadata column contributes to the narrow choices area."
+      ]
+    },
+    {
+      "id": "02_define_responsive_layout",
+      "order": 2,
+      "title": "Define minimal responsive layout change",
+      "check": true,
+      "targets": "CSS rules for detail layout and choices layout",
+      "allowed_fields": [
+        "CSS layout rules",
+        "CSS custom properties only if already consistent with file style"
+      ],
+      "protected_fields": [
+        "Data loading logic",
+        "JSON parsing logic",
+        "Question filtering logic",
+        "Answer validation behavior"
+      ],
+      "summary": "Choose the smallest CSS change that lets choices use available width and stack naturally when the container is narrow.",
+      "verify": [
+        "Document whether choices should use auto-fit/minmax, a breakpoint to one column, or both.",
+        "Confirm the chosen min width cannot exceed 100% of the parent container.",
+        "Confirm the plan excludes a font-size slider."
+      ]
+    },
+    {
+      "id": "03_update_choices_wrapping",
+      "order": 3,
+      "title": "Update choices wrapping behavior",
+      "check": true,
+      "targets": "Choice item text styles",
+      "allowed_fields": [
+        "CSS for choices container and choice item elements"
+      ],
+      "protected_fields": [
+        "Choice text content",
+        "Choice numbering",
+        "Rendered answer values"
+      ],
+      "summary": "Allow long choice text to wrap inside its own available width without overlapping neighboring choices.",
+      "verify": [
+        "Confirm choice items have min-width: 0 where needed.",
+        "Confirm long text can wrap instead of overlapping adjacent choices.",
+        "Confirm any overflow behavior is local to the choice item only if wrapping is not possible for math content."
+      ]
+    },
+    {
+      "id": "04_update_detail_column_responsiveness",
+      "order": 4,
+      "title": "Update detail column responsiveness",
+      "check": true,
+      "targets": "Main content and right metadata column layout",
+      "allowed_fields": [
+        "CSS grid/flex layout rules",
+        "Responsive media queries"
+      ],
+      "protected_fields": [
+        "Metadata field names",
+        "Metadata values",
+        "Question selection state",
+        "Sidebar behavior unless directly required by the layout fix"
+      ],
+      "summary": "Prevent the answer metadata column from forcing the choices area too narrow on medium or small viewports.",
+      "verify": [
+        "Confirm the main content column can shrink with min-width: 0.",
+        "Confirm the metadata column stacks or resizes at the selected breakpoint.",
+        "Confirm the overall page does not gain horizontal scrolling from the detail grid."
+      ]
+    },
+    {
+      "id": "05_visual_regression_check",
+      "order": 5,
+      "title": "Check representative responsive states",
+      "check": true,
+      "targets": "Viewer UI at desktop, medium, and narrow widths",
+      "allowed_fields": [
+        "Manual browser inspection",
+        "Screenshot or DOM inspection notes if available"
+      ],
+      "protected_fields": [
+        "No unrelated UI redesign",
+        "No palette or typography overhaul"
+      ],
+      "summary": "Verify the choices area behaves correctly across the widths likely to reproduce the reported overlap.",
+      "verify": [
+        "At a desktop width similar to the screenshot, choices do not overlap.",
+        "At a medium width, choices stack or reflow without page-level horizontal scroll.",
+        "At a narrow width, the right metadata area does not cover or squeeze choices.",
+        "Question stem, explanation, answer_type, and answer remain visible and readable."
+      ]
+    },
+    {
+      "id": "06_final_validation",
+      "order": 6,
+      "title": "Run final validation and update checklist",
+      "check": true,
+      "targets": "index.html and this checklist JSON",
+      "allowed_fields": [
+        "Checklist check fields",
+        "Checklist filename count",
+        "Validation notes if needed"
+      ],
+      "protected_fields": [
+        "Completed task definitions unless scope changes are explicitly needed"
+      ],
+      "summary": "Validate the implementation and keep the checklist count in sync after work is complete.",
+      "verify": [
+        "Parse index.html or run the available project validation command if one exists.",
+        "Parse this checklist JSON successfully.",
+        "Confirm completed task count in the filename matches tasks[*].check.",
+        "Move the checklist to docs/archive only if all tasks are complete."
+      ]
+    }
+  ]
+}
