@@ -98,6 +98,7 @@
         "Grid column controls for 2, 3, and 4 columns",
         "Image-size controls",
         "Information visibility control",
+        "R-key folder reload shortcut outside typing controls",
         "Dedicated browser-storage keys for 그림 preferences",
         "Selected JSON file and content scroll-position storage",
         "Sticky picture-page toolbar styles"
@@ -107,7 +108,7 @@
         "Existing storage keys and settings behavior",
         "Image inventory ordering"
       ],
-      "summary": "Use a three-column default grid, let users switch to two or four columns, adjust image size, toggle filenames and connection details, keep the controls visible while scrolling, and restore the selected file and content position after returning from another page.",
+      "summary": "Use a three-column default grid, let users switch to two or four columns, adjust image size, toggle filenames and connection details, reload the remembered folder with the R key outside typing controls, keep the controls visible while scrolling, and restore the selected file and content position after returning from another page.",
       "verify": [
         "The default grid has three columns.",
         "Two-, three-, and four-column controls update card layout correctly.",
