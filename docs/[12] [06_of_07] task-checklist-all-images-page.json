@@ -9,7 +9,8 @@
     "Files without connected images remain selectable and show an empty-state message; the grid itself never renders image-less entries.",
     "Existing image-note behavior will be reused if it exists and supports the required context; otherwise a minimal 그림-page detail dialog will be added.",
     "Grid columns, image size, information visibility, and later bookmark selections are stored in browser storage without changing JSON source data.",
-    "Bookmarks are private to each browser profile and GitHub Pages origin; they are not shared or synchronized between people or devices."
+    "Bookmarks are private to each browser profile and GitHub Pages origin; they are not shared or synchronized between people or devices.",
+    "문항 뷰 북마크는 그림 뷰 북마크와 별도의 browser localStorage 키로 저장한다."
   ],
   "source_checklists": [
     "docs/archive/[07] [04_of_04] task-checklist-viewer-terminology-sidebar.json",
@@ -41,7 +42,7 @@
       "id": "02_build_image_inventory_model",
       "order": 2,
       "title": "Build selected-file image inventory and connection metadata",
-      "check": false,
+      "check": true,
       "targets": "all-images.html image collection, grouping, sorting, and missing-image state",
       "allowed_fields": [
         "New all-images.html data and rendering code",
@@ -66,7 +67,7 @@
       "id": "03_create_picture_page_and_navigation",
       "order": 3,
       "title": "Create the 그림 page and page-entry navigation",
-      "check": false,
+      "check": true,
       "targets": "all-images.html and visible navigation in index.html, question-viewer.html, section-viewer.html, and stats.html",
       "allowed_fields": [
         "New all-images.html markup and styles",
@@ -92,7 +93,7 @@
       "id": "04_add_grid_and_display_preferences",
       "order": 4,
       "title": "Add image grid controls and persistent display preferences",
-      "check": false,
+      "check": true,
       "targets": "all-images.html grid styles, controls, and browser-storage state",
       "allowed_fields": [
         "Grid column controls for 2, 3, and 4 columns",
@@ -121,7 +122,7 @@
       "id": "05_add_image_note_and_question_links",
       "order": 5,
       "title": "Add image-note detail and exact question navigation",
-      "check": false,
+      "check": true,
       "targets": "all-images.html image-card interactions and question-viewer.html deep-link handling only if missing",
       "allowed_fields": [
         "Image card click behavior",
@@ -149,12 +150,12 @@
       "id": "06_add_private_image_bookmarks",
       "order": 6,
       "title": "Add per-browser 그림 bookmarks",
-      "check": false,
-      "targets": "all-images.html bookmark controls, filtering, and browser-storage state",
+      "check": true,
+      "targets": "all-images.html and question-viewer.html bookmark controls, filtering, and browser-storage state",
       "allowed_fields": [
-        "Per-card bookmark button and selected state",
-        "All and bookmarked-only filter controls",
-        "Dedicated browser-storage key using stable JSON filename and image filename identifiers",
+        "그림 카드와 문항별 북마크 버튼 및 selected state",
+        "그림 뷰와 문항 뷰의 bookmarked-only filter controls",
+        "그림은 JSON filename and image filename, 문항은 JSON filename and question number identifiers를 사용하는 별도 browser-storage keys",
         "Bookmark count display"
       ],
       "protected_fields": [
@@ -163,12 +164,14 @@
         "Cross-user sharing or external synchronization",
         "Existing grid and image-note behavior unless required by the bookmark UI"
       ],
-      "summary": "Let each user mark 그림 cards for later correction and filter the selected JSON file to bookmarked cards only. Store choices locally per browser profile and deployment origin, including GitHub Pages.",
+      "summary": "Let each user mark 그림 cards and questions for later correction, then filter each view to its own bookmarks only. Store choices locally per browser profile and deployment origin, including GitHub Pages.",
       "verify": [
         "A card bookmark can be added and removed without changing JSON data.",
         "The bookmarked-only filter shows only bookmarked cards for the selected JSON file.",
         "Bookmark state persists after reload on the same browser and origin.",
         "The bookmark key remains stable when the same JSON file and image file are reloaded.",
+        "문항 뷰 북마크 key remains stable when the same JSON file and question number are reloaded.",
+        "그림 뷰와 문항 뷰 북마크 are stored and filtered independently.",
         "No user data is transmitted or shared with other browser profiles, devices, or users."
       ]
     },

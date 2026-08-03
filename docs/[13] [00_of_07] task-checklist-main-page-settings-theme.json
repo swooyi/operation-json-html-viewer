@@ -1,0 +1,93 @@
+{
+  "target_file": "C:\\dev\\연산JSON_HTML 뷰어\\index.html",
+  "status_rule": "After completing a task, set its check field to true. In future runs, only tasks with check false are eligible for work.",
+  "scope": "Add a locally saved Settings panel to the main page. It provides theme mode, five accent-color presets, and free-font selection without changing viewer behavior, question data, or mathematical/code typography.",
+  "assumptions": [
+    "The default theme is the current blue accent with system-preference color mode.",
+    "Settings are stored only in the browser localStorage and are not sent to a server or written to problem JSON files.",
+    "The initial accent presets are red, yellow, green, blue, and purple.",
+    "The initial font choices are system default, Pretendard, Noto Sans KR, and Gowun Dodum.",
+    "Theme and font controls are accessed through a main-page Settings button, with theme and font as subitems.",
+    "MathJax expressions and fixed-width code/JSON regions retain their existing font rules."
+  ],
+  "source_checklists": [],
+  "tasks": [
+    {
+      "id": "01_audit_main_page_style_targets",
+      "order": 1,
+      "title": "Identify main-page accent and typography targets",
+      "check": false,
+      "targets": "index.html styles, markup, and scripts",
+      "allowed_fields": ["CSS selectors", "CSS custom properties", "settings-related markup and JavaScript"],
+      "protected_fields": ["question JSON files", "viewer behavior", "MathJax configuration", "code/JSON font selectors"],
+      "summary": "Map existing buttons, sliders, selected-file styling, and help icons so the settings implementation changes only the intended visual elements.",
+      "verify": ["List each intended accent target and its current selector.", "Confirm no question data or viewer logic is in scope."]
+    },
+    {
+      "id": "02_define_theme_design_tokens",
+      "order": 2,
+      "title": "Define light and dark theme tokens",
+      "check": false,
+      "targets": "index.html CSS custom properties",
+      "allowed_fields": ["CSS custom properties", "light/dark media and data-attribute selectors"],
+      "protected_fields": ["layout dimensions", "content copy", "unrelated component styling"],
+      "summary": "Create semantic variables for surfaces, text, borders, accent color, accent contrast text, hover, focus, and selected-file styling.",
+      "verify": ["Light and dark modes both use readable text, surface, and border colors.", "Accent variables cover the listed targets without hard-coded per-preset component colors."]
+    },
+    {
+      "id": "03_build_settings_panel",
+      "order": 3,
+      "title": "Add Settings button and settings panel",
+      "check": false,
+      "targets": "index.html main-page controls",
+      "allowed_fields": ["Settings button", "settings-panel markup", "accessible labels and control states"],
+      "protected_fields": ["existing file-selection controls", "file loading and navigation behavior", "unrelated page sections"],
+      "summary": "Place a Settings button on the main page and expose Theme and Font subitems in a compact panel.",
+      "verify": ["Panel can be opened and closed by mouse and keyboard.", "Each setting control has an associated accessible label.", "Existing main-page controls remain usable."]
+    },
+    {
+      "id": "04_implement_theme_mode_and_accents",
+      "order": 4,
+      "title": "Implement mode and five accent presets",
+      "check": false,
+      "targets": "index.html theme control logic and CSS",
+      "allowed_fields": ["theme mode logic", "accent preset logic", "button/slider/selected-file/help-icon styles", "focus styles"],
+      "protected_fields": ["file parsing", "question rendering", "data validation logic"],
+      "summary": "Support system, light, and dark modes plus red, yellow, green, blue, and purple accents; blue remains the default and yellow uses sufficient text contrast.",
+      "verify": ["Each of five presets visibly updates buttons, sliders, selected files, help icons, and focus/selection indicators.", "System mode follows the browser preference.", "Yellow preset retains readable foreground contrast."]
+    },
+    {
+      "id": "05_implement_font_selection",
+      "order": 5,
+      "title": "Implement free-font selection",
+      "check": false,
+      "targets": "index.html font loading and font-setting logic",
+      "allowed_fields": ["webfont references or local font assets", "app font CSS variable", "font selection UI and logic"],
+      "protected_fields": ["MathJax font rules", "fixed-width code/JSON font rules", "mathematical content layout rules"],
+      "summary": "Allow selection among system default, Pretendard, Noto Sans KR, and Gowun Dodum for general UI text only.",
+      "verify": ["Each font selection changes general UI text.", "Math expressions and fixed-width code/JSON regions remain unchanged.", "Selected font has an available fallback if its webfont cannot load."]
+    },
+    {
+      "id": "06_persist_and_reset_local_preferences",
+      "order": 6,
+      "title": "Persist local preferences and add reset",
+      "check": false,
+      "targets": "index.html settings JavaScript",
+      "allowed_fields": ["localStorage key", "preference read/write logic", "reset control"],
+      "protected_fields": ["uploaded files", "problem JSON data", "any server-facing behavior"],
+      "summary": "Save mode, accent, and font preferences in localStorage and restore them before the interface is shown; provide a reset to system mode, blue accent, and system font.",
+      "verify": ["Preferences survive a page reload in the same browser.", "Reset restores all three defaults and updates persisted values.", "No user content or JSON file is modified."]
+    },
+    {
+      "id": "07_verify_theme_settings_regression",
+      "order": 7,
+      "title": "Verify settings behavior and visual regression",
+      "check": false,
+      "targets": "index.html in a browser",
+      "allowed_fields": ["test-only localStorage values", "temporary browser state"],
+      "protected_fields": ["production content", "sample JSON files", "unrelated HTML pages"],
+      "summary": "Test every option combination at representative viewport sizes and confirm existing main-page workflow still works.",
+      "verify": ["Test system, light, and dark modes with all five accent presets.", "Test all four font choices and the reset action.", "Confirm keyboard navigation and focus visibility.", "Confirm file selection and page navigation still work.", "Parse the final checklist JSON and ensure the filename completed count matches task states."]
+    }
+  ]
+}

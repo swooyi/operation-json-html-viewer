@@ -686,6 +686,7 @@
       align-items: center;
       gap: 4px;
     }
+    .filter-button-dots .bookmark-icon { width: 10px; height: 13px; fill: #2563eb; }
     .filter-dot {
       display: inline-flex;
       width: 7px;
@@ -877,6 +878,8 @@
     }
     .fold-button:hover,
     .nav-button:hover:not(:disabled) { background: #eef2f7; }
+    .nav-button[aria-pressed="true"] { border-color: #2563eb; background: #eff6ff; color: #1d4ed8; }
+    .nav-button[aria-pressed="true"] .bookmark-icon { fill: #1d4ed8; }
     .nav-button:disabled {
       color: #98a2b3;
       cursor: default;
@@ -1092,6 +1095,8 @@
       border-color: transparent;
       color: #174ea6;
     }
+    .bookmark-icon { width:10px; height:13px; fill:#98a2b3; flex:0 0 auto; }
+    .question-node .bookmark-icon, .image-toggle.active .bookmark-icon { fill:#2563eb; }
     .empty {
       padding: 18px;
       color: var(--muted);
@@ -1483,6 +1488,7 @@
             <label id="blocks-toggle-label" class="image-toggle"><input id="blocks-only" type="checkbox"> blocks 있는 문항 <span class="filter-dot purple" aria-hidden="true"></span></label>
             <label id="missing-image-toggle-label" class="image-toggle"><input id="missing-image-only" type="checkbox"> 이미지 파일을 찾을 수 없는 문항 <span class="filter-dot yellow" aria-hidden="true"></span></label>
             <label id="latex-warning-toggle-label" class="image-toggle"><input id="latex-warning-only" type="checkbox"> latex 오류있는 문항 <span class="filter-dot red" aria-hidden="true"></span></label>
+            <label id="bookmark-toggle-label" class="image-toggle" aria-label="bookmark 보기" title="bookmark 보기"><input id="bookmarked-only" type="checkbox"><span>bookmark 보기</span><span class="filter-dot yellow" aria-hidden="true"></span></label>
           </div>
         </div>
         <div class="filter-row image-controls">
@@ -1698,6 +1704,7 @@
       navWidth: 'allQuestionHtmlViewer.navWidth',
       sectionTarget: 'allQuestionHtmlViewer.sectionTarget',
       questionViewState: 'allQuestionHtmlViewer.questionViewState',
+      bookmarks: 'questionViewer.bookmarks',
     };
     const DB_NAME = 'all-question-html-viewer';
     const DB_STORE = 'handles';
@@ -1743,11 +1750,13 @@
     const imageSizeValue = document.getElementById('image-size-value');
     const blocksOnlyInput = document.getElementById('blocks-only');
     const latexWarningOnlyInput = document.getElementById('latex-warning-only');
+    const bookmarkedOnlyInput = document.getElementById('bookmarked-only');
     const imageToggleLabel = document.getElementById('image-toggle-label');
     const missingImageToggleLabel = document.getElementById('missing-image-toggle-label');
     const renderImageToggleLabel = document.getElementById('render-image-toggle-label');
     const blocksToggleLabel = document.getElementById('blocks-toggle-label');
     const latexWarningToggleLabel = document.getElementById('latex-warning-toggle-label');
+    const bookmarkToggleLabel = document.getElementById('bookmark-toggle-label');
     const expandAllButton = document.getElementById('expand-all');
     const collapseAllButton = document.getElementById('collapse-all');
     const resizer = document.getElementById('resizer');
@@ -2587,6 +2596,46 @@
       ].join('::');
     }
 
+    function bookmarkKey(data) {
+      return `${data.fileName}::${data.qNumberLabel}`;
+    }
+
+    function bookmarkIcon() {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.classList.add('bookmark-icon');
+      svg.setAttribute('viewBox', '0 0 16 16');
+      svg.setAttribute('aria-label', '북마크됨');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      path.setAttribute('d', 'M5 1.5A1.5 1.5 0 0 0 3.5 3v11l4.5-2.8 4.5 2.8V3A1.5 1.5 0 0 0 11 1.5H5Z');
+      svg.appendChild(path);
+      return svg;
+    }
+
+    function readBookmarks() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEYS.bookmarks) || '[]');
+        return new Set(Array.isArray(saved) ? saved : []);
+      } catch {
+        return new Set();
+      }
+    }
+
+    function isBookmarked(data) {
+      return readBookmarks().has(bookmarkKey(data));
+    }
+
+    function toggleBookmark(data) {
+      const bookmarks = readBookmarks();
+      const key = bookmarkKey(data);
+      if (bookmarks.has(key)) {
+        bookmarks.delete(key);
+      } else {
+        bookmarks.add(key);
+      }
+      localStorage.setItem(STORAGE_KEYS.bookmarks, JSON.stringify([...bookmarks]));
+      renderNav();
+    }
+
     function readSectionTarget() {
       const saved = sessionStorage.getItem(STORAGE_KEYS.sectionTarget);
       if (!saved) {
@@ -3204,6 +3253,7 @@
         missingImageOnlyInput.checked,
         blocksOnlyInput.checked,
         latexWarningOnlyInput.checked,
+        bookmarkedOnlyInput.checked,
       ].filter(Boolean).length;
     }
 
@@ -3213,6 +3263,7 @@
         blocksOnlyInput.checked ? 'purple' : '',
         missingImageOnlyInput.checked ? 'yellow' : '',
         latexWarningOnlyInput.checked ? 'red' : '',
+        bookmarkedOnlyInput.checked ? 'bookmark' : '',
       ].filter(Boolean);
     }
 
@@ -3229,6 +3280,10 @@
       dotWrap.className = 'filter-button-dots';
       dotWrap.setAttribute('aria-hidden', 'true');
       dots.forEach((color) => {
+        if (color === 'bookmark') {
+          dotWrap.appendChild(bookmarkIcon());
+          return;
+        }
         const dot = document.createElement('span');
         dot.className = `filter-dot ${color}`;
         dotWrap.appendChild(dot);
@@ -3243,6 +3298,7 @@
       imageToggleLabel.classList.toggle('active', imageOnlyInput.checked);
       blocksToggleLabel.classList.toggle('active', blocksOnlyInput.checked);
       latexWarningToggleLabel.classList.toggle('active', latexWarningOnlyInput.checked);
+      bookmarkToggleLabel.classList.toggle('active', bookmarkedOnlyInput.checked);
       missingImageOnlyInput.disabled = false;
       missingImageToggleLabel.classList.remove('disabled');
       missingImageToggleLabel.classList.toggle('active', missingImageOnlyInput.checked);
@@ -3265,6 +3321,7 @@
       const missingImageOnly = missingImageOnlyInput.checked;
       const blocksOnly = blocksOnlyInput.checked;
       const latexWarningOnly = latexWarningOnlyInput.checked;
+      const bookmarkedOnly = bookmarkedOnlyInput.checked;
       return cards
         .map((data, index) => ({ data, index }))
         .filter((entry) => (
@@ -3273,6 +3330,7 @@
           && (!missingImageOnly || entry.data.missingImageRefs.length > 0)
           && (!blocksOnly || entry.data.hasBlocks)
           && (!latexWarningOnly || entry.data.latexWarnings.length > 0)
+          && (!bookmarkedOnly || isBookmarked(entry.data))
           && (!query || matchesSearch(entry.data, query))
         ))
         .map((entry) => entry.index);
@@ -3455,6 +3513,9 @@
             label.className = 'question-label';
             label.textContent = data.qNumberLabel;
             button.appendChild(label);
+            if (isBookmarked(data)) {
+              button.appendChild(bookmarkIcon());
+            }
             addWarningDot(button, warningBundle(data));
             button.addEventListener('click', () => {
               activeLoadError = null;
@@ -3638,6 +3699,14 @@
       });
       rawJsonToggle.appendChild(rawJsonCheckbox);
       rawJsonToggle.appendChild(rawJsonToggleText);
+      const bookmarkButton = document.createElement('button');
+      bookmarkButton.type = 'button';
+      bookmarkButton.className = 'nav-button';
+      bookmarkButton.replaceChildren(bookmarkIcon());
+      bookmarkButton.title = 'bookmark';
+      bookmarkButton.setAttribute('aria-label', 'bookmark');
+      bookmarkButton.setAttribute('aria-pressed', String(isBookmarked(data)));
+      bookmarkButton.addEventListener('click', () => toggleBookmark(data));
       headActions.appendChild(headNav);
       headActions.appendChild(rawJsonToggle);
 
@@ -3653,6 +3722,7 @@
       setText(titleLine, 'section-title', data.sectionLabel);
       setText(titleLine, 'q-number', data.qNumberLabel);
       headInfo.appendChild(titleLine);
+      headInfo.appendChild(bookmarkButton);
       headTop.appendChild(headInfo);
       headTop.appendChild(headActions);
       head.appendChild(headTop);
@@ -3833,6 +3903,7 @@
     });
     blocksOnlyInput.addEventListener('change', renderNav);
     latexWarningOnlyInput.addEventListener('change', renderNav);
+    bookmarkedOnlyInput.addEventListener('change', renderNav);
     document.addEventListener('keydown', (event) => {
       if (event.key === 'Escape') {
         closeFilterPanel();
