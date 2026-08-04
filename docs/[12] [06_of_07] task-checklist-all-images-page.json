@@ -127,9 +127,11 @@
       "allowed_fields": [
         "Image card click behavior",
         "Image-note dialog or reuse integration",
-        "Per-connection question navigation controls",
-        "Minimal URL/state handling required for exact question opening",
-        "Escape and arrow-key behavior while image detail is open"
+        "Per-connection floating question-detail controls",
+        "Question-viewer deep link from the floating detail",
+        "Floating-detail keyboard navigation and question bookmark state",
+        "MathJax configuration and 문항 뷰-equivalent question-detail rendering",
+        "Floating-detail image-size preference stored separately in browser storage"
       ],
       "protected_fields": [
         "Question content",
@@ -137,13 +139,15 @@
         "Unrelated keyboard shortcuts",
         "Existing image-note data unrelated to the selected image"
       ],
-      "summary": "Open image notes from a card, expose every connection in the detail view, and let each connection open its exact question in 문항 뷰 without making card clicks conflict with navigation buttons.",
+      "summary": "Open each connected question in a compact floating detail from 그림, render its 문항 뷰-equivalent content and LaTex, let users persistently adjust its image size, manage its 문항 뷰 bookmark state, open the exact question in 문항 뷰 on demand, and navigate connected questions with arrow keys.",
       "verify": [
         "Clicking an image card opens its note/detail view.",
         "The detail view shows the image filename and every connection row.",
-        "Each connection can open the matching JSON file and question number in 문항 뷰.",
-        "Esc closes the detail view.",
-        "Left and right arrow keys move through images only while the detail view is open and focus is not in a typing control."
+        "Each connection opens its matching question in a floating detail and shows its 문항 뷰 bookmark state beside the connection button.",
+        "The floating detail renders 문제, blocks, choices, answer_type, answer, and 해설 with MathJax LaTex typesetting.",
+        "The floating detail image-size slider defaults to 220px, supports 140-420px, and persists independently from 문항 뷰 settings.",
+        "The floating detail can add or remove the matching 문항 뷰 bookmark and open the exact question in 문항 뷰.",
+        "Esc closes the active detail; up/down moves connected questions in the same image and left/right moves to the adjacent image's connected question."
       ]
     },
     {
