@@ -1567,13 +1567,13 @@
           <details class="manual-section" open>
             <summary>1. 빠른 시작</summary>
             <div class="manual-section-content">
-              <p>새로운 폴더에서 작업할 때는 <strong>폴더 선택</strong>을 누른 뒤 <strong>문항 뷰</strong>, <strong>소단원 뷰</strong>, <strong>통계</strong> 화면을 선택합니다.</p>
+              <p>새로운 폴더에서 작업할 때는 <strong>폴더 선택</strong>을 누른 뒤 <strong>문항 뷰</strong>, <strong>소단원 뷰</strong>, <strong>통계</strong>, <strong>그림</strong> 화면을 선택합니다.</p>
               <p>최근 작업한 폴더에서 작업할 때는 <strong>폴더 선택</strong> 옆의 최근 방문 폴더 목록에서 폴더를 고른 뒤 화면을 선택합니다.</p>
               <div class="manual-highlight">전달받은 작업 폴더의 구조를 유지한 상태로 사용해 주세요. JSON 안의 <code>[img: 파일명]</code> 정보와 실제 이미지 파일이 연결되어야 이미지가 정상 표시됩니다.</div>
               <ol>
                 <li>새 작업이면 <code>폴더 선택</code>을 누르고 작업 폴더를 선택합니다.</li>
                 <li>최근 작업이면 <code>최근 폴더</code> 목록에서 작업 폴더를 선택합니다.</li>
-                <li><code>문항 뷰</code>, <code>소단원 뷰</code>, <code>통계</code>를 눌러 필요한 화면으로 이동합니다.</li>
+                <li><code>문항 뷰</code>, <code>소단원 뷰</code>, <code>통계</code>, <code>그림</code>을 눌러 필요한 화면으로 이동합니다.</li>
               </ol>
             </div>
           </details>
@@ -1593,6 +1593,7 @@
                   <tr><td>상단 개수 표시</td><td><code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code> 형식으로 현재 불러온 데이터를 보여줍니다.</td></tr>
                   <tr><td>왼쪽 목록</td><td>JSON 파일, section, 문항 번호 순서로 표시됩니다.</td></tr>
                   <tr><td>오른쪽 상세 화면</td><td>선택한 문항의 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 보여줍니다.</td></tr>
+                  <tr><td><code>그림</code></td><td>선택한 JSON 파일에 연결된 그림과 연결 문항을 확인합니다.</td></tr>
                 </tbody>
               </table>
               <p><code>최근 폴더</code>는 이전에 열었던 폴더를 다시 선택하는 기능입니다. 브라우저에 따라 폴더 기억을 지원하지 않을 수 있으며, 권한이 끊기면 <code>최근 폴더 권한이 필요합니다. 폴더 선택을 다시 눌러 주세요.</code>가 표시될 수 있습니다.</p>
@@ -1666,7 +1667,30 @@
           </details>
 
           <details class="manual-section">
-            <summary>6. 오류와 경고</summary>
+            <summary>6. 그림 뷰</summary>
+            <div class="manual-section-content">
+              <p><code>그림</code> 화면은 선택한 JSON 파일의 연결 그림을 section·문항 번호 순으로 보여줍니다. 카드에서는 원본 그림 이름을 작게, 연결된 section·문항 번호를 크게 표시합니다.</p>
+              <table class="manual-table">
+                <thead><tr><th>기능</th><th>설명</th></tr></thead>
+                <tbody>
+                  <tr><td><code>bookmark 보기</code></td><td>그림 카드 북마크만 표시합니다. 그림 북마크는 문항 북마크와 별도로 저장됩니다.</td></tr>
+                  <tr><td><code>문항 보기</code></td><td>문항 뷰로 이동하지 않고 연결 문항을 플로팅 창으로 엽니다.</td></tr>
+                  <tr><td>플로팅 문항창</td><td>문항 뷰와 같은 문제, blocks, choices, answer_type, answer, 해설과 LaTex 렌더링을 보여줍니다.</td></tr>
+                  <tr><td><code>bookmark</code></td><td>플로팅 창에서 문항 북마크를 설정하거나 해제합니다. 결과는 문항 뷰와 그림 카드의 연결 행에 반영됩니다.</td></tr>
+                  <tr><td><code>문항 뷰에서 보기</code></td><td>플로팅 창의 현재 문항을 문항 뷰에서 엽니다.</td></tr>
+                  <tr><td>이미지 크기</td><td>플로팅 창 안의 이미지를 <code>140px-420px</code>로 조절합니다. 기본값은 <code>220px</code>이며 브라우저에 저장됩니다.</td></tr>
+                </tbody>
+              </table>
+              <ul>
+                <li><code>↑</code>, <code>↓</code>: 같은 그림에 연결된 이전·다음 문항으로 이동합니다.</li>
+                <li><code>←</code>, <code>→</code>: 이전·다음 그림의 연결 문항으로 이동합니다.</li>
+                <li><code>Esc</code>: 플로팅 문항창을 닫습니다.</li>
+              </ul>
+            </div>
+          </details>
+
+          <details class="manual-section">
+            <summary>7. 오류와 경고</summary>
             <div class="manual-section-content">
               <p>상단에 <span class="manual-badge red">오류 N개</span>가 표시되면 JSON 문법 오류, 넘버링 오류, LaTeX 경고가 있다는 뜻입니다. <code>오류 N개</code>를 클릭하면 <code>오류만 보기 ON / 오류 N개</code> 상태가 되며, 오류가 있는 항목만 왼쪽 목록에 표시됩니다.</p>
               <table class="manual-table">
