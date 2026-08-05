@@ -189,7 +189,8 @@
         "Checklist check fields",
         "Checklist filename count",
         "Checklist archive location after full completion",
-        "Small fixes directly required by validation"
+        "Small fixes directly required by validation",
+        "Home and question-viewer manual content directly required by implemented features"
       ],
       "protected_fields": [
         "Unrelated pages and styles",

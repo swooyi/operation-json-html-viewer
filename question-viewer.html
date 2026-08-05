@@ -3726,10 +3726,10 @@
       headInfo.appendChild(fileLine);
       const titleLine = document.createElement('div');
       titleLine.className = 'title-line';
+      titleLine.appendChild(bookmarkButton);
       setText(titleLine, 'section-title', data.sectionLabel);
       setText(titleLine, 'q-number', data.qNumberLabel);
       headInfo.appendChild(titleLine);
-      headInfo.appendChild(bookmarkButton);
       headTop.appendChild(headInfo);
       headTop.appendChild(headActions);
       head.appendChild(headTop);
