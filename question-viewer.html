@@ -880,6 +880,12 @@
       font: inherit;
       font-size: 12px;
       white-space: nowrap;
+      text-align: center;
+    }
+    .nav-shortcut {
+      display: block;
+      margin-top: 2px;
+      font-size: 10px;
     }
     .fold-button:hover,
     .nav-button:hover:not(:disabled) { background: #eef2f7; }
@@ -1274,6 +1280,23 @@
     }
     .block-line + .block-line {
       margin-top: 6px;
+    }
+    .plain-block {
+      padding: 12px 20px;
+    }
+    .block-table {
+      width: 100%;
+      margin: 12px 0;
+      border-collapse: collapse;
+      table-layout: fixed;
+    }
+    .block-table td {
+      min-width: 0;
+      padding: 8px 10px;
+      border: 1px solid #aeb5bf;
+      text-align: center;
+      vertical-align: middle;
+      overflow-wrap: anywhere;
     }
     .rendered-image {
       display: block;
@@ -2422,8 +2445,64 @@
       appendTextWithImages(parent, blockDisplayValue(block));
     }
 
+    function blockType(block) {
+      return block && typeof block === 'object' && !Array.isArray(block) ? block.type : '';
+    }
+
+    function appendTableBlock(parent, block) {
+      const table = document.createElement('table');
+      table.className = 'block-table';
+      const lines = Array.isArray(block.lines) ? block.lines : [];
+      lines.forEach((line) => {
+        const row = document.createElement('tr');
+        String(line ?? '').split('|').forEach((cell) => {
+          const cellNode = document.createElement('td');
+          const value = cell.trim();
+          if (value) {
+            appendTextWithImages(cellNode, value);
+          }
+          row.appendChild(cellNode);
+        });
+        table.appendChild(row);
+      });
+      parent.appendChild(table);
+    }
+
+    function appendLabeledBlock(parent, block) {
+      const section = document.createElement('fieldset');
+      section.className = 'view-block';
+      const heading = document.createElement('legend');
+      heading.textContent = '보기';
+      section.appendChild(heading);
+      const content = document.createElement('div');
+      content.className = 'block-item';
+      appendBlockContent(content, block);
+      section.appendChild(content);
+      parent.appendChild(section);
+    }
+
     function addBlocksSection(parent, blocks) {
       if (!hasDisplayValue(blocks)) {
+        return;
+      }
+      const items = Array.isArray(blocks) ? blocks : [blocks];
+      const hasTypedBlock = items.some((block) => ['statement_set', 'box', 'table'].includes(blockType(block)));
+      if (hasTypedBlock) {
+        items.forEach((block) => {
+          const type = blockType(block);
+          if (type === 'statement_set') {
+            appendLabeledBlock(parent, block);
+          } else if (type === 'box') {
+            const box = document.createElement('div');
+            box.className = 'view-block plain-block block-item';
+            appendBlockContent(box, block);
+            parent.appendChild(box);
+          } else if (type === 'table') {
+            appendTableBlock(parent, block);
+          } else {
+            appendLabeledBlock(parent, block);
+          }
+        });
         return;
       }
       const section = document.createElement('fieldset');
@@ -2433,7 +2512,6 @@
       section.appendChild(heading);
       const list = document.createElement('div');
       list.className = 'block-list';
-      const items = Array.isArray(blocks) ? blocks : [blocks];
       items.forEach((block) => {
         const item = document.createElement('div');
         item.className = 'block-item';
@@ -3710,14 +3788,22 @@
       const prevButton = document.createElement('button');
       prevButton.type = 'button';
       prevButton.className = 'nav-button';
-      prevButton.textContent = '이전문항';
+      prevButton.append(document.createTextNode('이전문항'));
+      const prevShortcut = document.createElement('span');
+      prevShortcut.className = 'nav-shortcut';
+      prevShortcut.textContent = '(Alt+Q)';
+      prevButton.appendChild(prevShortcut);
       prevButton.title = '이전문항 (Alt+Q)';
       prevButton.disabled = position <= 0;
       prevButton.addEventListener('click', () => moveBy(-1));
       const nextButton = document.createElement('button');
       nextButton.type = 'button';
       nextButton.className = 'nav-button';
-      nextButton.textContent = '다음문항';
+      nextButton.append(document.createTextNode('다음문항'));
+      const nextShortcut = document.createElement('span');
+      nextShortcut.className = 'nav-shortcut';
+      nextShortcut.textContent = '(Alt+W)';
+      nextButton.appendChild(nextShortcut);
       nextButton.title = '다음문항 (Alt+W)';
       nextButton.disabled = position < 0 || position >= indexes.length - 1;
       nextButton.addEventListener('click', () => moveBy(1));
