@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>소단원 뷰 - 연산 JSON 뷰어</title>
+  <title>유형 뷰 - 교과연산 JSON 뷰어</title>
   <script>
     window.MathJax = {
       tex: {
@@ -1073,6 +1073,8 @@
       border-color: transparent;
       color: #174ea6;
     }
+    .file-node.file-type-single .question-label { color: #1f2933; }
+    .file-node.file-type-multi .question-label { color: #7e22ce; }
     .empty {
       padding: 18px;
       color: var(--muted);
@@ -1162,318 +1164,96 @@
       align-content: start;
       background: #fff;
     }
-    .exam-toolbar {
-      position: relative;
-      z-index: 2;
+    .type-view-head {
       flex: 0 0 auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 12px 18px;
+      padding: 22px 28px 14px;
       border-bottom: 1px solid var(--line);
       background: #fff;
     }
-    .exam-toolbar-group {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      min-width: 0;
-    }
-    .exam-file-title {
-      min-width: 0;
-      color: #0f172a;
-      font-size: 14px;
-      font-weight: 700;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-    .exam-page-status,
-    .exam-zoom-status {
-      min-width: 64px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      text-align: center;
-      white-space: nowrap;
-    }
-    .exam-page-input {
-      width: 54px;
-      min-height: 30px;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 4px 6px;
-      color: #0f172a;
-      font: inherit;
-      font-size: 12px;
-      font-weight: 700;
-      text-align: center;
-    }
-    .exam-page-total {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-    .exam-stage {
+    .type-view-content {
+      display: grid;
+      gap: 16px;
       flex: 1 1 auto;
       min-height: 0;
       overflow: auto;
-      padding: 24px;
-      background: #e9eef5;
-    }
-    .exam-page-frame {
-      width: calc(210mm * var(--exam-zoom, 1));
-      height: calc(297mm * var(--exam-zoom, 1));
-      margin: 0 auto;
-    }
-    .pdf-page {
-      width: 210mm;
-      height: 297mm;
-      overflow: hidden;
-      padding: 14mm 14mm 15mm;
-      background: #fff;
-      color: #111;
-      font-family: "Malgun Gothic", "맑은 고딕", sans-serif;
-      font-size: 10pt;
-      line-height: 1.6;
-      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.18);
-      transform: scale(var(--exam-zoom, 1));
-      transform-origin: top left;
-      display: flex;
-      flex-direction: column;
-    }
-    .pdf-page-header {
-      margin-bottom: 7mm;
-      border-bottom: 0.5pt solid #d7e2ec;
-      padding-bottom: 3mm;
-    }
-    .pdf-unit-line {
-      display: flex;
-      gap: 1.8em;
-      color: #4e6679;
-      font-size: 9.5pt;
-      font-weight: 700;
-      line-height: 1.4;
-    }
-    .pdf-title {
-      margin-top: 1.5mm;
-      color: #245c86;
-      font-size: 18pt;
-      font-weight: 700;
-      line-height: 1.25;
-    }
-    .pdf-section-title {
-      break-inside: avoid;
-      padding: 6pt;
-      border: 0.5pt solid #d8e3ed;
-      background: #f3f7fb;
-      color: #4e6679;
-      font-size: 11pt;
-      font-weight: 700;
-      margin-bottom: 3.8mm;
-    }
-    .pdf-problem-columns,
-    .pdf-answer-columns {
-      position: relative;
-      flex: 1 1 auto;
-      min-height: 0;
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 8mm;
-    }
-    .pdf-problem-columns::before,
-    .pdf-answer-columns::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      border-left: 0.4pt solid #d7e2ec;
-      transform: translateX(-0.2pt);
-      pointer-events: none;
-    }
-    .pdf-column {
-      min-width: 0;
-    }
-    .pdf-item {
-      break-inside: avoid;
-      margin-bottom: 10mm;
-    }
-    .pdf-answer-item {
-      break-inside: avoid;
-      margin-bottom: 4mm;
-    }
-    .pdf-question-line {
-      display: grid;
-      grid-template-columns: 2.2em minmax(0, 1fr);
-      align-items: start;
-      gap: 0.2em;
-    }
-    .pdf-question-no {
-      color: #245c86;
-      font-weight: 700;
-    }
-    .pdf-question-body,
-    .pdf-answer-body,
-    .pdf-explanation,
-    .pdf-choice-content,
-    .pdf-block-content {
-      min-width: 0;
-      white-space: pre-wrap;
-      overflow-wrap: anywhere;
-    }
-    .pdf-blocks {
-      display: grid;
-      gap: 2mm;
-      margin: 1.5mm 0 0 2.2em;
-    }
-    .pdf-box-block {
-      width: 72%;
-      margin: 0 auto;
-      padding: 6pt;
-      border: 0.5pt solid #222;
-      text-align: center;
-    }
-    .pdf-statement-label {
-      margin-left: 1.8em;
-      font-weight: 700;
-    }
-    .pdf-statement-box {
-      width: 100%;
-      padding: 6pt;
-      border: 0.5pt solid #222;
-      text-align: left;
-    }
-    .pdf-centered-lines {
-      text-align: center;
-    }
-    .pdf-table {
-      width: 98%;
-      margin: 1mm auto;
-      border-collapse: collapse;
-      table-layout: fixed;
-    }
-    .pdf-table td {
-      border: 1px solid #222;
-      padding: 4pt;
-      text-align: center;
-      vertical-align: middle;
-    }
-    .pdf-image-wrap {
-      margin: 1mm 0;
-      text-align: center;
-    }
-    .pdf-image-wrap img {
-      max-width: min(95%, var(--rendered-image-max-width, 200px));
-      height: auto;
+      padding: 22px 28px 40px;
+      align-content: start;
       background: #fff;
     }
-    .pdf-missing-image {
+    .type-view-row {
       display: grid;
-      justify-items: center;
-      gap: 1mm;
-      margin: 1mm auto;
-      padding: 3mm;
-      border: 0.5pt dashed #c2410c;
-      color: #9a3412;
-      background: #fff7ed;
-      text-align: center;
+      grid-template-columns: 72px 420px 420px 50px 140px;
+      min-width: 1102px;
+      align-items: stretch;
+      border: 1px solid var(--line);
     }
-    .pdf-choices {
-      display: grid;
-      gap: 0.6mm 4%;
-      list-style: none;
+    .type-view-ordinal,
+    .type-view-cell {
+      min-width: 0;
+      padding: 10px 12px;
+    }
+    .type-view-ordinal {
+      color: #0f172a;
+      font-weight: 700;
+    }
+    .type-view-cell,
+    .type-view-ordinal + .type-view-cell {
+      border-left: 1px solid var(--line);
+    }
+    .type-view-cell > section > h2 {
+      display: none;
+    }
+    .type-view-cell > section + section,
+    .type-view-cell > .view-block + section,
+    .type-view-cell > section + .view-block {
+      margin-top: 12px;
+    }
+    .type-view-cell .text-block {
       padding: 0;
-      margin: 1.5mm 0 0 2.2em;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
     }
-    .pdf-choices.layout-3 {
-      grid-template-columns: repeat(3, 31%);
-      justify-content: space-between;
+    .type-view-cell .choice-list {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px;
+      padding: 0;
     }
-    .pdf-choices.layout-2 {
-      grid-template-columns: repeat(2, 48%);
-      justify-content: space-between;
+    .type-view-cell .choice-list.two-choice-list,
+    .type-view-cell .choice-list.choice-list-with-images {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .pdf-choices.layout-1 {
-      grid-template-columns: 1fr;
+    .type-view-cell .choice-list li {
+      padding: 0;
     }
-    .pdf-choice {
-      display: grid;
-      grid-template-columns: 1.35em minmax(0, 1fr);
-      align-items: start;
+    .type-view-cell .view-block {
       min-width: 0;
+      margin: 12px 0;
+      border: 2px solid #b8bdc5;
+      border-radius: 10px;
+      padding: 14px 12px 12px;
     }
-    .pdf-answer-header {
-      margin-bottom: 7mm;
-      border-bottom: 0.5pt solid #d7e2ec;
-      padding-bottom: 3mm;
-      color: #245c86;
-      font-size: 18pt;
+    .type-view-cell .view-block legend {
+      padding: 0 6px;
+      color: #374151;
+      font-size: 15px;
       font-weight: 700;
     }
-    .pdf-answer-line strong:first-child {
-      color: #245c86;
+    .type-view-cell .block-item {
+      padding: 0 8px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
     }
-    .pdf-page-footer {
-      flex: 0 0 auto;
-      margin-top: 3mm;
-      color: #111;
-      font-size: 8pt;
-      line-height: 1;
-      text-align: center;
+    .type-view-cell .rendered-image {
+      width: auto;
+      max-width: min(100%, var(--rendered-image-max-width, 1200px));
     }
-    .pdf-measure-root {
-      position: fixed;
-      left: -10000px;
-      top: 0;
-      width: 210mm;
-      height: auto;
-      visibility: hidden;
-      pointer-events: none;
-      z-index: -1;
+    .type-view-cell .choice-list-with-images .rendered-image {
+      max-width: 100%;
     }
-    @media print {
-      body,
-      main,
-      article {
-        display: block;
-        height: auto;
-        overflow: visible;
-      }
-      header,
-      nav,
-      .resizer,
-      .exam-toolbar {
-        display: none;
-      }
-      .pdf-measure-root {
-        display: none;
-      }
-      .exam-stage {
-        padding: 0;
-        overflow: visible;
-        background: #fff;
-      }
-      .exam-page-frame {
-        width: auto;
-        height: auto;
-      }
-      .pdf-page {
-        height: 297mm;
-        transform: none;
-        box-shadow: none;
-        page-break-after: always;
-      }
-    }
-    .paired-row {
-      min-width: 0;
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(120px, 320px);
-      gap: 16px;
-      align-items: start;
-    }
+
+
     .answer-column {
       min-width: 0;
     }
@@ -1705,6 +1485,20 @@
       .content-grid {
         padding: 18px 16px 32px;
       }
+      .type-view-head,
+      .type-view-content {
+        padding-left: 16px;
+        padding-right: 16px;
+      }
+      .type-view-row {
+        grid-template-columns: 1fr;
+        min-width: 0;
+      }
+      .type-view-cell,
+      .type-view-ordinal + .type-view-cell {
+        border-top: 1px solid var(--line);
+        border-left: 0;
+      }
       .paired-row {
         grid-template-columns: 1fr;
       }
@@ -1723,12 +1517,12 @@
       <a class="home-link" href="index.html" aria-label="메인페이지로 이동" title="메인페이지로 이동">⌂</a>
       <div class="page-switcher">
         <button id="page-switch-button" class="page-switch-button" type="button" aria-haspopup="true" aria-expanded="false">
-          <h1>소단원 뷰</h1>
+          <h1>유형 뷰</h1>
           <span class="page-switch-caret" aria-hidden="true">▼</span>
         </button>
         <div id="page-switch-menu" class="page-switch-menu" hidden>
           <a href="question-viewer.html?autoload=1">문항 뷰</a>
-          <a href="section-viewer.html?autoload=1" aria-current="page">소단원 뷰</a>
+          <a href="section-viewer.html?autoload=1" aria-current="page">유형 뷰</a>
           <a href="stats.html?autoload=1">통계</a>
           <a href="all-images.html?autoload=1">그림</a>
         </div>
@@ -1754,6 +1548,7 @@
     <nav>
       <div class="filters">
         <input id="search" class="search-input" type="search" placeholder="JSON 파일명 검색">
+        <label id="image-size-control" class="image-size-control">이미지 크기 <input id="image-size" type="range" min="100" max="400" step="20" value="300"><span id="image-size-value" class="image-size-value">1200px</span></label>
       </div>
       <div hidden>
         <button id="filter-menu-button" type="button" aria-expanded="false">필터</button>
@@ -1763,7 +1558,6 @@
         <label id="missing-image-toggle-label"><input id="missing-image-only" type="checkbox"></label>
         <label id="latex-warning-toggle-label"><input id="latex-warning-only" type="checkbox"></label>
         <label id="render-image-toggle-label"><input id="render-images" type="checkbox" checked></label>
-        <label id="image-size-control" class="image-size-control">그림 크기 <input id="image-size" type="range" min="80" max="300" step="10" value="160"><span id="image-size-value" class="image-size-value">160px</span></label>
         <button id="expand-all" type="button">전체 펼치기</button>
         <button id="collapse-all" type="button">전체 접기</button>
         <span id="result-count">0개 표시</span>
@@ -1776,13 +1570,13 @@
   <div id="manual-overlay" class="manual-overlay" hidden>
     <section class="manual-dialog" role="dialog" aria-modal="true" aria-labelledby="manual-title">
       <div class="manual-header">
-        <h2 id="manual-title">연산 JSON 뷰어 사용 메뉴얼</h2>
-        <button id="manual-close" class="manual-close" type="button" aria-label="사용 메뉴얼 닫기">×</button>
+        <h2 id="manual-title">교과연산 JSON 뷰어 사용 매뉴얼</h2>
+        <button id="manual-close" class="manual-close" type="button" aria-label="사용 매뉴얼 닫기">×</button>
       </div>
       <div class="manual-body">
         <div class="manual-summary-card">
           <h3>처음 사용하는 순서</h3>
-          <p>연산 JSON 뷰어는 작업 폴더를 불러온 뒤, 왼쪽에서 JSON 파일명을 고르고 오른쪽에서 내용과 이미지를 확인하는 도구입니다.</p>
+          <p>교과연산 JSON 뷰어는 작업 폴더를 불러온 뒤, 왼쪽에서 JSON 파일명을 고르고 오른쪽에서 내용과 이미지를 확인하는 도구입니다.</p>
           <div class="manual-flow" aria-label="사용 흐름">
             <span class="manual-step">폴더 선택</span>
             <span class="manual-arrow" aria-hidden="true">→</span>
@@ -1803,12 +1597,13 @@
           <details class="manual-section" open>
             <summary>1. 빠른 시작</summary>
             <div class="manual-section-content">
-              <p><strong>폴더 선택</strong>을 눌러 연산 JSON 파일과 이미지 파일이 들어있는 폴더를 선택합니다. 폴더를 선택하면 상단에 <code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code>가 표시되고, 왼쪽에는 JSON 파일명이 나타납니다.</p>
-              <p>왼쪽에서 JSON 파일명을 선택하면 오른쪽에서 해당 파일의 첫 문항부터 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 확인할 수 있습니다.</p>
+              <p><strong>폴더 선택</strong>을 눌러 교과연산 JSON 파일과 이미지 파일이 들어있는 폴더를 선택합니다. 폴더를 선택하면 상단에 <code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code>가 표시되고, 왼쪽에는 JSON 파일과 section 목록이 나타납니다.</p>
+              <div class="manual-highlight">최상위 <code>items</code> 배열의 단일 section 파일은 파일을 한 번 클릭합니다. 최상위 <code>sections</code> 배열의 여러 section 파일은 파일을 펼친 뒤 원하는 section을 클릭합니다.</div>
+              <p>선택한 section의 문항은 순번과 함께 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code> 열로 연속 표시됩니다.</p>
               <div class="manual-highlight">전달받은 작업 폴더의 구조를 유지한 상태로 사용해 주세요. JSON 안의 <code>[img: 파일명]</code> 정보와 실제 이미지 파일이 연결되어야 이미지가 정상 표시됩니다.</div>
               <ol>
                 <li><code>폴더 선택</code>을 누릅니다.</li>
-                <li>연산 JSON 파일과 이미지 파일이 들어있는 작업 폴더를 선택합니다.</li>
+                <li>교과연산 JSON 파일과 이미지 파일이 들어있는 작업 폴더를 선택합니다.</li>
                 <li>왼쪽 목록에서 JSON 파일명을 확인합니다.</li>
                 <li>확인할 JSON 파일명을 클릭합니다.</li>
                 <li>오른쪽 상세 화면에서 문제, 보기, 정답, 해설, 이미지 표시 상태를 확인합니다.</li>
@@ -1829,8 +1624,8 @@
                   <tr><td><code>최근 폴더</code></td><td>이전에 열었던 폴더 목록을 다시 엽니다. 브라우저 권한이 필요할 수 있습니다.</td></tr>
                   <tr><td><code>다시 읽기</code></td><td>현재 폴더를 다시 불러와 JSON 파일 수정, 이미지 파일 추가, 이미지 파일 수정, 이미지 파일 교체 내용을 갱신해서 확인합니다. 작업 중 파일을 고친 뒤 화면에 바로 반영하고 싶을 때 사용합니다. 단축키는 <code>R</code>입니다.</td></tr>
                   <tr><td>상단 개수 표시</td><td><code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code> 형식으로 현재 불러온 데이터를 보여줍니다.</td></tr>
-                  <tr><td>왼쪽 목록</td><td>JSON 파일명이 표시됩니다.</td></tr>
-                  <tr><td>오른쪽 상세 화면</td><td>선택한 문항의 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 보여줍니다.</td></tr>
+                  <tr><td>왼쪽 목록</td><td>단일 section 파일은 파일을 클릭하고, 여러 section 파일은 파일을 펼쳐 section을 클릭합니다.</td></tr>
+                  <tr><td>오른쪽 상세 화면</td><td>선택한 section의 모든 문항을 순번, <code>문제</code>, <code>해설</code>, <code>answer</code>, <code>answer_type</code> 열로 보여줍니다.</td></tr>
                 </tbody>
               </table>
               <p><code>최근 폴더</code>는 이전에 열었던 폴더를 다시 선택하는 기능입니다. 브라우저에 따라 폴더 기억을 지원하지 않을 수 있으며, 권한이 끊기면 <code>최근 폴더 권한이 필요합니다. 폴더 선택을 다시 눌러 주세요.</code>가 표시될 수 있습니다.</p>
@@ -1840,7 +1635,7 @@
           <details class="manual-section">
             <summary>3. 문항 확인 방법</summary>
             <div class="manual-section-content">
-              <p>왼쪽 목록에서 JSON 파일명을 클릭하면 오른쪽 상세 화면에서 해당 파일의 A4 시험지를 확인합니다. 이후 상단의 <code>이전 페이지</code>, <code>다음 페이지</code>로 페이지를 이동합니다.</p>
+              <p>왼쪽 목록에서 section을 선택하면 오른쪽 상세 화면에서 해당 section의 모든 문항을 아래로 연속해 확인합니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>항목</th><th>의미</th></tr>
@@ -1852,16 +1647,10 @@
                   <tr><td><code>answer_type</code></td><td>정답 유형입니다.</td></tr>
                   <tr><td><code>answer</code></td><td>정답 값입니다.</td></tr>
                   <tr><td><code>해설</code></td><td>문항 해설입니다.</td></tr>
-                  <tr><td><code>image_edit_notes</code></td><td>이미지 작업 메모입니다. 기본은 접힌 상태이며 <code>펼치기</code>로 확인합니다.</td></tr>
-                  <tr><td><code>JSON 원문 보기 ON/OFF</code></td><td>현재 문항의 원본 JSON을 그대로 확인합니다.</td></tr>
                 </tbody>
               </table>
               <ul>
-                <li><code>이전 페이지</code>: 이전 A4 페이지로 이동합니다.</li>
-                <li><code>다음 페이지</code>: 다음 A4 페이지로 이동합니다.</li>
-                <li><code>←</code>, <code>→</code>: 이전/다음 페이지로 이동합니다.</li>
-                <li><code>Home</code>, <code>End</code>: 첫 페이지/마지막 페이지로 이동합니다.</li>
-                <li><code>Ctrl + +</code>, <code>Ctrl + -</code>, <code>Ctrl + 0</code>: 확대, 축소, 100% 복귀입니다.</li>
+                <li>맨 왼쪽 열은 현재 문항 순번과 section 전체 문항 수를 <code>n/전체</code> 형식으로 표시합니다.</li>
               </ul>
             </div>
           </details>
@@ -1886,7 +1675,7 @@
           <details class="manual-section">
             <summary>5. 오류와 경고</summary>
             <div class="manual-section-content">
-              <p>상단에 <span class="manual-badge red">오류 N개</span>가 표시되면 JSON 문법 오류, 넘버링 오류, LaTeX 경고가 있다는 뜻입니다. <code>오류 N개</code>를 클릭하면 <code>오류만 보기 ON / 오류 N개</code> 상태가 되며, 오류가 있는 항목만 왼쪽 목록에 표시됩니다.</p>
+              <p>상단에 <span class="manual-badge red">오류 N개</span>가 표시되면 JSON 문법 오류 또는 LaTeX 경고가 있다는 뜻입니다. <code>오류 N개</code>를 클릭하면 <code>오류만 보기 ON / 오류 N개</code> 상태가 되며, 오류가 있는 항목만 왼쪽 목록에 표시됩니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>표시</th><th>의미</th><th>확인 방법</th></tr>
@@ -1894,8 +1683,7 @@
                 <tbody>
                   <tr><td><span class="manual-badge red">JSON 첫 번째 감지 오류</span></td><td>JSON 파일을 파싱하지 못했습니다.</td><td>오른쪽의 <code>오류 메시지</code>, <code>줄</code>, <code>칸</code>, <code>주변 원문</code>을 확인합니다.</td></tr>
                   <tr><td><code>JSON 최상위 값은 객체여야 합니다.</code></td><td>JSON 최상단이 객체 형식이 아닙니다.</td><td>파일 구조가 <code>{ ... }</code> 형태인지 확인합니다.</td></tr>
-                  <tr><td><code>sections 배열을 찾을 수 없습니다.</code></td><td>JSON에 <code>sections</code> 배열이 없습니다.</td><td>생성된 JSON 구조를 확인합니다.</td></tr>
-                  <tr><td><code>넘버링 오류</code></td><td>한 파일 안의 <code>q_number</code>가 <code>1</code>부터 문항 개수까지 순차적으로 이어지지 않습니다.</td><td>section이 바뀌어도 번호가 이어지는지 확인합니다.</td></tr>
+                  <tr><td><code>JSON 형식을 확인할 수 없습니다.</code></td><td>JSON에 <code>sections</code> 배열 또는 최상위 <code>items</code> 배열이 없습니다. 두 배열이 함께 있어도 형식 오류입니다.</td><td>소단원 파일은 <code>sections</code>, 단일 section 파일은 최상위 <code>items</code>만 사용합니다.</td></tr>
                   <tr><td><span class="manual-badge yellow">이미지 파일을 찾을 수 없음: 파일명</span></td><td>이미지 참조는 있지만 파일 연결에 실패했습니다.</td><td>실제 이미지 파일 위치와 파일명을 확인합니다.</td></tr>
                   <tr><td><code>$ 구분자 개수가 맞지 않습니다.</code></td><td>LaTeX 인라인 수식 구분자가 맞지 않습니다.</td><td>해당 문항의 수식 기호를 확인합니다.</td></tr>
                   <tr><td><code>\( \) 구분자 개수가 맞지 않습니다.</code></td><td>LaTeX 괄호형 수식 구분자가 맞지 않습니다.</td><td>여는 기호와 닫는 기호를 확인합니다.</td></tr>
@@ -1917,7 +1705,6 @@
       recentSelection: 'allQuestionHtmlViewer.recentSelection',
       recentFolders: 'allQuestionHtmlViewer.recentFolders',
       navWidth: 'allQuestionHtmlViewer.navWidth',
-      examZoom: 'allQuestionHtmlViewer.examZoom',
     };
     const DB_NAME = 'all-question-html-viewer';
     const DB_STORE = 'handles';
@@ -1926,17 +1713,9 @@
     const MAX_RECENT_FOLDERS = 10;
     const MIN_NAV_WIDTH = 260;
     const MAX_NAV_WIDTH_RATIO = 0.6;
-    const MIN_EXAM_ZOOM = 0.6;
-    const MAX_EXAM_ZOOM = 1.6;
-    const EXAM_ZOOM_STEP = 0.1;
-    const PDF_COLUMN_COUNT = 2;
-    const PDF_MEASURE_SELECTOR = '.pdf-measure-root';
     let cards = [];
-    let worksheetPayloads = new Map();
+    let singleFileGroups = new Map();
     let activeIndex = 0;
-    let currentPageIndex = 0;
-    let currentExamPages = [];
-    let examZoom = 1;
     let imageIndex = new Map();
     let imageObjectUrls = [];
     let imageNotesExpanded = false;
@@ -2497,7 +2276,7 @@
       parent.appendChild(section);
     }
 
-    function appendTextWithImages(parent, text) {
+    function appendTextWithImages(parent, text, imageClass = 'rendered-image') {
       const value = String(text || '-');
       if (!renderImagesInput.checked) {
         parent.textContent = value;
@@ -2516,7 +2295,7 @@
         const imageUrl = imageLookupKeys(fileName).map((key) => imageIndex.get(key)).find(Boolean);
         if (imageUrl) {
           const image = document.createElement('img');
-          image.className = 'rendered-image';
+          image.className = imageClass;
           image.src = imageUrl;
           image.alt = fileName;
           parent.appendChild(image);
@@ -2563,9 +2342,10 @@
       if (!hasDisplayValue(blocks)) {
         return;
       }
-      const section = document.createElement('section');
-      const heading = document.createElement('h2');
-      heading.textContent = 'blocks';
+      const section = document.createElement('fieldset');
+      section.className = 'view-block';
+      const heading = document.createElement('legend');
+      heading.textContent = '보기';
       section.appendChild(heading);
       const list = document.createElement('div');
       list.className = 'block-list';
@@ -2684,30 +2464,6 @@
       return [...new Set(values.filter(Boolean))];
     }
 
-    function qNumberValue(value) {
-      if (Number.isInteger(value)) {
-        return value;
-      }
-      if (typeof value === 'string' && /^\d+$/.test(value.trim())) {
-        return Number(value.trim());
-      }
-      return null;
-    }
-
-    function collectNumberingErrors(qNumber, expectedNumber) {
-      if (qNumber === undefined || qNumber === null || String(qNumber).trim() === '') {
-        return [`넘버링 오류: q_number가 없습니다. 기대값은 ${expectedNumber}번입니다.`];
-      }
-      const actualNumber = qNumberValue(qNumber);
-      if (actualNumber === null) {
-        return [`넘버링 오류: q_number가 숫자가 아닙니다. 현재값은 ${String(qNumber)}이고 기대값은 ${expectedNumber}번입니다.`];
-      }
-      if (actualNumber !== expectedNumber) {
-        return [`넘버링 오류: 현재 ${actualNumber}번, 기대값은 ${expectedNumber}번입니다.`];
-      }
-      return [];
-    }
-
     function redWarningSummary(data) {
       return uniqueList([
         ...(data?.jsonErrors || []),
@@ -2788,8 +2544,7 @@
 
     function buildCardsFromPayload(fileName, payload) {
       const result = [];
-      const sections = Array.isArray(payload?.sections) ? payload.sections : [];
-      let expectedQNumber = 1;
+      const sections = payload.sections;
       sections.forEach((section, sectionIndex) => {
         if (!section || typeof section !== 'object') {
           return;
@@ -2801,8 +2556,6 @@
           if (!item || typeof item !== 'object') {
             return;
           }
-          const numberingErrors = collectNumberingErrors(item.q_number, expectedQNumber);
-          expectedQNumber += 1;
           const question = item.question && typeof item.question === 'object' ? item.question : {};
           const imageEditNotes = item.image_edit_notes;
           const blocks = question.blocks ?? [];
@@ -2820,6 +2573,7 @@
           }));
           result.push({
             fileName,
+            fileType: payload.fileType,
             sectionIndex,
             sectionLabel: sectionLabel(sectionIndex, sectionTitle),
             sectionNote,
@@ -2837,7 +2591,6 @@
             imageRefs,
             missingImageRefs,
             latexWarnings,
-            jsonErrors: numberingErrors,
             hasImage: containsImageTag(item) || hasDisplayValue(imageEditNotes),
           });
         });
@@ -2846,7 +2599,7 @@
     }
 
     function countSections(payload) {
-      return Array.isArray(payload?.sections) ? payload.sections.length : 0;
+      return payload.sections.length;
     }
 
     function folderNameFromFiles(files, fallback = '폴더') {
@@ -2869,6 +2622,26 @@
 
     function displayFileName(fileName) {
       return String(fileName || '').replace(/\.json$/i, '');
+    }
+
+    function unitNumber(value) {
+      const match = String(value || '').trim().match(/^(\d+)\./);
+      return match ? match[1] : '';
+    }
+
+    function unitName(value) {
+      return String(value || '').trim().replace(/^\d+\.\s*/, '');
+    }
+
+    function singleFileGroupLabel(payload) {
+      const subject = String(payload?.subject || '').trim();
+      const numbers = [payload?.unit_large, payload?.unit_medium, payload?.unit_small]
+        .map(unitNumber)
+        .filter(Boolean);
+      const smallName = unitName(payload?.unit_small);
+      return subject && numbers.length === 3 && smallName
+        ? `${subject} ${numbers.join('.')} ${smallName}`
+        : '';
     }
 
     function isWorkingJsonFile(file) {
@@ -2979,9 +2752,22 @@
       if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
         throw new Error('JSON 최상위 값은 객체여야 합니다.');
       }
-      if (!Array.isArray(payload.sections)) {
-        throw new Error('sections 배열을 찾을 수 없습니다.');
+      const hasSections = Array.isArray(payload.sections);
+      const hasItems = Array.isArray(payload.items);
+      if (hasSections === hasItems) {
+        throw new Error('JSON은 sections 배열 또는 items 배열 중 하나만 가져야 합니다.');
       }
+      return hasSections
+        ? { ...payload, fileType: 'multi', sections: payload.sections }
+        : {
+          ...payload,
+          fileType: 'single',
+          sections: [{
+            section_title: String(payload.section_title ?? ''),
+            note: String(payload.note ?? ''),
+            items: payload.items,
+          }],
+        };
     }
 
     async function loadFiles(fileList, folderName = '폴더', options = {}) {
@@ -2991,16 +2777,17 @@
       buildImageIndex(allFiles);
       const jsonFiles = sortJsonFiles(allFiles.filter((file) => file.name.toLowerCase().endsWith('.json') && !isWorkingJsonFile(file)));
       const loadedCards = [];
-      const loadedPayloads = new Map();
+      const loadedSingleFileGroups = new Map();
       const errors = [];
       let sectionCount = 0;
       for (const file of jsonFiles) {
         let text = '';
         try {
           text = await file.text();
-          const payload = JSON.parse(text);
-          validatePayloadShape(payload);
-          loadedPayloads.set(file.name, payload);
+          const payload = validatePayloadShape(JSON.parse(text));
+          if (payload.fileType === 'single') {
+            loadedSingleFileGroups.set(file.name, singleFileGroupLabel(payload));
+          }
           sectionCount += countSections(payload);
           loadedCards.push(...buildCardsFromPayload(file.name, payload));
         } catch (error) {
@@ -3009,10 +2796,8 @@
       }
       loadErrors = errors;
       cards = loadedCards;
-      worksheetPayloads = loadedPayloads;
+      singleFileGroups = loadedSingleFileGroups;
       activeLoadError = null;
-      currentPageIndex = 0;
-      currentExamPages = [];
       if (preserveState && savedState) {
         openState.clear();
         savedState.openEntries.forEach(([key, value]) => openState.set(key, value));
@@ -3107,29 +2892,28 @@
     function choiceLengthClass(choices) {
       const lengths = choices.map((choice) => displayValue(choice).replace(/\s+/g, ' ').trim().length);
       const maxLength = lengths.length ? Math.max(...lengths) : 0;
-      if (maxLength >= 70) {
-        return 'very-long-choice-list';
-      }
-      if (maxLength >= 35) {
-        return 'long-choice-list';
+      if (maxLength >= 6) {
+        return 'two-choice-list';
       }
       return '';
     }
 
     function addChoicesSection(parent, choices) {
       if (!Array.isArray(choices)) {
-        addSection(parent, 'choices', displayValue(choices));
+        const text = document.createElement('div');
+        text.className = 'text-block choice-list';
+        appendTextWithImages(text, displayValue(choices), 'rendered-image choice-image');
+        parent.appendChild(text);
         return;
       }
-      const section = document.createElement('section');
-      const heading = document.createElement('h2');
-      heading.textContent = 'choices';
-      section.appendChild(heading);
       const list = document.createElement('ol');
       list.className = 'text-block choice-list';
       const lengthClass = choiceLengthClass(choices);
       if (lengthClass) {
         list.classList.add(lengthClass);
+      }
+      if (choices.some((choice) => containsImageTag(choice))) {
+        list.classList.add('choice-list-with-images');
       }
       if (!choices.length) {
         const item = document.createElement('li');
@@ -3147,14 +2931,13 @@
           marker.textContent = markers[index] || `${index + 1}.`;
           const content = document.createElement('div');
           content.className = 'choice-content';
-          appendTextWithImages(content, displayValue(choice));
+          appendTextWithImages(content, displayValue(choice), 'rendered-image choice-image');
           item.appendChild(marker);
           item.appendChild(content);
           list.appendChild(item);
         });
       }
-      section.appendChild(list);
-      parent.appendChild(section);
+      parent.appendChild(list);
     }
 
     function addRawJsonSection(parent, item) {
@@ -3538,40 +3321,122 @@
 
       const grouped = groupIndexes(indexes);
       loadErrors.forEach((error) => {
-        if (!errorOnlyNav && indexes.length && grouped.has(error.fileName)) {
+        if (!grouped.has(error.fileName)) {
+          appendLoadErrorNavItem(navTree, error);
+        }
+      });
+      const singleGroups = new Map();
+      grouped.forEach((fileIndexes, fileName) => {
+        if (cards[fileIndexes[0]].fileType !== 'single') {
           return;
         }
-        if (grouped.has(error.fileName)) {
+        const label = singleFileGroups.get(fileName) || '';
+        if (!label) {
           return;
         }
-        appendLoadErrorNavItem(navTree, error);
+        if (!singleGroups.has(label)) {
+          singleGroups.set(label, []);
+        }
+        singleGroups.get(label).push({ fileName, index: fileIndexes[0] });
+      });
+      singleGroups.forEach((files, label) => {
+        const details = document.createElement('details');
+        details.open = openState.get(`single-group::${label}`) || false;
+        details.addEventListener('toggle', () => openState.set(`single-group::${label}`, details.open));
+        const summary = document.createElement('summary');
+        summary.className = 'file-summary file-type-single';
+        summary.textContent = label;
+        details.appendChild(summary);
+        const list = document.createElement('div');
+        list.className = 'question-list';
+        files.forEach(({ fileName, index }) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'question-node file-node file-type-single';
+          button.classList.toggle('active', activeIndex === index);
+          button.textContent = fileName;
+          button.addEventListener('click', () => {
+            activeLoadError = null;
+            activeIndex = index;
+            openState.set(`single-group::${label}`, true);
+            renderNav();
+          });
+          list.appendChild(button);
+        });
+        details.appendChild(list);
+        navTree.appendChild(details);
       });
       grouped.forEach((fileIndexes, fileName) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = 'question-node file-node';
-        button.dataset.fileName = fileName;
-        button.dataset.index = String(fileIndexes[0]);
-        button.classList.toggle('active', cards[activeIndex]?.fileName === fileName);
-        const label = document.createElement('span');
-        label.className = 'question-label';
-        label.textContent = displayFileName(fileName);
-        button.appendChild(label);
-        button.addEventListener('click', () => {
+        const fileType = cards[fileIndexes[0]].fileType;
+        const selectSection = (index) => {
           activeLoadError = null;
-          activeIndex = fileIndexes[0];
-          currentPageIndex = 0;
-          renderCard(activeIndex);
-          setActiveQuestionNode();
+          activeIndex = index;
+          if (cards[index].fileType === 'multi') {
+            openState.set(`file::${cards[index].fileName}`, true);
+          }
+          renderNav();
+        };
+        if (fileType === 'single') {
+          if (singleFileGroups.get(fileName)) {
+            return;
+          }
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'question-node file-node file-type-single';
+          button.classList.toggle('active', cards[activeIndex]?.fileName === fileName);
+          const label = document.createElement('span');
+          label.className = 'question-label';
+          label.textContent = displayFileName(fileName);
+          button.appendChild(label);
+          button.addEventListener('click', () => selectSection(fileIndexes[0]));
+          navTree.appendChild(button);
+          return;
+        }
+
+        const fileKey = `file::${fileName}`;
+        const fileDetails = document.createElement('details');
+        fileDetails.dataset.key = fileKey;
+        fileDetails.open = openState.has(fileKey) ? openState.get(fileKey) : false;
+        fileDetails.addEventListener('toggle', () => openState.set(fileKey, fileDetails.open));
+        const summary = document.createElement('summary');
+        summary.className = 'file-summary file-type-multi';
+        const label = document.createElement('span');
+        label.className = 'summary-text';
+        label.textContent = displayFileName(fileName);
+        summary.appendChild(label);
+        fileDetails.appendChild(summary);
+
+        const sections = new Map();
+        fileIndexes.forEach((index) => {
+          const data = cards[index];
+          const key = `${data.sectionIndex}::${data.sectionLabel}`;
+          if (!sections.has(key)) {
+            sections.set(key, { label: data.sectionLabel, indexes: [] });
+          }
+          sections.get(key).indexes.push(index);
         });
-        navTree.appendChild(button);
+        const list = document.createElement('div');
+        list.className = 'question-list';
+        sections.forEach((section) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.className = 'question-node';
+          button.classList.toggle('active', section.indexes.includes(activeIndex));
+          const sectionLabel = document.createElement('span');
+          sectionLabel.className = 'question-label';
+          sectionLabel.textContent = section.label;
+          button.appendChild(sectionLabel);
+          button.addEventListener('click', () => selectSection(section.indexes[0]));
+          list.appendChild(button);
+        });
+        fileDetails.appendChild(list);
+        navTree.appendChild(fileDetails);
       });
 
       if (activeLoadError) {
         renderJsonErrorDetail(activeLoadError);
       } else if (!indexes.includes(activeIndex)) {
         activeIndex = indexes[0];
-        currentPageIndex = 0;
         renderCard(activeIndex);
       } else {
         renderCard(activeIndex);
@@ -3620,576 +3485,6 @@
       } else {
         typeset();
       }
-    }
-
-    function clampExamZoom(value) {
-      const rounded = Math.round(Number(value) * 10) / 10;
-      if (!Number.isFinite(rounded)) {
-        return 1;
-      }
-      return Math.min(Math.max(rounded, MIN_EXAM_ZOOM), MAX_EXAM_ZOOM);
-    }
-
-    function setExamZoom(value, shouldSave = true) {
-      examZoom = clampExamZoom(value);
-      document.documentElement.style.setProperty('--exam-zoom', String(examZoom));
-      if (shouldSave) {
-        localStorage.setItem(STORAGE_KEYS.examZoom, String(examZoom));
-      }
-    }
-
-    function restoreExamZoom() {
-      setExamZoom(Number(localStorage.getItem(STORAGE_KEYS.examZoom)) || 1, false);
-    }
-
-    function formatExamZoom() {
-      return `${Math.round(examZoom * 100)}%`;
-    }
-
-    function selectedFileName(index = activeIndex) {
-      return cards[index]?.fileName || '';
-    }
-
-    function romanizeLeadingNumber(text) {
-      const value = String(text || '').trim();
-      const match = /^(\d+)\.\s*(.+)$/.exec(value);
-      if (!match) {
-        return value;
-      }
-      const romans = ['', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-      const number = Number(match[1]);
-      return `${romans[number] || match[1]}. ${match[2]}`;
-    }
-
-    function worksheetItems(payload) {
-      return (Array.isArray(payload?.sections) ? payload.sections : [])
-        .flatMap((section) => (Array.isArray(section?.items) ? section.items : []));
-    }
-
-    function ensurePdfMeasureRoot() {
-      let root = document.querySelector(PDF_MEASURE_SELECTOR);
-      if (!root) {
-        root = document.createElement('div');
-        root.className = 'pdf-measure-root';
-        root.setAttribute('aria-hidden', 'true');
-        document.body.appendChild(root);
-      }
-      return root;
-    }
-
-    function clearPdfMeasureRoot() {
-      const root = document.querySelector(PDF_MEASURE_SELECTOR);
-      if (root) {
-        root.replaceChildren();
-      }
-    }
-
-    function createPdfColumns(className) {
-      const columns = document.createElement('div');
-      columns.className = className;
-      for (let index = 0; index < PDF_COLUMN_COUNT; index += 1) {
-        const column = document.createElement('div');
-        column.className = 'pdf-column';
-        columns.appendChild(column);
-      }
-      return columns;
-    }
-
-    function createPdfSectionTitle(sectionTitle) {
-      const title = document.createElement('div');
-      title.className = 'pdf-section-title';
-      title.textContent = sectionTitle;
-      return title;
-    }
-
-    function createPdfPageBase(pageData) {
-      const page = document.createElement('section');
-      page.className = `pdf-page ${pageData.type === 'answer' ? 'pdf-answer-page' : 'pdf-problem-page'}`;
-      if (pageData.type === 'answer') {
-        const header = document.createElement('header');
-        header.className = 'pdf-answer-header';
-        header.textContent = '정답 및 해설';
-        page.appendChild(header);
-      } else {
-        appendPdfHeader(page, pageData.payload);
-      }
-      return page;
-    }
-
-    function appendPdfPageFooter(page, pageData) {
-      const footer = document.createElement('footer');
-      footer.className = 'pdf-page-footer';
-      footer.textContent = String(pageData.pageNumber || '');
-      page.appendChild(footer);
-    }
-
-    function measurePdfColumnHeight(pageData) {
-      const root = ensurePdfMeasureRoot();
-      root.replaceChildren();
-      const page = createPdfPageBase(pageData);
-      const columns = createPdfColumns(pageData.type === 'answer' ? 'pdf-answer-columns' : 'pdf-problem-columns');
-      page.appendChild(columns);
-      appendPdfPageFooter(page, pageData);
-      root.appendChild(page);
-      const height = columns.firstElementChild.getBoundingClientRect().height;
-      root.replaceChildren();
-      return height;
-    }
-
-    function measuredElementHeight(element) {
-      const rect = element.getBoundingClientRect();
-      const style = window.getComputedStyle(element);
-      return rect.height + parseFloat(style.marginTop || '0') + parseFloat(style.marginBottom || '0');
-    }
-
-    function measurePdfEntry(entry, pageData) {
-      const root = ensurePdfMeasureRoot();
-      root.replaceChildren();
-      const page = createPdfPageBase(pageData);
-      const columns = createPdfColumns(pageData.type === 'answer' ? 'pdf-answer-columns' : 'pdf-problem-columns');
-      const column = columns.firstElementChild;
-      page.appendChild(columns);
-      appendPdfPageFooter(page, pageData);
-      root.appendChild(page);
-      column.appendChild(createPdfEntryElement(entry));
-      const height = measuredElementHeight(column.firstElementChild);
-      root.replaceChildren();
-      return height;
-    }
-
-    function createEmptyPdfPageModel(basePageData) {
-      return {
-        type: basePageData.type,
-        fileName: basePageData.fileName,
-        payload: basePageData.payload,
-        sectionIndex: basePageData.sectionIndex,
-        columns: Array.from({ length: PDF_COLUMN_COUNT }, () => []),
-      };
-    }
-
-    function paginatePdfEntries(basePageData, entries) {
-      const availableHeight = measurePdfColumnHeight(basePageData);
-      const pages = [];
-      let page = createEmptyPdfPageModel(basePageData);
-      let columnIndex = 0;
-      let usedHeight = 0;
-
-      entries.forEach((entry) => {
-        const entryHeight = measurePdfEntry(entry, basePageData);
-        const shouldMoveColumn = usedHeight > 0 && usedHeight + entryHeight > availableHeight;
-        if (shouldMoveColumn) {
-          columnIndex += 1;
-          usedHeight = 0;
-        }
-        if (columnIndex >= PDF_COLUMN_COUNT) {
-          pages.push(page);
-          page = createEmptyPdfPageModel(basePageData);
-          columnIndex = 0;
-          usedHeight = 0;
-        }
-        page.columns[columnIndex].push(entry);
-        usedHeight += entryHeight;
-      });
-
-      if (page.columns.some((column) => column.length)) {
-        pages.push(page);
-      }
-      return pages;
-    }
-
-    function buildExamPages(fileName) {
-      const payload = worksheetPayloads.get(fileName);
-      if (!payload) {
-        return [];
-      }
-      const pages = [];
-      const sections = Array.isArray(payload.sections) ? payload.sections : [];
-      sections.forEach((section, sectionIndex) => {
-        const basePageData = {
-          type: 'problem',
-          fileName,
-          payload,
-          section,
-          sectionIndex,
-        };
-        const entries = [];
-        if (section?.section_title) {
-          entries.push({ type: 'section-title', text: section.section_title });
-        }
-        const items = Array.isArray(section?.items) ? section.items : [];
-        items.forEach((item) => entries.push({ type: 'problem', item }));
-        pages.push(...paginatePdfEntries(basePageData, entries));
-      });
-      const answerBasePageData = {
-        type: 'answer',
-        fileName,
-        payload,
-      };
-      const answerEntries = worksheetItems(payload).map((item) => ({ type: 'answer', item }));
-      pages.push(...paginatePdfEntries(answerBasePageData, answerEntries));
-      pages.forEach((page, index) => {
-        page.pageNumber = index + 1;
-        page.totalPages = pages.length;
-      });
-      clearPdfMeasureRoot();
-      return pages;
-    }
-
-    function appendPdfHeader(page, payload) {
-      const header = document.createElement('header');
-      header.className = 'pdf-page-header';
-      const unitLine = document.createElement('div');
-      unitLine.className = 'pdf-unit-line';
-      const unitLarge = document.createElement('span');
-      unitLarge.textContent = romanizeLeadingNumber(payload?.unit_large || '');
-      const unitMedium = document.createElement('span');
-      unitMedium.textContent = payload?.unit_medium || '';
-      unitLine.appendChild(unitLarge);
-      unitLine.appendChild(unitMedium);
-      const title = document.createElement('div');
-      title.className = 'pdf-title';
-      title.textContent = payload?.worksheet_title || '워크시트';
-      header.appendChild(unitLine);
-      header.appendChild(title);
-      page.appendChild(header);
-    }
-
-    function splitPipeCells(line) {
-      const cells = [];
-      let current = '';
-      let inMath = false;
-      for (let index = 0; index < line.length; index += 1) {
-        const char = line[index];
-        if (char === '$') {
-          inMath = !inMath;
-        }
-        if (char === '|' && !inMath) {
-          cells.push(current.trim());
-          current = '';
-        } else {
-          current += char;
-        }
-      }
-      cells.push(current.trim());
-      return cells.filter((cell, index, array) => cell || index > 0 && index < array.length - 1);
-    }
-
-    function isMarkdownDividerRow(cells) {
-      return cells.every((cell) => /^:?-{3,}:?$/.test(cell.trim()));
-    }
-
-    function parsePipeTableLines(lines) {
-      const rows = lines
-        .map((line) => splitPipeCells(String(line || '').trim()))
-        .filter((cells) => cells.length >= 2)
-        .filter((cells) => !isMarkdownDividerRow(cells));
-      if (rows.length < 2) {
-        return null;
-      }
-      const width = rows[0].length;
-      return rows.every((row) => row.length === width) ? rows : null;
-    }
-
-    function appendPdfTable(parent, rows, context) {
-      const table = document.createElement('table');
-      table.className = 'pdf-table';
-      const body = document.createElement('tbody');
-      rows.forEach((row) => {
-        const tr = document.createElement('tr');
-        row.forEach((cell) => {
-          const td = document.createElement('td');
-          appendPdfText(td, cell, context);
-          tr.appendChild(td);
-        });
-        body.appendChild(tr);
-      });
-      table.appendChild(body);
-      parent.appendChild(table);
-    }
-
-    function appendPdfMissingImage(parent, fileName) {
-      const box = document.createElement('div');
-      box.className = 'pdf-missing-image';
-      const mark = document.createElement('strong');
-      mark.textContent = '×';
-      const label = document.createElement('span');
-      label.textContent = '이미지 없음';
-      const name = document.createElement('small');
-      name.textContent = fileName || '-';
-      box.appendChild(mark);
-      box.appendChild(label);
-      box.appendChild(name);
-      parent.appendChild(box);
-    }
-
-    function appendPdfImage(parent, fileName) {
-      const wrap = document.createElement('div');
-      wrap.className = 'pdf-image-wrap';
-      const imageUrl = imageLookupKeys(fileName).map((key) => imageIndex.get(key)).find(Boolean);
-      if (imageUrl) {
-        const image = document.createElement('img');
-        image.src = imageUrl;
-        image.alt = fileName;
-        wrap.appendChild(image);
-      } else {
-        appendPdfMissingImage(wrap, fileName);
-      }
-      parent.appendChild(wrap);
-    }
-
-    function appendPdfText(parent, text, context = {}) {
-      const value = String(text ?? '');
-      const tableRows = parsePipeTableLines(value.split(/\r\n|\r|\n/).filter((line) => line.trim()));
-      if (tableRows) {
-        appendPdfTable(parent, tableRows, context);
-        return;
-      }
-      const imageCursor = context.imageCursor || { value: 0 };
-      const images = Array.isArray(context.item?.images) ? context.item.images : [];
-      const pattern = /\[img(?:\s*:\s*([^\]]+))?\]/gi;
-      let cursor = 0;
-      let matched = false;
-      for (const match of value.matchAll(pattern)) {
-        matched = true;
-        if (match.index > cursor) {
-          parent.appendChild(document.createTextNode(value.slice(cursor, match.index)));
-        }
-        const explicitName = String(match[1] || '').trim();
-        const sequentialName = explicitName || imageFileNameFromValue(images[imageCursor.value]);
-        if (!explicitName) {
-          imageCursor.value += 1;
-        }
-        appendPdfImage(parent, sequentialName);
-        cursor = match.index + match[0].length;
-      }
-      if (!matched) {
-        parent.appendChild(document.createTextNode(value || '-'));
-      } else if (cursor < value.length) {
-        parent.appendChild(document.createTextNode(value.slice(cursor)));
-      }
-    }
-
-    function blockLines(block) {
-      if (block && typeof block === 'object' && !Array.isArray(block) && Array.isArray(block.lines)) {
-        return block.lines.map((line) => displayValue(line));
-      }
-      return String(blockDisplayValue(block)).split(/\r\n|\r|\n/);
-    }
-
-    function appendPdfBlock(parent, block, context) {
-      const lines = blockLines(block);
-      const type = block && typeof block === 'object' && !Array.isArray(block) ? block.type : '';
-      const tableRows = parsePipeTableLines(lines.filter((line) => line.trim()));
-      if (!type && tableRows) {
-        appendPdfTable(parent, tableRows, context);
-        return;
-      }
-      const wrapper = document.createElement('div');
-      if (type === 'box') {
-        wrapper.className = 'pdf-box-block';
-      } else if (type === 'statement_set') {
-        wrapper.className = 'pdf-statement-set';
-        const label = document.createElement('div');
-        label.className = 'pdf-statement-label';
-        label.textContent = '| 보기 |';
-        const box = document.createElement('div');
-        box.className = 'pdf-statement-box pdf-block-content';
-        lines.forEach((line, index) => {
-          if (index > 0) {
-            box.appendChild(document.createElement('br'));
-          }
-          appendPdfText(box, line, context);
-        });
-        wrapper.appendChild(label);
-        wrapper.appendChild(box);
-        parent.appendChild(wrapper);
-        return;
-      } else {
-        wrapper.className = 'pdf-centered-lines pdf-block-content';
-      }
-      lines.forEach((line, index) => {
-        if (index > 0) {
-          wrapper.appendChild(document.createElement('br'));
-        }
-        appendPdfText(wrapper, line, context);
-      });
-      parent.appendChild(wrapper);
-    }
-
-    function appendPdfBlocks(parent, blocks, context) {
-      if (!hasDisplayValue(blocks)) {
-        return;
-      }
-      const wrap = document.createElement('div');
-      wrap.className = 'pdf-blocks';
-      const items = Array.isArray(blocks) ? blocks : [blocks];
-      items.forEach((block) => appendPdfBlock(wrap, block, context));
-      parent.appendChild(wrap);
-    }
-
-    function normalizedChoiceLength(choice) {
-      return displayValue(choice)
-        .replace(/\\(frac|dfrac|sqrt|times|div|cdot|left|right)\b/g, '')
-        .replace(/[{}$\\]/g, '')
-        .replace(/\s+/g, '')
-        .length;
-    }
-
-    function pdfChoiceLayout(choices) {
-      const lengths = choices.map(normalizedChoiceLength);
-      const maxLength = lengths.length ? Math.max(...lengths) : 0;
-      const totalLength = lengths.reduce((sum, value) => sum + value, 0);
-      if (maxLength <= 6 && totalLength <= 24) {
-        return 3;
-      }
-      if (maxLength <= 10 && totalLength <= 42) {
-        return 2;
-      }
-      return 1;
-    }
-
-    function appendPdfChoices(parent, choices, context) {
-      if (!Array.isArray(choices) || !choices.length) {
-        return;
-      }
-      const markers = ['①', '②', '③', '④', '⑤', '⑥', '⑦', '⑧', '⑨', '⑩'];
-      const list = document.createElement('ol');
-      list.className = `pdf-choices layout-${pdfChoiceLayout(choices)}`;
-      choices.forEach((choice, index) => {
-        const item = document.createElement('li');
-        item.className = 'pdf-choice';
-        const marker = document.createElement('span');
-        marker.textContent = markers[index] || `${index + 1}.`;
-        const content = document.createElement('div');
-        content.className = 'pdf-choice-content';
-        appendPdfText(content, displayValue(choice), context);
-        item.appendChild(marker);
-        item.appendChild(content);
-        list.appendChild(item);
-      });
-      parent.appendChild(list);
-    }
-
-    function createPdfProblemItem(item) {
-      const question = item?.question && typeof item.question === 'object' ? item.question : {};
-      const imageCursor = { value: 0 };
-      const context = { item, imageCursor };
-      const article = document.createElement('article');
-      article.className = 'pdf-item';
-      const line = document.createElement('div');
-      line.className = 'pdf-question-line';
-      const number = document.createElement('span');
-      number.className = 'pdf-question-no';
-      number.textContent = `${item?.q_number ?? '-'}.`;
-      const body = document.createElement('div');
-      body.className = 'pdf-question-body';
-      appendPdfText(body, question.stem || '-', context);
-      line.appendChild(number);
-      line.appendChild(body);
-      article.appendChild(line);
-      appendPdfBlocks(article, question.blocks, context);
-      appendPdfChoices(article, Array.isArray(item?.choices) ? item.choices : [], context);
-      return article;
-    }
-
-    function appendPdfProblemItem(parent, item) {
-      parent.appendChild(createPdfProblemItem(item));
-    }
-
-    function createPdfAnswerItem(item) {
-      const article = document.createElement('article');
-      article.className = 'pdf-answer-item';
-      const answerLine = document.createElement('div');
-      answerLine.className = 'pdf-answer-line';
-      const number = document.createElement('strong');
-      number.textContent = `${item?.q_number ?? '-'}.`;
-      const answer = document.createElement('strong');
-      answer.textContent = displayValue(item?.answer);
-      answerLine.appendChild(number);
-      answerLine.appendChild(document.createTextNode(' 정답: '));
-      answerLine.appendChild(answer);
-      const explanation = document.createElement('div');
-      explanation.className = 'pdf-explanation';
-      const imageCursor = { value: countImageTags(item?.question?.stem || '') };
-      appendPdfText(explanation, item?.explanation || '-', { item, imageCursor });
-      article.appendChild(answerLine);
-      article.appendChild(explanation);
-      return article;
-    }
-
-    function appendPdfAnswerItem(parent, item) {
-      parent.appendChild(createPdfAnswerItem(item));
-    }
-
-    function countImageTags(text) {
-      return [...String(text || '').matchAll(/\[img(?:\s*:\s*([^\]]+))?\]/gi)].filter((match) => !match[1]).length;
-    }
-
-    function createPdfEntryElement(entry) {
-      if (entry.type === 'section-title') {
-        return createPdfSectionTitle(entry.text);
-      }
-      if (entry.type === 'answer') {
-        return createPdfAnswerItem(entry.item);
-      }
-      return createPdfProblemItem(entry.item);
-    }
-
-    function renderProblemPage(pageData) {
-      const page = createPdfPageBase(pageData);
-      const columns = createPdfColumns('pdf-problem-columns');
-      pageData.columns.forEach((entries, index) => {
-        const column = columns.children[index];
-        entries.forEach((entry) => column.appendChild(createPdfEntryElement(entry)));
-      });
-      page.appendChild(columns);
-      appendPdfPageFooter(page, pageData);
-      return page;
-    }
-
-    function renderAnswerPage(pageData) {
-      const page = createPdfPageBase(pageData);
-      const columns = createPdfColumns('pdf-answer-columns');
-      pageData.columns.forEach((entries, index) => {
-        const column = columns.children[index];
-        entries.forEach((entry) => column.appendChild(createPdfEntryElement(entry)));
-      });
-      page.appendChild(columns);
-      appendPdfPageFooter(page, pageData);
-      return page;
-    }
-
-    function renderExamPage(pageData) {
-      return pageData?.type === 'answer' ? renderAnswerPage(pageData) : renderProblemPage(pageData);
-    }
-
-    function changeExamPage(delta) {
-      if (!currentExamPages.length) {
-        return;
-      }
-      const nextIndex = Math.min(Math.max(currentPageIndex + delta, 0), currentExamPages.length - 1);
-      if (nextIndex === currentPageIndex) {
-        return;
-      }
-      currentPageIndex = nextIndex;
-      renderCard(activeIndex);
-    }
-
-    function setExamPage(index) {
-      if (!currentExamPages.length) {
-        return;
-      }
-      currentPageIndex = Math.min(Math.max(index, 0), currentExamPages.length - 1);
-      renderCard(activeIndex);
-    }
-
-    function setExamPageFromInput(input) {
-      const requestedPage = Number(input.value);
-      if (!Number.isFinite(requestedPage)) {
-        input.value = String(currentPageIndex + 1);
-        return;
-      }
-      setExamPage(Math.round(requestedPage) - 1);
     }
 
     function renderJsonErrorDetail(error) {
@@ -4260,117 +3555,53 @@
         return;
       }
 
-      const fileName = data.fileName;
-      currentExamPages = buildExamPages(fileName);
-      if (!currentExamPages.length) {
-        const empty = document.createElement('div');
-        empty.className = 'empty';
-        empty.textContent = '표시할 소단원 뷰 페이지가 없습니다.';
-        cardRoot.appendChild(empty);
-        return;
+      const sectionItems = cards.filter((card) => (
+        card.fileName === data.fileName && card.sectionIndex === data.sectionIndex
+      ));
+      const head = document.createElement('div');
+      head.className = 'type-view-head';
+      const fileLine = document.createElement('div');
+      fileLine.className = 'file-line';
+      setText(fileLine, 'file-name', data.fileName);
+      if (data.sectionNote) {
+        setText(fileLine, 'section-note', data.sectionNote);
       }
-      currentPageIndex = Math.min(Math.max(currentPageIndex, 0), currentExamPages.length - 1);
+      const titleLine = document.createElement('div');
+      titleLine.className = 'title-line';
+      setText(titleLine, 'section-title', data.sectionLabel);
+      head.append(fileLine, titleLine);
+      cardRoot.appendChild(head);
 
-      const toolbar = document.createElement('div');
-      toolbar.className = 'exam-toolbar';
-      const title = document.createElement('div');
-      title.className = 'exam-file-title';
-      title.textContent = displayFileName(fileName);
-      const pageControls = document.createElement('div');
-      pageControls.className = 'exam-toolbar-group';
-      const prevButton = document.createElement('button');
-      prevButton.type = 'button';
-      prevButton.className = 'nav-button';
-      prevButton.textContent = '이전 페이지';
-      prevButton.title = '이전 페이지 (←)';
-      prevButton.disabled = currentPageIndex <= 0;
-      prevButton.addEventListener('click', () => changeExamPage(-1));
-      const pageInput = document.createElement('input');
-      pageInput.className = 'exam-page-input';
-      pageInput.type = 'number';
-      pageInput.min = '1';
-      pageInput.max = String(currentExamPages.length);
-      pageInput.step = '1';
-      pageInput.value = String(currentPageIndex + 1);
-      pageInput.setAttribute('aria-label', '이동할 페이지 번호');
-      pageInput.addEventListener('change', () => setExamPageFromInput(pageInput));
-      pageInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter') {
-          event.preventDefault();
-          setExamPageFromInput(pageInput);
-          pageInput.blur();
+      const content = document.createElement('div');
+      content.className = 'type-view-content';
+      sectionItems.forEach((item, itemIndex) => {
+        const row = document.createElement('div');
+        row.className = 'type-view-row';
+        const ordinal = document.createElement('div');
+        ordinal.className = 'type-view-ordinal';
+        ordinal.textContent = `${itemIndex + 1}/${sectionItems.length}`;
+        const prompt = document.createElement('div');
+        prompt.className = 'type-view-cell prompt-column';
+        const explanation = document.createElement('div');
+        explanation.className = 'type-view-cell explanation-column';
+        const answer = document.createElement('div');
+        answer.className = 'type-view-cell answer-column';
+        const answerType = document.createElement('div');
+        answerType.className = 'type-view-cell answer-type-column';
+        addSection(prompt, '문제', item.stem);
+        if (item.hasBlocks) {
+          addBlocksSection(prompt, item.rawBlocks);
         }
+        addChoicesSection(prompt, item.choices);
+        addSection(explanation, '해설', item.explanation);
+        addSection(answer, 'answer', item.answer, 'text-block answer-block');
+        addSection(answerType, 'answer_type', item.answerType, 'text-block answer-block');
+        row.append(ordinal, prompt, explanation, answer, answerType);
+        content.appendChild(row);
       });
-      const pageTotal = document.createElement('span');
-      pageTotal.className = 'exam-page-total';
-      pageTotal.textContent = `/ ${currentExamPages.length}`;
-      const nextButton = document.createElement('button');
-      nextButton.type = 'button';
-      nextButton.className = 'nav-button';
-      nextButton.textContent = '다음 페이지';
-      nextButton.title = '다음 페이지 (→)';
-      nextButton.disabled = currentPageIndex >= currentExamPages.length - 1;
-      nextButton.addEventListener('click', () => changeExamPage(1));
-      pageControls.appendChild(prevButton);
-      pageControls.appendChild(pageInput);
-      pageControls.appendChild(pageTotal);
-      pageControls.appendChild(nextButton);
-
-      const zoomControls = document.createElement('div');
-      zoomControls.className = 'exam-toolbar-group';
-      const zoomOut = document.createElement('button');
-      zoomOut.type = 'button';
-      zoomOut.className = 'nav-button';
-      zoomOut.textContent = '-';
-      zoomOut.title = '축소 (Ctrl+-)';
-      zoomOut.disabled = examZoom <= MIN_EXAM_ZOOM;
-      zoomOut.addEventListener('click', () => {
-        setExamZoom(examZoom - EXAM_ZOOM_STEP);
-        renderCard(activeIndex);
-      });
-      const zoomStatus = document.createElement('button');
-      zoomStatus.type = 'button';
-      zoomStatus.className = 'nav-button exam-zoom-status';
-      zoomStatus.textContent = formatExamZoom();
-      zoomStatus.title = '100%로 복귀 (Ctrl+0)';
-      zoomStatus.addEventListener('click', () => {
-        setExamZoom(1);
-        renderCard(activeIndex);
-      });
-      const zoomIn = document.createElement('button');
-      zoomIn.type = 'button';
-      zoomIn.className = 'nav-button';
-      zoomIn.textContent = '+';
-      zoomIn.title = '확대 (Ctrl++)';
-      zoomIn.disabled = examZoom >= MAX_EXAM_ZOOM;
-      zoomIn.addEventListener('click', () => {
-        setExamZoom(examZoom + EXAM_ZOOM_STEP);
-        renderCard(activeIndex);
-      });
-      zoomControls.appendChild(zoomOut);
-      zoomControls.appendChild(zoomStatus);
-      zoomControls.appendChild(zoomIn);
-
-      const imageControls = document.createElement('div');
-      imageControls.className = 'exam-toolbar-group';
-      imageControls.appendChild(imageSizeControl);
-      updateImageSizeAvailability();
-
-      toolbar.appendChild(title);
-      toolbar.appendChild(pageControls);
-      toolbar.appendChild(imageControls);
-      toolbar.appendChild(zoomControls);
-      cardRoot.appendChild(toolbar);
-
-      const stage = document.createElement('div');
-      stage.className = 'exam-stage';
-      const frame = document.createElement('div');
-      frame.className = 'exam-page-frame';
-      frame.appendChild(renderExamPage(currentExamPages[currentPageIndex]));
-      stage.appendChild(frame);
-      cardRoot.appendChild(stage);
-
+      cardRoot.appendChild(content);
       typesetMath(cardRoot);
+      return;
     }
 
     function closeManual() {
@@ -4513,40 +3744,6 @@
         }
         return;
       }
-      const target = event.target;
-      const key = event.key;
-      if ((event.ctrlKey || event.metaKey) && !event.altKey) {
-        if (key === '+' || key === '=') {
-          event.preventDefault();
-          setExamZoom(examZoom + EXAM_ZOOM_STEP);
-          renderCard(activeIndex);
-        } else if (key === '-' || key === '_') {
-          event.preventDefault();
-          setExamZoom(examZoom - EXAM_ZOOM_STEP);
-          renderCard(activeIndex);
-        } else if (key === '0') {
-          event.preventDefault();
-          setExamZoom(1);
-          renderCard(activeIndex);
-        }
-        return;
-      }
-      if (isTypingTarget(target) || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) {
-        return;
-      }
-      if (key === 'ArrowLeft') {
-        event.preventDefault();
-        changeExamPage(-1);
-      } else if (key === 'ArrowRight') {
-        event.preventDefault();
-        changeExamPage(1);
-      } else if (key === 'Home') {
-        event.preventDefault();
-        setExamPage(0);
-      } else if (key === 'End') {
-        event.preventDefault();
-        setExamPage(currentExamPages.length - 1);
-      }
     });
     expandAllButton.addEventListener('click', () => {
       document.querySelectorAll('nav details').forEach((details) => {
@@ -4591,7 +3788,6 @@
     });
     async function initializePage() {
       restoreNavWidth();
-      restoreExamZoom();
       updateImageSize();
       updateImageSizeAvailability();
       renderRecentSelectionHint();

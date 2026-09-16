@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>연산 JSON 뷰어</title>
+  <title>교과연산 JSON 뷰어</title>
   <script>
     window.MathJax = {
       tex: {
@@ -972,6 +972,8 @@
       font-size: 13px;
       line-height: 1.3;
     }
+    .file-summary.file-type-single .summary-text { color: #0f172a; }
+    .file-summary.file-type-multi .summary-text { color: #7e22ce; }
     summary::-webkit-details-marker {
       display: none;
     }
@@ -1486,10 +1488,10 @@
   <header class="top-bar">
     <div class="header-title">
       <a class="home-link" href="index.html" aria-label="메인페이지로 이동" title="메인페이지로 이동">⌂</a>
-      <h1>연산 JSON 뷰어</h1>
+      <h1>교과연산 JSON 뷰어</h1>
     </div>
     <div class="top-actions">
-      <button id="manual-button" class="load-button manual-button" type="button" title="사용 메뉴얼 보기" aria-label="사용 메뉴얼 열기">?</button>
+      <button id="manual-button" class="load-button manual-button" type="button" title="사용 매뉴얼 보기" aria-label="사용 매뉴얼 열기">?</button>
       <button id="folder-button" class="load-button" type="button">폴더 선택</button>
       <div class="recent-folder-control">
         <button id="recent-folder-button" class="load-button recent-folder-button" type="button" disabled aria-expanded="false">
@@ -1507,10 +1509,10 @@
   </header>
   <main class="home-main">
     <section class="home-panel" aria-labelledby="home-title">
-      <h2 id="home-title">연산 JSON 뷰어</h2>
+      <h2 id="home-title">교과연산 JSON 뷰어</h2>
       <div class="home-page-links" aria-label="페이지 이동">
         <a class="home-page-link" href="question-viewer.html">문항 뷰</a>
-        <a class="home-page-link" href="section-viewer.html">소단원 뷰</a>
+        <a class="home-page-link" href="section-viewer.html">유형 뷰</a>
         <a class="home-page-link" href="stats.html">통계</a>
         <a class="home-page-link" href="all-images.html">그림</a>
       </div>
@@ -1548,8 +1550,8 @@
   <div id="manual-overlay" class="manual-overlay" hidden>
     <section class="manual-dialog" role="dialog" aria-modal="true" aria-labelledby="manual-title">
       <div class="manual-header">
-        <h2 id="manual-title">연산 JSON 뷰어 사용 메뉴얼</h2>
-        <button id="manual-close" class="manual-close" type="button" aria-label="사용 메뉴얼 닫기">×</button>
+        <h2 id="manual-title">교과연산 JSON 뷰어 사용 매뉴얼</h2>
+        <button id="manual-close" class="manual-close" type="button" aria-label="사용 매뉴얼 닫기">×</button>
       </div>
       <div class="manual-body">
         <div class="manual-summary-card">
@@ -1567,13 +1569,13 @@
           <details class="manual-section" open>
             <summary>1. 빠른 시작</summary>
             <div class="manual-section-content">
-              <p>새로운 폴더에서 작업할 때는 <strong>폴더 선택</strong>을 누른 뒤 <strong>문항 뷰</strong>, <strong>소단원 뷰</strong>, <strong>통계</strong>, <strong>그림</strong> 화면을 선택합니다.</p>
+              <p>새로운 폴더에서 작업할 때는 <strong>폴더 선택</strong>을 누른 뒤 <strong>문항 뷰</strong>, <strong>유형 뷰</strong>, <strong>통계</strong>, <strong>그림</strong> 화면을 선택합니다.</p>
               <p>최근 작업한 폴더에서 작업할 때는 <strong>폴더 선택</strong> 옆의 최근 방문 폴더 목록에서 폴더를 고른 뒤 화면을 선택합니다.</p>
               <div class="manual-highlight">전달받은 작업 폴더의 구조를 유지한 상태로 사용해 주세요. JSON 안의 <code>[img: 파일명]</code> 정보와 실제 이미지 파일이 연결되어야 이미지가 정상 표시됩니다.</div>
               <ol>
                 <li>새 작업이면 <code>폴더 선택</code>을 누르고 작업 폴더를 선택합니다.</li>
                 <li>최근 작업이면 <code>최근 폴더</code> 목록에서 작업 폴더를 선택합니다.</li>
-                <li><code>문항 뷰</code>, <code>소단원 뷰</code>, <code>통계</code>, <code>그림</code>을 눌러 필요한 화면으로 이동합니다.</li>
+                <li><code>문항 뷰</code>, <code>유형 뷰</code>, <code>통계</code>, <code>그림</code>을 눌러 필요한 화면으로 이동합니다.</li>
               </ol>
             </div>
           </details>
@@ -1591,7 +1593,7 @@
                   <tr><td><code>최근 폴더</code></td><td>이전에 열었던 폴더 목록을 다시 엽니다. 브라우저 권한이 필요할 수 있습니다.</td></tr>
                   <tr><td><code>다시 읽기</code></td><td>현재 폴더를 다시 불러와 JSON 파일 수정, 이미지 파일 추가, 이미지 파일 수정, 이미지 파일 교체 내용을 갱신해서 확인합니다. 작업 중 파일을 고친 뒤 화면에 바로 반영하고 싶을 때 사용합니다.</td></tr>
                   <tr><td>상단 개수 표시</td><td><code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code> 형식으로 현재 불러온 데이터를 보여줍니다.</td></tr>
-                  <tr><td>왼쪽 목록</td><td>JSON 파일, section, 문항 번호 순서로 표시됩니다.</td></tr>
+                  <tr><td>왼쪽 목록</td><td>검정색 단일 section 파일은 <code>파일 → 문항 번호</code>, 보라색 여러 section 파일은 <code>파일 → section → 문항 번호</code> 순서로 표시됩니다.</td></tr>
                   <tr><td>오른쪽 상세 화면</td><td>선택한 문항의 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 보여줍니다.</td></tr>
                   <tr><td><code>그림</code></td><td>선택한 JSON 파일에 연결된 그림과 연결 문항을 확인합니다.</td></tr>
                 </tbody>
@@ -1603,7 +1605,7 @@
           <details class="manual-section">
             <summary>3. 문항 확인 방법</summary>
             <div class="manual-section-content">
-              <p>왼쪽 목록에서 JSON 파일명을 펼치면 section 목록이 보입니다. section을 펼치면 <code>1번</code>, <code>2번</code> 같은 문항 번호가 표시됩니다. 문항을 클릭하면 오른쪽 상세 화면에서 해당 문항을 확인합니다.</p>
+              <p>검정색 단일 section 파일은 파일명을 펼치면 <code>1번</code>, <code>2번</code> 같은 문항 번호가 바로 표시됩니다. 보라색 여러 section 파일은 section을 펼친 뒤 문항 번호를 확인합니다. 문항을 클릭하면 오른쪽 상세 화면에서 해당 문항을 확인합니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>항목</th><th>의미</th></tr>
@@ -1669,7 +1671,7 @@
           <details class="manual-section">
             <summary>6. 오류와 경고</summary>
             <div class="manual-section-content">
-              <p>상단에 <span class="manual-badge red">오류 N개</span>가 표시되면 JSON 문법 오류, 넘버링 오류, LaTeX 경고가 있다는 뜻입니다. <code>오류 N개</code>를 클릭하면 <code>오류만 보기 ON / 오류 N개</code> 상태가 되며, 오류가 있는 항목만 왼쪽 목록에 표시됩니다.</p>
+              <p>상단에 <span class="manual-badge red">오류 N개</span>가 표시되면 JSON 문법 오류 또는 LaTeX 경고가 있다는 뜻입니다. <code>오류 N개</code>를 클릭하면 <code>오류만 보기 ON / 오류 N개</code> 상태가 되며, 오류가 있는 항목만 왼쪽 목록에 표시됩니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>표시</th><th>의미</th><th>확인 방법</th></tr>
@@ -1677,8 +1679,7 @@
                 <tbody>
                   <tr><td><span class="manual-badge red">JSON 첫 번째 감지 오류</span></td><td>JSON 파일을 파싱하지 못했습니다.</td><td>오른쪽의 <code>오류 메시지</code>, <code>줄</code>, <code>칸</code>, <code>주변 원문</code>을 확인합니다.</td></tr>
                   <tr><td><code>JSON 최상위 값은 객체여야 합니다.</code></td><td>JSON 최상단이 객체 형식이 아닙니다.</td><td>파일 구조가 <code>{ ... }</code> 형태인지 확인합니다.</td></tr>
-                  <tr><td><code>sections 배열을 찾을 수 없습니다.</code></td><td>JSON에 <code>sections</code> 배열이 없습니다.</td><td>생성된 JSON 구조를 확인합니다.</td></tr>
-                  <tr><td><code>넘버링 오류</code></td><td>한 파일 안의 <code>q_number</code>가 <code>1</code>부터 문항 개수까지 순차적으로 이어지지 않습니다.</td><td>section이 바뀌어도 번호가 이어지는지 확인합니다.</td></tr>
+                  <tr><td><code>JSON 형식을 확인할 수 없습니다.</code></td><td>JSON에 <code>sections</code> 배열 또는 최상위 <code>items</code> 배열이 없습니다. 두 배열이 함께 있어도 형식 오류입니다.</td><td>소단원 파일은 <code>sections</code>, 단일 section 파일은 최상위 <code>items</code>만 사용합니다.</td></tr>
                   <tr><td><span class="manual-badge yellow">이미지 파일을 찾을 수 없음: 파일명</span></td><td>이미지 참조는 있지만 파일 연결에 실패했습니다.</td><td>실제 이미지 파일 위치와 파일명을 확인합니다.</td></tr>
                   <tr><td><code>$ 구분자 개수가 맞지 않습니다.</code></td><td>LaTeX 인라인 수식 구분자가 맞지 않습니다.</td><td>해당 문항의 수식 기호를 확인합니다.</td></tr>
                   <tr><td><code>\( \) 구분자 개수가 맞지 않습니다.</code></td><td>LaTeX 괄호형 수식 구분자가 맞지 않습니다.</td><td>여는 기호와 닫는 기호를 확인합니다.</td></tr>
@@ -2446,30 +2447,6 @@
       return [...new Set(values.filter(Boolean))];
     }
 
-    function qNumberValue(value) {
-      if (Number.isInteger(value)) {
-        return value;
-      }
-      if (typeof value === 'string' && /^\d+$/.test(value.trim())) {
-        return Number(value.trim());
-      }
-      return null;
-    }
-
-    function collectNumberingErrors(qNumber, expectedNumber) {
-      if (qNumber === undefined || qNumber === null || String(qNumber).trim() === '') {
-        return [`넘버링 오류: q_number가 없습니다. 기대값은 ${expectedNumber}번입니다.`];
-      }
-      const actualNumber = qNumberValue(qNumber);
-      if (actualNumber === null) {
-        return [`넘버링 오류: q_number가 숫자가 아닙니다. 현재값은 ${String(qNumber)}이고 기대값은 ${expectedNumber}번입니다.`];
-      }
-      if (actualNumber !== expectedNumber) {
-        return [`넘버링 오류: 현재 ${actualNumber}번, 기대값은 ${expectedNumber}번입니다.`];
-      }
-      return [];
-    }
-
     function redWarningSummary(data) {
       return uniqueList([
         ...(data?.jsonErrors || []),
@@ -2550,8 +2527,7 @@
 
     function buildCardsFromPayload(fileName, payload) {
       const result = [];
-      const sections = Array.isArray(payload?.sections) ? payload.sections : [];
-      let expectedQNumber = 1;
+      const sections = payload.sections;
       sections.forEach((section, sectionIndex) => {
         if (!section || typeof section !== 'object') {
           return;
@@ -2563,8 +2539,6 @@
           if (!item || typeof item !== 'object') {
             return;
           }
-          const numberingErrors = collectNumberingErrors(item.q_number, expectedQNumber);
-          expectedQNumber += 1;
           const question = item.question && typeof item.question === 'object' ? item.question : {};
           const imageEditNotes = item.image_edit_notes;
           const blocks = question.blocks ?? [];
@@ -2582,6 +2556,7 @@
           }));
           result.push({
             fileName,
+            fileType: payload.fileType,
             sectionIndex,
             sectionLabel: sectionLabel(sectionIndex, sectionTitle),
             sectionNote,
@@ -2599,7 +2574,6 @@
             imageRefs,
             missingImageRefs,
             latexWarnings,
-            jsonErrors: numberingErrors,
             hasImage: containsImageTag(item) || hasDisplayValue(imageEditNotes),
           });
         });
@@ -2608,7 +2582,7 @@
     }
 
     function countSections(payload) {
-      return Array.isArray(payload?.sections) ? payload.sections.length : 0;
+      return payload.sections.length;
     }
 
     function folderNameFromFiles(files, fallback = '폴더') {
@@ -2741,9 +2715,22 @@
       if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
         throw new Error('JSON 최상위 값은 객체여야 합니다.');
       }
-      if (!Array.isArray(payload.sections)) {
-        throw new Error('sections 배열을 찾을 수 없습니다.');
+      const hasSections = Array.isArray(payload.sections);
+      const hasItems = Array.isArray(payload.items);
+      if (hasSections === hasItems) {
+        throw new Error('JSON은 sections 배열 또는 items 배열 중 하나만 가져야 합니다.');
       }
+      return hasSections
+        ? { ...payload, fileType: 'multi', sections: payload.sections }
+        : {
+          ...payload,
+          fileType: 'single',
+          sections: [{
+            section_title: String(payload.section_title ?? ''),
+            note: String(payload.note ?? ''),
+            items: payload.items,
+          }],
+        };
     }
 
     async function loadFiles(fileList, folderName = '폴더', options = {}) {
@@ -2759,8 +2746,7 @@
         let text = '';
         try {
           text = await file.text();
-          const payload = JSON.parse(text);
-          validatePayloadShape(payload);
+          const payload = validatePayloadShape(JSON.parse(text));
           sectionCount += countSections(payload);
           loadedCards.push(...buildCardsFromPayload(file.name, payload));
         } catch (error) {
@@ -3310,19 +3296,25 @@
         fileDetails.addEventListener('toggle', () => openState.set(fileKey, fileDetails.open));
         const fileSummary = document.createElement('summary');
         fileSummary.className = 'file-summary';
+        const firstSection = sections.values().next().value;
+        const fileType = cards[firstSection.items[0]].fileType;
+        fileSummary.classList.add(`file-type-${fileType}`);
         appendSummaryContent(fileSummary, displayFileName(fileName), fileWarningBundle(fileName, indexes));
         fileDetails.appendChild(fileSummary);
 
         sections.forEach((section) => {
-          const sectionKey = `section::${fileName}::${section.label}`;
-          const sectionDetails = document.createElement('details');
-          sectionDetails.dataset.key = sectionKey;
-          sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : true;
-          sectionDetails.addEventListener('toggle', () => openState.set(sectionKey, sectionDetails.open));
-          const sectionSummary = document.createElement('summary');
-          sectionSummary.className = 'section-summary';
-          appendSummaryContent(sectionSummary, section.label, sectionWarningBundle(section.items));
-          sectionDetails.appendChild(sectionSummary);
+          const isSingleSection = fileType === 'single';
+          const sectionDetails = isSingleSection ? fileDetails : document.createElement('details');
+          if (!isSingleSection) {
+            const sectionKey = `section::${fileName}::${section.label}`;
+            sectionDetails.dataset.key = sectionKey;
+            sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : true;
+            sectionDetails.addEventListener('toggle', () => openState.set(sectionKey, sectionDetails.open));
+            const sectionSummary = document.createElement('summary');
+            sectionSummary.className = 'section-summary';
+            appendSummaryContent(sectionSummary, section.label, sectionWarningBundle(section.items));
+            sectionDetails.appendChild(sectionSummary);
+          }
 
           const list = document.createElement('div');
           list.className = 'question-list';
@@ -3348,7 +3340,9 @@
             list.appendChild(button);
           });
           sectionDetails.appendChild(list);
-          fileDetails.appendChild(sectionDetails);
+          if (!isSingleSection) {
+            fileDetails.appendChild(sectionDetails);
+          }
         });
         navTree.appendChild(fileDetails);
       });
@@ -3590,7 +3584,7 @@
         return;
       }
       const manualBody = manualOverlay.querySelector('.manual-body');
-      document.getElementById('manual-title').textContent = '연산 JSON 뷰어 메인 도움말';
+      document.getElementById('manual-title').textContent = '교과연산 JSON 뷰어 메인 도움말';
       manualBody.replaceChildren();
 
       const summary = document.createElement('div');
@@ -3617,12 +3611,20 @@
                 <tr><td><code>폴더 선택</code></td><td>JSON 파일과 이미지 파일이 들어있는 작업 폴더를 선택합니다.</td></tr>
                 <tr><td><code>최근 폴더</code></td><td><code>폴더 선택</code> 옆에 있는 최근 방문 폴더 목록입니다. 이전에 열었던 작업 폴더를 다시 선택합니다.</td></tr>
                 <tr><td><code>문항 뷰</code></td><td>문항 단위로 문제, 보기, 정답, 해설, 이미지를 확인합니다.</td></tr>
-                <tr><td><code>소단원 뷰</code></td><td>JSON 파일별 시험지 내용을 확인합니다.</td></tr>
+                <tr><td><code>유형 뷰</code></td><td>선택한 section의 모든 문항을 한 번에 확인합니다.</td></tr>
                 <tr><td><code>통계</code></td><td>파일별, section별 문항수와 정답 번호 개수 분포를 확인합니다.</td></tr>
                 <tr><td><code>그림</code></td><td>선택한 JSON 파일에 연결된 그림과 연결 문항을 확인합니다.</td></tr>
               </tbody>
             </table>
             <div class="manual-highlight">폴더가 선택된 상태에서 화면 버튼을 누르면 해당 페이지로 이동하면서 현재 폴더를 다시 불러옵니다.</div>
+          </div>
+        </details>
+        <details class="manual-section">
+          <summary>2. JSON 파일 형식과 목록 표시</summary>
+          <div class="manual-section-content">
+            <p>파일 형식은 자동으로 인식합니다. 최상위 <code>items</code> 배열을 가진 단일 section 파일은 검정색으로, 최상위 <code>sections</code> 배열을 가진 여러 section 파일은 보라색으로 표시됩니다.</p>
+            <p>단일 section 파일은 파일을 펼치면 문항 번호가 바로 보입니다. 여러 section 파일은 파일을 펼친 뒤 section을 한 번 더 펼쳐 문항 번호를 확인합니다.</p>
+            <div class="manual-highlight">한 JSON 파일에는 <code>items</code> 또는 <code>sections</code> 중 하나만 사용합니다. 두 배열이 함께 있거나 둘 다 없으면 형식 오류로 표시됩니다.</div>
           </div>
         </details>
       `;

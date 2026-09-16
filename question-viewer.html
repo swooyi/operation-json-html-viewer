@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>문항 뷰 - 연산 JSON 뷰어</title>
+  <title>문항 뷰 - 교과연산 JSON 뷰어</title>
   <script>
     window.MathJax = {
       tex: {
@@ -929,6 +929,8 @@
       font-size: 13px;
       line-height: 1.3;
     }
+    .file-summary.file-type-single .summary-text { color: #0f172a; }
+    .file-summary.file-type-multi .summary-text { color: #7e22ce; }
     summary::-webkit-details-marker {
       display: none;
     }
@@ -1191,15 +1193,33 @@
       align-content: start;
       background: #fff;
     }
-    .paired-row {
-      min-width: 0;
+    .question-body-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(120px, 320px);
-      gap: 16px;
-      align-items: start;
+      grid-template-columns: 420px 420px 50px 140px;
+      min-width: 1030px;
+      align-items: stretch;
+      border: 1px solid var(--line);
     }
-    .answer-column {
+    .question-body-cell {
       min-width: 0;
+      padding: 10px 12px;
+    }
+    .question-body-cell + .question-body-cell {
+      border-left: 1px solid var(--line);
+    }
+    .question-body-cell > section > h2 {
+      display: none;
+    }
+    .question-body-cell > section + section,
+    .question-body-cell > .view-block + section,
+    .question-body-cell > section + .view-block {
+      margin-top: 12px;
+    }
+    .question-body-cell .text-block {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
     }
     section {
       min-width: 0;
@@ -1233,13 +1253,23 @@
       display: grid;
       gap: 8px;
     }
+    .view-block {
+      min-width: 0;
+      margin: 12px 0;
+      border: 2px solid #b8bdc5;
+      border-radius: 10px;
+      padding: 14px 12px 12px;
+    }
+    .view-block legend {
+      padding: 0 6px;
+      color: #374151;
+      font-size: 15px;
+      font-weight: 700;
+    }
     .block-item {
       white-space: pre-wrap;
       line-height: 1.65;
-      border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 12px;
-      background: #fff;
+      padding: 0 8px;
       overflow-wrap: anywhere;
     }
     .block-line + .block-line {
@@ -1247,7 +1277,8 @@
     }
     .rendered-image {
       display: block;
-      max-width: min(100%, var(--rendered-image-max-width, 200px));
+      width: auto;
+      max-width: min(100%, var(--rendered-image-max-width, 1200px));
       height: auto;
       margin: 8px 0;
       border: 1px solid var(--line);
@@ -1266,21 +1297,21 @@
     }
     .choice-list {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(min(max(var(--rendered-image-max-width, 200px), calc((100% - 24px) / 3)), 100%), 1fr));
-      gap: 10px 12px;
-      padding: 12px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 5px 5px;
+      padding: 0px;
       list-style: none;
     }
-    .choice-list.long-choice-list {
-      grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr));
+    .choice-list.two-choice-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .choice-list.very-long-choice-list {
-      grid-template-columns: 1fr;
+    .choice-list.choice-list-with-images {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .choice-list li {
       min-width: 0;
       margin: 0;
-      padding: 10px;
+      padding: 0px;
       display: grid;
       grid-template-columns: auto minmax(0, 1fr);
       gap: 8px;
@@ -1297,6 +1328,9 @@
     .choice-content {
       min-width: 0;
       overflow-wrap: anywhere;
+    }
+    .choice-list-with-images .rendered-image {
+      max-width: 100%;
     }
     .raw-json-section {
       display: grid;
@@ -1435,8 +1469,12 @@
       .content-grid {
         padding: 18px 16px 32px;
       }
-      .paired-row {
+      .question-body-grid {
         grid-template-columns: 1fr;
+      }
+      .question-body-cell + .question-body-cell {
+        border-top: 1px solid var(--line);
+        border-left: 0;
       }
       .head-top {
         display: grid;
@@ -1458,7 +1496,7 @@
         </button>
         <div id="page-switch-menu" class="page-switch-menu" hidden>
           <a href="question-viewer.html?autoload=1" aria-current="page">문항 뷰</a>
-          <a href="section-viewer.html?autoload=1">소단원 뷰</a>
+          <a href="section-viewer.html?autoload=1">유형 뷰</a>
           <a href="stats.html?autoload=1">통계</a>
           <a href="all-images.html?autoload=1">그림</a>
         </div>
@@ -1498,7 +1536,7 @@
         </div>
         <div class="filter-row image-controls">
           <label id="render-image-toggle-label" class="image-toggle compact"><input id="render-images" type="checkbox" checked> 이미지 표시</label>
-          <label id="image-size-control" class="image-size-control">이미지 크기 <input id="image-size" type="range" min="100" max="500" step="20" value="200"><span id="image-size-value" class="image-size-value">200px</span></label>
+          <label id="image-size-control" class="image-size-control">이미지 크기 <input id="image-size" type="range" min="100" max="400" step="20" value="300"><span id="image-size-value" class="image-size-value">1200px</span></label>
         </div>
         <div class="fold-actions">
           <button id="expand-all" class="fold-button" type="button">전체 펼치기</button>
@@ -1514,7 +1552,7 @@
   <div id="manual-overlay" class="manual-overlay" hidden>
     <section class="manual-dialog" role="dialog" aria-modal="true" aria-labelledby="manual-title">
       <div class="manual-header">
-        <h2 id="manual-title">문항 뷰 사용 매뉴얼</h2>
+        <h2 id="manual-title">교과연산 JSON 뷰어 문항 뷰 매뉴얼</h2>
         <button id="manual-close" class="manual-close" type="button" aria-label="사용 매뉴얼 닫기">×</button>
       </div>
       <div class="manual-body">
@@ -1539,11 +1577,12 @@
           <details class="manual-section" open>
             <summary>1. 빠른 시작</summary>
             <div class="manual-section-content">
-              <p>왼쪽 목록에서 JSON 파일과 section을 펼친 뒤 확인할 문항을 선택합니다. 폴더를 바꾸고 싶을 때는 상단의 <strong>폴더 선택</strong> 또는 <strong>최근 폴더</strong>에서 작업 폴더를 다시 선택할 수 있습니다.</p>
+              <p>왼쪽 목록에서 JSON 파일을 펼친 뒤 확인할 문항을 선택합니다. 폴더를 바꾸고 싶을 때는 상단의 <strong>폴더 선택</strong> 또는 <strong>최근 폴더</strong>에서 작업 폴더를 다시 선택할 수 있습니다.</p>
+              <div class="manual-highlight">파일 형식은 자동으로 인식합니다. 최상위 <code>items</code> 배열을 가진 단일 section 파일은 검정색 파일명 아래에 문항 번호가 바로 표시됩니다. 최상위 <code>sections</code> 배열을 가진 여러 section 파일은 보라색 파일명 아래에서 section을 한 번 더 펼쳐 문항을 확인합니다.</div>
               <p>왼쪽에서 문항을 선택하면 오른쪽에서 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>, 이미지, JSON 원문을 확인할 수 있습니다.</p>
               <div class="manual-highlight">전달받은 작업 폴더의 구조를 유지한 상태로 사용해 주세요. JSON 안의 <code>[img: 파일명]</code> 정보와 실제 이미지 파일이 연결되어야 이미지가 정상 표시됩니다.</div>
               <ol>
-                <li>왼쪽 목록에서 JSON 파일, section, 문항 번호를 차례로 확인합니다.</li>
+                <li>왼쪽 목록에서 JSON 파일을 펼치고 문항 번호를 확인합니다. 보라색 파일은 section을 한 번 더 펼칩니다.</li>
                 <li>확인할 문항을 클릭합니다.</li>
                 <li>오른쪽 상세 화면에서 문제, 보기, 정답, 해설, 이미지 표시 상태를 확인합니다.</li>
               </ol>
@@ -1565,7 +1604,7 @@
                   <tr><td><code>최근 폴더</code></td><td>이전에 열었던 폴더 목록을 다시 엽니다. 브라우저 권한이 필요할 수 있습니다.</td></tr>
                   <tr><td><code>다시 읽기</code></td><td>현재 폴더를 다시 불러와 JSON 파일 수정, 이미지 파일 추가, 이미지 파일 수정, 이미지 파일 교체 내용을 갱신해서 확인합니다. 작업 중 파일을 고친 뒤 화면에 바로 반영하고 싶을 때 사용합니다. 단축키는 <code>R</code>입니다.</td></tr>
                   <tr><td>상단 개수 표시</td><td><code>파일 N개 / section N개 / 문항 N개 / 이미지 N개</code> 형식으로 현재 불러온 데이터를 보여줍니다.</td></tr>
-                  <tr><td>왼쪽 목록</td><td>JSON 파일, section, 문항 번호 순서로 표시됩니다.</td></tr>
+                  <tr><td>왼쪽 목록</td><td>검정색 단일 section 파일은 <code>파일 → 문항 번호</code>, 보라색 여러 section 파일은 <code>파일 → section → 문항 번호</code> 순서로 표시됩니다.</td></tr>
                   <tr><td>오른쪽 상세 화면</td><td>선택한 문항의 <code>문제</code>, <code>choices</code>, <code>answer_type</code>, <code>answer</code>, <code>해설</code>을 보여줍니다.</td></tr>
                 </tbody>
               </table>
@@ -1576,7 +1615,7 @@
           <details class="manual-section">
             <summary>3. 왼쪽 문항 목록</summary>
             <div class="manual-section-content">
-              <p>왼쪽 목록은 <code>JSON 파일</code>, <code>section</code>, <code>문항 번호</code> 순서로 표시됩니다. 기본 상태에서는 목록이 접혀 있으므로 필요한 파일과 section만 펼쳐서 확인합니다.</p>
+              <p>왼쪽 목록은 파일 형식에 따라 다르게 표시됩니다. 검정색 단일 section 파일은 파일을 펼치면 문항 번호가 바로 보이고, 보라색 여러 section 파일은 파일과 section을 차례로 펼쳐 확인합니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>항목</th><th>설명</th></tr>
@@ -1594,7 +1633,7 @@
           <details class="manual-section">
             <summary>4. 오른쪽 상세 화면</summary>
             <div class="manual-section-content">
-              <p>왼쪽 목록에서 JSON 파일명을 펼치면 section 목록이 보입니다. section을 펼치면 <code>1번</code>, <code>2번</code> 같은 문항 번호가 표시됩니다. 문항을 클릭하면 오른쪽 상세 화면에서 해당 문항을 확인합니다.</p>
+              <p>검정색 단일 section 파일은 파일명을 펼치면 <code>1번</code>, <code>2번</code> 같은 문항 번호가 바로 표시됩니다. 보라색 여러 section 파일은 section을 펼친 뒤 문항 번호를 확인합니다. 문항을 클릭하면 오른쪽 상세 화면에서 해당 문항을 확인합니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>항목</th><th>의미</th></tr>
@@ -1650,7 +1689,7 @@
                 </thead>
                 <tbody>
                   <tr><td><span class="manual-badge green">이미지 표시</span></td><td>체크하면 <code>[img: 파일명]</code> 위치에 이미지를 보여줍니다. 해제하면 원문 텍스트로 봅니다.</td></tr>
-                  <tr><td><code>이미지 크기</code></td><td>표시되는 이미지 크기를 <code>100px-500px</code>까지 조절합니다.</td></tr>
+                  <tr><td><code>이미지 크기</code></td><td>표시되는 이미지의 최대 폭을 <code>100px-1600px</code>에서 조절합니다. 기본값에서는 원본보다 크게 확대하지 않으며, 해당 열의 폭도 넘지 않습니다.</td></tr>
                   <tr><td><span class="manual-badge yellow">이미지 없음: 파일명</span></td><td>JSON에는 이미지가 적혀 있지만 실제 파일을 찾지 못한 상태입니다.</td></tr>
                   <tr><td><code>파일명 복사</code></td><td><code>image_edit_notes</code>의 image 값에서 확장자를 제외한 파일명을 복사합니다.</td></tr>
                 </tbody>
@@ -1678,7 +1717,7 @@
           <details class="manual-section">
             <summary>8. 오류와 경고</summary>
             <div class="manual-section-content">
-              <p>상단에 <span class="manual-badge red">오류 N개</span>가 표시되면 JSON 문법 오류, 넘버링 오류, LaTeX 경고가 있다는 뜻입니다. <code>오류 N개</code>를 클릭하면 <code>오류만 보기 ON / 오류 N개</code> 상태가 되며, 오류가 있는 항목만 왼쪽 목록에 표시됩니다.</p>
+              <p>상단에 <span class="manual-badge red">오류 N개</span>가 표시되면 JSON 문법 오류 또는 LaTeX 경고가 있다는 뜻입니다. <code>오류 N개</code>를 클릭하면 <code>오류만 보기 ON / 오류 N개</code> 상태가 되며, 오류가 있는 항목만 왼쪽 목록에 표시됩니다.</p>
               <table class="manual-table">
                 <thead>
                   <tr><th>표시</th><th>의미</th><th>확인 방법</th></tr>
@@ -1686,8 +1725,7 @@
                 <tbody>
                   <tr><td><span class="manual-badge red">JSON 첫 번째 감지 오류</span></td><td>JSON 파일을 파싱하지 못했습니다.</td><td>오른쪽의 <code>오류 메시지</code>, <code>줄</code>, <code>칸</code>, <code>주변 원문</code>을 확인합니다.</td></tr>
                   <tr><td><code>JSON 최상위 값은 객체여야 합니다.</code></td><td>JSON 최상단이 객체 형식이 아닙니다.</td><td>파일 구조가 <code>{ ... }</code> 형태인지 확인합니다.</td></tr>
-                  <tr><td><code>sections 배열을 찾을 수 없습니다.</code></td><td>JSON에 <code>sections</code> 배열이 없습니다.</td><td>생성된 JSON 구조를 확인합니다.</td></tr>
-                  <tr><td><code>넘버링 오류</code></td><td>한 파일 안의 <code>q_number</code>가 <code>1</code>부터 문항 개수까지 순차적으로 이어지지 않습니다.</td><td>section이 바뀌어도 번호가 이어지는지 확인합니다.</td></tr>
+                  <tr><td><code>JSON 형식을 확인할 수 없습니다.</code></td><td>JSON에 <code>sections</code> 배열 또는 최상위 <code>items</code> 배열이 없습니다. 두 배열이 함께 있어도 형식 오류입니다.</td><td>소단원 파일은 <code>sections</code>, 단일 section 파일은 최상위 <code>items</code>만 사용합니다.</td></tr>
                   <tr><td><span class="manual-badge yellow">이미지 파일을 찾을 수 없음: 파일명</span></td><td>이미지 참조는 있지만 파일 연결에 실패했습니다.</td><td>실제 이미지 파일 위치와 파일명을 확인합니다.</td></tr>
                   <tr><td><code>$ 구분자 개수가 맞지 않습니다.</code></td><td>LaTeX 인라인 수식 구분자가 맞지 않습니다.</td><td>해당 문항의 수식 기호를 확인합니다.</td></tr>
                   <tr><td><code>\( \) 구분자 개수가 맞지 않습니다.</code></td><td>LaTeX 괄호형 수식 구분자가 맞지 않습니다.</td><td>여는 기호와 닫는 기호를 확인합니다.</td></tr>
@@ -1796,7 +1834,7 @@
     }
 
     function updateImageSize() {
-      const size = Number(imageSizeInput.value) || 200;
+      const size = Number(imageSizeInput.value) || 1200;
       document.documentElement.style.setProperty('--rendered-image-max-width', `${size}px`);
       imageSizeValue.textContent = `${size}px`;
     }
@@ -2322,7 +2360,7 @@
       parent.appendChild(section);
     }
 
-    function appendTextWithImages(parent, text) {
+    function appendTextWithImages(parent, text, imageClass = 'rendered-image') {
       const value = String(text || '-');
       if (!renderImagesInput.checked) {
         parent.textContent = value;
@@ -2341,7 +2379,7 @@
         const imageUrl = imageLookupKeys(fileName).map((key) => imageIndex.get(key)).find(Boolean);
         if (imageUrl) {
           const image = document.createElement('img');
-          image.className = 'rendered-image';
+          image.className = imageClass;
           image.src = imageUrl;
           image.alt = fileName;
           parent.appendChild(image);
@@ -2388,9 +2426,10 @@
       if (!hasDisplayValue(blocks)) {
         return;
       }
-      const section = document.createElement('section');
-      const heading = document.createElement('h2');
-      heading.textContent = 'blocks';
+      const section = document.createElement('fieldset');
+      section.className = 'view-block';
+      const heading = document.createElement('legend');
+      heading.textContent = '보기';
       section.appendChild(heading);
       const list = document.createElement('div');
       list.className = 'block-list';
@@ -2507,30 +2546,6 @@
 
     function uniqueList(values) {
       return [...new Set(values.filter(Boolean))];
-    }
-
-    function qNumberValue(value) {
-      if (Number.isInteger(value)) {
-        return value;
-      }
-      if (typeof value === 'string' && /^\d+$/.test(value.trim())) {
-        return Number(value.trim());
-      }
-      return null;
-    }
-
-    function collectNumberingErrors(qNumber, expectedNumber) {
-      if (qNumber === undefined || qNumber === null || String(qNumber).trim() === '') {
-        return [`넘버링 오류: q_number가 없습니다. 기대값은 ${expectedNumber}번입니다.`];
-      }
-      const actualNumber = qNumberValue(qNumber);
-      if (actualNumber === null) {
-        return [`넘버링 오류: q_number가 숫자가 아닙니다. 현재값은 ${String(qNumber)}이고 기대값은 ${expectedNumber}번입니다.`];
-      }
-      if (actualNumber !== expectedNumber) {
-        return [`넘버링 오류: 현재 ${actualNumber}번, 기대값은 ${expectedNumber}번입니다.`];
-      }
-      return [];
     }
 
     function redWarningSummary(data) {
@@ -2693,8 +2708,7 @@
 
     function buildCardsFromPayload(fileName, payload) {
       const result = [];
-      const sections = Array.isArray(payload?.sections) ? payload.sections : [];
-      let expectedQNumber = 1;
+      const sections = payload.sections;
       sections.forEach((section, sectionIndex) => {
         if (!section || typeof section !== 'object') {
           return;
@@ -2706,8 +2720,6 @@
           if (!item || typeof item !== 'object') {
             return;
           }
-          const numberingErrors = collectNumberingErrors(item.q_number, expectedQNumber);
-          expectedQNumber += 1;
           const question = item.question && typeof item.question === 'object' ? item.question : {};
           const imageEditNotes = item.image_edit_notes;
           const blocks = question.blocks ?? [];
@@ -2725,6 +2737,7 @@
           }));
           result.push({
             fileName,
+            fileType: payload.fileType,
             sectionIndex,
             sectionLabel: sectionLabel(sectionIndex, sectionTitle),
             sectionNote,
@@ -2742,7 +2755,6 @@
             imageRefs,
             missingImageRefs,
             latexWarnings,
-            jsonErrors: numberingErrors,
             hasImage: containsImageTag(item) || hasDisplayValue(imageEditNotes),
           });
         });
@@ -2751,7 +2763,7 @@
     }
 
     function countSections(payload) {
-      return Array.isArray(payload?.sections) ? payload.sections.length : 0;
+      return payload.sections.length;
     }
 
     function folderNameFromFiles(files, fallback = '폴더') {
@@ -2884,9 +2896,22 @@
       if (!payload || typeof payload !== 'object' || Array.isArray(payload)) {
         throw new Error('JSON 최상위 값은 객체여야 합니다.');
       }
-      if (!Array.isArray(payload.sections)) {
-        throw new Error('sections 배열을 찾을 수 없습니다.');
+      const hasSections = Array.isArray(payload.sections);
+      const hasItems = Array.isArray(payload.items);
+      if (hasSections === hasItems) {
+        throw new Error('JSON은 sections 배열 또는 items 배열 중 하나만 가져야 합니다.');
       }
+      return hasSections
+        ? { ...payload, fileType: 'multi', sections: payload.sections }
+        : {
+          ...payload,
+          fileType: 'single',
+          sections: [{
+            section_title: String(payload.section_title ?? ''),
+            note: String(payload.note ?? ''),
+            items: payload.items,
+          }],
+        };
     }
 
     async function loadFiles(fileList, folderName = '폴더', options = {}) {
@@ -2902,8 +2927,7 @@
         let text = '';
         try {
           text = await file.text();
-          const payload = JSON.parse(text);
-          validatePayloadShape(payload);
+          const payload = validatePayloadShape(JSON.parse(text));
           sectionCount += countSections(payload);
           loadedCards.push(...buildCardsFromPayload(file.name, payload));
         } catch (error) {
@@ -3031,29 +3055,28 @@
     function choiceLengthClass(choices) {
       const lengths = choices.map((choice) => displayValue(choice).replace(/\s+/g, ' ').trim().length);
       const maxLength = lengths.length ? Math.max(...lengths) : 0;
-      if (maxLength >= 70) {
-        return 'very-long-choice-list';
-      }
-      if (maxLength >= 35) {
-        return 'long-choice-list';
+      if (maxLength >= 6) {
+        return 'two-choice-list';
       }
       return '';
     }
 
     function addChoicesSection(parent, choices) {
       if (!Array.isArray(choices)) {
-        addSection(parent, 'choices', displayValue(choices));
+        const text = document.createElement('div');
+        text.className = 'text-block choice-list';
+        appendTextWithImages(text, displayValue(choices), 'rendered-image choice-image');
+        parent.appendChild(text);
         return;
       }
-      const section = document.createElement('section');
-      const heading = document.createElement('h2');
-      heading.textContent = 'choices';
-      section.appendChild(heading);
       const list = document.createElement('ol');
       list.className = 'text-block choice-list';
       const lengthClass = choiceLengthClass(choices);
       if (lengthClass) {
         list.classList.add(lengthClass);
+      }
+      if (choices.some((choice) => containsImageTag(choice))) {
+        list.classList.add('choice-list-with-images');
       }
       if (!choices.length) {
         const item = document.createElement('li');
@@ -3071,14 +3094,13 @@
           marker.textContent = markers[index] || `${index + 1}.`;
           const content = document.createElement('div');
           content.className = 'choice-content';
-          appendTextWithImages(content, displayValue(choice));
+          appendTextWithImages(content, displayValue(choice), 'rendered-image choice-image');
           item.appendChild(marker);
           item.appendChild(content);
           list.appendChild(item);
         });
       }
-      section.appendChild(list);
-      parent.appendChild(section);
+      parent.appendChild(list);
     }
 
     function addRawJsonSection(parent, item) {
@@ -3489,22 +3511,28 @@
         });
         const fileSummary = document.createElement('summary');
         fileSummary.className = 'file-summary';
+        const firstSection = sections.values().next().value;
+        const fileType = cards[firstSection.items[0]].fileType;
+        fileSummary.classList.add(`file-type-${fileType}`);
         appendSummaryContent(fileSummary, displayFileName(fileName), fileWarningBundle(fileName, indexes));
         fileDetails.appendChild(fileSummary);
 
         sections.forEach((section) => {
-          const sectionKey = `section::${fileName}::${section.label}`;
-          const sectionDetails = document.createElement('details');
-          sectionDetails.dataset.key = sectionKey;
-          sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : false;
-          sectionDetails.addEventListener('toggle', () => {
-            openState.set(sectionKey, sectionDetails.open);
-            writeQuestionViewState();
-          });
-          const sectionSummary = document.createElement('summary');
-          sectionSummary.className = 'section-summary';
-          appendSummaryContent(sectionSummary, section.label, sectionWarningBundle(section.items));
-          sectionDetails.appendChild(sectionSummary);
+          const isSingleSection = fileType === 'single';
+          const sectionDetails = isSingleSection ? fileDetails : document.createElement('details');
+          if (!isSingleSection) {
+            const sectionKey = `section::${fileName}::${section.label}`;
+            sectionDetails.dataset.key = sectionKey;
+            sectionDetails.open = openState.has(sectionKey) ? openState.get(sectionKey) : false;
+            sectionDetails.addEventListener('toggle', () => {
+              openState.set(sectionKey, sectionDetails.open);
+              writeQuestionViewState();
+            });
+            const sectionSummary = document.createElement('summary');
+            sectionSummary.className = 'section-summary';
+            appendSummaryContent(sectionSummary, section.label, sectionWarningBundle(section.items));
+            sectionDetails.appendChild(sectionSummary);
+          }
 
           const list = document.createElement('div');
           list.className = 'question-list';
@@ -3534,7 +3562,9 @@
             list.appendChild(button);
           });
           sectionDetails.appendChild(list);
-          fileDetails.appendChild(sectionDetails);
+          if (!isSingleSection) {
+            fileDetails.appendChild(sectionDetails);
+          }
         });
         navTree.appendChild(fileDetails);
       });
@@ -3747,23 +3777,26 @@
         addRawJsonSection(content, data.rawItem);
       }
       addImageEditNotesSection(content, data.imageEditNotes);
-      addSection(content, '문제', data.stem);
-      if (data.hasBlocks) {
-        addBlocksSection(content, data.rawBlocks);
-      }
-
-      const pairedRow = document.createElement('div');
-      pairedRow.className = 'paired-row';
-      const choicesColumn = document.createElement('div');
+      const bodyGrid = document.createElement('div');
+      bodyGrid.className = 'question-body-grid';
+      const promptColumn = document.createElement('div');
+      promptColumn.className = 'question-body-cell prompt-column';
+      const explanationColumn = document.createElement('div');
+      explanationColumn.className = 'question-body-cell explanation-column';
       const answerColumn = document.createElement('div');
-      answerColumn.className = 'answer-column';
-      pairedRow.appendChild(choicesColumn);
-      pairedRow.appendChild(answerColumn);
-      content.appendChild(pairedRow);
-      addChoicesSection(choicesColumn, data.choices);
-      addSection(answerColumn, 'answer_type', data.answerType, 'text-block answer-block');
+      answerColumn.className = 'question-body-cell answer-column';
+      const answerTypeColumn = document.createElement('div');
+      answerTypeColumn.className = 'question-body-cell answer-type-column';
+      bodyGrid.append(promptColumn, explanationColumn, answerColumn, answerTypeColumn);
+      content.appendChild(bodyGrid);
+      addSection(promptColumn, '문제', data.stem);
+      if (data.hasBlocks) {
+        addBlocksSection(promptColumn, data.rawBlocks);
+      }
+      addChoicesSection(promptColumn, data.choices);
+      addSection(explanationColumn, '해설', data.explanation);
       addSection(answerColumn, 'answer', data.answer, 'text-block answer-block');
-      addSection(content, '해설', data.explanation);
+      addSection(answerTypeColumn, 'answer_type', data.answerType, 'text-block answer-block');
       restoreSharedScrollPosition();
       requestAnimationFrame(restoreSharedScrollPosition);
 
